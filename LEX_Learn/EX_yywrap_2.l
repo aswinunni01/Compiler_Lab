@@ -1,0 +1,68 @@
+
+/*	DECLARATIONS	*/
+
+
+/*	AUXILIARY DECLARATIONS	*/
+
+
+%{
+	
+#include<stdio.h>
+char *file1;
+%}
+
+
+/*	REGULAR DEFINITIONS	*/
+
+number	[0-9]+
+op	[-|+|*|/|^|=]
+
+
+/* 	RULES	*/
+
+%%
+
+
+{number}   {printf("number");}
+
+%%
+
+
+/*	AUXILIARY FUNCTIONS	*/
+
+
+int yywrap(){
+
+	FILE *newfile_pointer;
+	char *file2 = "console";
+	if(strcmp(file1,file2)!=0){
+		file1=file2;
+		yyin = stdin;
+		return 0;
+	}
+	else
+		return 1;
+
+}
+
+int main(int argc, char* argv[]){
+	file1 = "input_file.l";
+	yyin = fopen("input_file.l","r");
+	yylex();
+	return 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
