@@ -10,16 +10,17 @@
 
 %token DIGIT NEWLINE
 %left '+'
-%left '*'
+%left '-'
+
 %%
 
 start: expr NEWLINE   { printf("\nComplete\n");
                       exit(1);
                     }
-
+;
 
 expr: expr '+' expr { printf("+ "); }
-    | expr '*' expr { printf("-");  }
+    | expr '-' expr { printf("-");  }
     | '(' expr ')' 
     |  DIGIT 	    { printf("%d", $1); }
     ;
