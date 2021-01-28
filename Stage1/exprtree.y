@@ -22,7 +22,7 @@ int yylex(void);
 
 program : expr END	{ 
 				$$ = $2;
-				preorder($1);
+				helperfunction($1);
 				exit(1);	}
 
 expr	: expr PLUS expr	{ $$ = makeOperatorNode('+',$1,$3); }

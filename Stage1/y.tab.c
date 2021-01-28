@@ -1130,7 +1130,7 @@ yyreduce:
 #line 23 "exprtree.y"
                         { 
 				(yyval.no) = (yyvsp[0].no);
-				preorder((yyvsp[-1].no));
+				helperfunction((yyvsp[-1].no));
 				exit(1);	}
 #line 1136 "y.tab.c"
     break;

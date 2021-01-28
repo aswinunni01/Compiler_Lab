@@ -1,3 +1,6 @@
+FILE *fptr;
+int count=0;
+
 struct tnode* makeLeafNode(int n){
 
 	struct tnode* temp;
@@ -57,4 +60,40 @@ void preorder(struct tnode* t){
 	preorder(t->left);
 	preorder(t->right);
 	
-}	
+}
+
+int getReg(){
+
+	count++;
+	return count-1;
+
+}
+int freeReg(){
+
+	count--;
+
+}
+void makexexe(struct tnode* t, FILE *fptr){
+	if(t==NULL)
+		return;
+
+	makexexe(t->left,fptr);
+	makexexe(t->right,fptr);
+
+	if(t->op==NULL){
+
+	        int d = getReg();
+		fprintf(fptr,"MOV R%d, %d\n",d,t->val);
+	}
+	else{
+		fprintf(fptr,"ADD R%d,R%d\n", count-2, count-1);
+		freeReg();
+	}
+}
+
+void helperfunction(struct tnode* t){
+	fptr = fopen("out.xexe","w");
+	makexexe(t,fptr);
+	return ;
+}
+
