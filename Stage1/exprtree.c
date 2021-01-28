@@ -14,12 +14,11 @@ struct tnode* makeLeafNode(int n){
 }
 
 
-struct tnode* makeOperatorNode(char c, struct tnode* l, struct tnode* r){
+struct tnode* makeOperatorNode(char* c, struct tnode* l, struct tnode* r){
 
 	struct tnode* temp;
 	temp = (struct tnode*)malloc(sizeof(struct tnode));
-	temp-> op = malloc(sizeof(char));
-	*(temp->op) = c;
+	temp->op = strdup(c);
 	temp->left = l;
 	temp->right = r;
 
@@ -86,7 +85,7 @@ void makexexe(struct tnode* t, FILE *fptr){
 		fprintf(fptr,"MOV R%d, %d\n",d,t->val);
 	}
 	else{
-		fprintf(fptr,"ADD R%d,R%d\n", count-2, count-1);
+		fprintf(fptr,"%s R%d,R%d\n",t->op, count-2, count-1);
 		freeReg();
 	}
 }

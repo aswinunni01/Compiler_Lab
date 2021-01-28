@@ -1137,25 +1137,25 @@ yyreduce:
 
   case 3: /* expr: expr PLUS expr  */
 #line 28 "exprtree.y"
-                                { (yyval.no) = makeOperatorNode('+',(yyvsp[-2].no),(yyvsp[0].no)); }
+                                { (yyval.no) = makeOperatorNode("ADD",(yyvsp[-2].no),(yyvsp[0].no)); }
 #line 1142 "y.tab.c"
     break;
 
   case 4: /* expr: expr MINUS expr  */
 #line 29 "exprtree.y"
-                                { (yyval.no) = makeOperatorNode('-', (yyvsp[-2].no),(yyvsp[0].no)); }
+                                { (yyval.no) = makeOperatorNode("SUB", (yyvsp[-2].no),(yyvsp[0].no)); }
 #line 1148 "y.tab.c"
     break;
 
   case 5: /* expr: expr MUL expr  */
 #line 30 "exprtree.y"
-                                { (yyval.no) = makeOperatorNode('*',(yyvsp[-2].no),(yyvsp[0].no)); }
+                                { (yyval.no) = makeOperatorNode("MUL",(yyvsp[-2].no),(yyvsp[0].no)); }
 #line 1154 "y.tab.c"
     break;
 
   case 6: /* expr: expr DIV expr  */
 #line 32 "exprtree.y"
-                                { (yyval.no) = makeOperatorNode('/',(yyvsp[-2].no),(yyvsp[0].no)); }
+                                { (yyval.no) = makeOperatorNode("DIV",(yyvsp[-2].no),(yyvsp[0].no)); }
 #line 1160 "y.tab.c"
     break;
 

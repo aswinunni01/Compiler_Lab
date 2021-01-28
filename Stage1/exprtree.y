@@ -25,11 +25,11 @@ program : expr END	{
 				helperfunction($1);
 				exit(1);	}
 
-expr	: expr PLUS expr	{ $$ = makeOperatorNode('+',$1,$3); }
-        | expr MINUS expr 	{ $$ = makeOperatorNode('-', $1,$3); }
-	| expr MUL expr		{ $$ = makeOperatorNode('*',$1,$3); }
+expr	: expr PLUS expr	{ $$ = makeOperatorNode("ADD",$1,$3); }
+        | expr MINUS expr 	{ $$ = makeOperatorNode("SUB", $1,$3); }
+	| expr MUL expr		{ $$ = makeOperatorNode("MUL",$1,$3); }
 
-	| expr DIV expr		{ $$ = makeOperatorNode('/',$1,$3); }
+	| expr DIV expr		{ $$ = makeOperatorNode("DIV",$1,$3); }
 	| '(' expr ')'		{ $$ = $2; }	
 	| NUM			{ $$ = $1; }
 
