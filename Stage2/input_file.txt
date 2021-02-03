@@ -1,0 +1,8 @@
+begin
+
+a=2*5-9
+b = 22+12
+read(d)
+c = d+12
+write(a)
+end
