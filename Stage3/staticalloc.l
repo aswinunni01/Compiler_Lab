@@ -15,16 +15,25 @@ char*  var;
 [a-z]	{ var = strdup(yytext); yylval.no = createTree(NULL,4,var,NULL,NULL);   return ID; }
 "write"	{ return WRITE; }
 "read"	{ return READ; }
+"if"	{ return IF; }
+"else"  { yylval.no = createTree(NULL, 7, "else", NULL, NULL); return Else; }
+"then"	{ 	yylval.no = createTree(NULL, 7, "then", NULL, NULL); return then; }
+"endif"	{ return ENDIF; }
 "+"	{ return PLUS; }
 "-"	{ return MINUS; }
 "*"	{ return MUL; }
 "/"	{ return DIV; }
 "="	{ return EQ; }
+"<"	{ return LT; }
+">"	{ return GT; }
+"<="	{ return LTE; }
+">="	{ return GTE; }
+"!="	{ return NE; }
+"=="	{ return EQU; }
 [ \t]	{}
 [()]	{ return *yytext; }
 "end"	{ return END; }
 "begin" { return BEG; }
-[;]	{ return *yytext; }
 .	{ yyerror("unknown character\n");exit(1);}
 
 
@@ -32,6 +41,15 @@ char*  var;
 %%
 
 int yywrap(void){
-	return 1;
+	FILE *newfile_pointer;
+	
+  	newfile_pointer = fopen("input_file.txt","r");
+  	if(c!=1)
+  	{	c=1;
+  		yyin = newfile_pointer;
+    		return 0;
+  	}
+  	else
+  		return 1;
 
 }

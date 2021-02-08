@@ -64,7 +64,17 @@ extern int yydebug;
     ID = 265,                      /* ID  */
     NUM = 266,                     /* NUM  */
     END = 267,                     /* END  */
-    BEG = 268                      /* BEG  */
+    BEG = 268,                     /* BEG  */
+    IF = 269,                      /* IF  */
+    ENDIF = 270,                   /* ENDIF  */
+    Else = 271,                    /* Else  */
+    then = 272,                    /* then  */
+    NE = 273,                      /* NE  */
+    EQU = 274,                     /* EQU  */
+    LT = 275,                      /* LT  */
+    LTE = 276,                     /* LTE  */
+    GT = 277,                      /* GT  */
+    GTE = 278                      /* GTE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -83,17 +93,27 @@ extern int yydebug;
 #define NUM 266
 #define END 267
 #define BEG 268
+#define IF 269
+#define ENDIF 270
+#define Else 271
+#define then 272
+#define NE 273
+#define EQU 274
+#define LT 275
+#define LTE 276
+#define GT 277
+#define GTE 278
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "staticalloc.y"
+#line 10 "staticalloc.y"
 
 
 	struct tnode *no;
 
-#line 97 "y.tab.h"
+#line 117 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -1,5 +1,5 @@
 #include<stdlib.h>
-
+int ifcount=0;
 int count=0;
 
 struct tnode* createTree(int val, int type, char* c, struct tnode* l, struct tnode* r){
@@ -25,25 +25,21 @@ int getReg(){
 void freeReg(){
 	count --;
 }
-void writeheader(FILE *fptr){
 
-	fprintf(fptr,"0\n2056\n0\n0\n0\n0\n0\n0\nBRKP\n");
-
-}	
 void  makepgrm(struct tnode *t, FILE *fptr){
 	if(t==NULL)
 		return;
 	makepgrm(t->left,fptr);
 	makepgrm(t->right,fptr);
 
-	 if(t->type == 0){
+ if(t->type == 0){
 		int d = getReg();
 		fprintf(fptr, "MOV R%d, %d\n",d,t->val);
 
 	}
 
 	else 	if(t->type == 1){
-		if(strcmp(t->varname,"EQ")==0){
+		if(strcmp(t->varname,"EQU")==0){
 			int d = getReg();
 			fprintf(fptr, "MOV R%d, %d\n",d, t->left->val+4096);
 			fprintf(fptr, "MOV [R%d], R%d\n",d,count-2);
@@ -91,24 +87,28 @@ void  makepgrm(struct tnode *t, FILE *fptr){
 		fprintf(fptr, "POP R%d\n",d);
 		fprintf(fptr, "POP R%d\n",d);
 		freeReg();
-
-
-				
+	}
+ else if(t->type == 6){
+	if(strcmp(t->varname, "Then") == 0){
+		fprintf(fptr, "JMP IF_END_%d\n",ifcount-1);
 
 	}
-	else if (t->type == 10){
-		int	d= getReg();
-		fprintf(fptr, "MOV R%d, \"Exit\"\n", d);
-                fprintf(fptr, "PUSH R%d\n",d);
-                fprintf(fptr, "PUSH R%d\n",d);
-		fprintf(fptr, "PUSH R%d\n",d);
-                fprintf(fptr, "PUSH R%d\n",d);
-		fprintf(fptr, "PUSH R%d\n",d);
-		fprintf(fptr, "CALL 0\n",d);
-		freeReg();
-		
-		
+	else{
+		fprintf(fptr, "IF_END_%d\n",ifcount);
 	}
+
+ }
+	else if(t->type == 7){
+		if(strcmp(t->varname,"then") == 0){
+			fprintf(fptr,"JZ R%d, ELSE_%d\n",count-1,ifcount);
+			ifcount++;
+		}
+		else{
+			ifcount--;
+			fprintf(fptr,"ELSE_%d\n",ifcount);
+		}
+	}
+
 
 
 }

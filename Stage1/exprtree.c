@@ -90,9 +90,37 @@ void makexexe(struct tnode* t, FILE *fptr){
 	}
 }
 
+void makeheader(FILE *fptr){
+
+        fprintf(fptr,"0\n2056\n0\n0\n0\n0\n0\n0\nBRKP\n");
+
+}
+
+void writefooter(FILE *fptr){
+	int d =getReg();
+	
+	fprintf(fptr, "MOV R%d, \"Write\"\n",d);
+	fprintf(fptr, "PUSH R%d\n",d);
+	fprintf(fptr, "MOV R%d, -2\n",d);
+	fprintf(fptr, "PUSH R%d\n",d);
+	fprintf(fptr, "PUSH R%d\n",d-1);
+	fprintf(fptr, "PUSH R%d\n",d);
+	fprintf(fptr, "PUSH R%d\n",d);
+	fprintf(fptr, "CALL 0\n");
+	fprintf(fptr, "MOV R%d, \"Exit\"\n", d);
+	fprintf(fptr, "PUSH R%d\n",d);
+	fprintf(fptr, "PUSH R%d\n",d);
+	fprintf(fptr, "PUSH R%d\n",d);
+	fprintf(fptr, "PUSH R%d\n",d);
+	fprintf(fptr, "PUSH R%d\n",d);
+	fprintf(fptr,	"CALL 0");
+
+}
 void helperfunction(struct tnode* t){
 	fptr = fopen("out.xexe","w");
+	makeheader(fptr);
 	makexexe(t,fptr);
+	writefooter(fptr);
 	return ;
 }
 

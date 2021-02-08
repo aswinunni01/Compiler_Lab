@@ -8,7 +8,7 @@ typedef struct tnode{
 struct tnode*	makeLeafNode(int n);
 
 struct tnode*	makeOperatorNode(char* c, struct tnode* l, struct tnode* r);
-
+void makeheader(FILE* fptr);
 int getReg();
 int freeReg();
 void  makexexe(struct tnode* t, FILE *fptr);

@@ -1,0 +1,16 @@
+begin
+
+if(1<2)
+then
+a=1
+if(3<2)
+then
+c=1
+else
+d=1
+endif
+else
+b=1
+endif
+end
+

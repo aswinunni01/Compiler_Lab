@@ -1,0 +1,16 @@
+begin
+i = 1+9
+if (a<b)
+then
+a=2*5-9
+b = 22+12
+else
+a=2-1
+if(c<d)
+then
+read(d)
+endif
+c = d+12
+endif
+write(a)
+end
