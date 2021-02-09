@@ -31,6 +31,7 @@ char*  var;
 "!="	{ return NE; }
 "=="	{ return EQU; }
 [ \t]	{}
+[;]	{ return *yytext; }
 [()]	{ return *yytext; }
 "end"	{ return END; }
 "begin" { return BEG; }
@@ -41,15 +42,6 @@ char*  var;
 %%
 
 int yywrap(void){
-	FILE *newfile_pointer;
-	
-  	newfile_pointer = fopen("input_file.txt","r");
-  	if(c!=1)
-  	{	c=1;
-  		yyin = newfile_pointer;
-    		return 0;
-  	}
-  	else
-  		return 1;
+  	return 1;
 
 }

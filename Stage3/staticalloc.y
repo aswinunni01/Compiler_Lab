@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "staticalloc.c"
 int yylex(void);
+FILE *input_file;
+struct tnode* end_node;
 %}
 
 %union{
@@ -21,19 +23,15 @@ int yylex(void);
 
 %%
 
-start : BEG Stlist END	{	printf("Completed");
+start : BEG Stlist END	{	         end_node = createTree(NULL, 10, NULL, NULL, $2);
+
+      					printf("Completed\n");
       					FILE *fptr = fopen("out.xexe", "w");
-     					 makepgrm($2,fptr); 
+     					 makepgrm(end_node,fptr); 
       					exit(1); }
       | BEG END	{ exit(1); }
 ;
 
-Stlist : Stlist Stmt { $$ = createTree(NULL, 3, NULL, $1, $2); }
-       | Stmt 		{ $$  = $1; }
-;
-
-Stmt : Ifstmt 	{ $$ = $1; }
-     ;
 
 Ifstmt	:	IF  '('E')' Thenstmt Elsestmt ENDIF {  $1 = createTree(NULL, 5, NULL, $5, $6);
        
@@ -55,9 +53,9 @@ Stlist : Stlist Stmt 	{ $$ = createTree(NULL,3, NULL, $1, $2); }
        | Stmt		{ $$ = $1; }
 ;
 
-Stmt	: InputStmt	{ $$ = $1; }
-     	| OutputStmt    { $$ = $1; }
-	| AsgStmt	{ $$ = $1; } 
+Stmt	: InputStmt ';'	{ $$ = $1; }
+     	| OutputStmt';'    { $$ = $1; }
+	| AsgStmt';'	{ $$ = $1; } 
 	| Ifstmt	{ $$ = $1; }
 ;
 
@@ -82,7 +80,7 @@ E : E PLUS E	{ $$ = createTree(NULL, 1, "ADD", $1, $3); }
   | E GTE E 	{ $$ = createTree(NULL, 1, "GTE", $1, $3); } 
   | E NE E 	{ $$ = createTree(NULL, 1, "NE", $1, $3); } 
   | '(' E ')' 	{ $$ = $2; }
-  | ID		{ $$ = $1; printf("ID FOuND"); }
+  | ID		{ $$ = $1; }
   | NUM		{ $$ = $1; }
   ;
 
@@ -93,9 +91,15 @@ yyerror(char const* s){
 	printf("yyerror %s", s);
 }
 
-int main(void){
-
-	yyparse();
+int main(int argc, char *argv[]){
+        extern FILE *yyin;
+        if(argc<2){
+                yyerror("Not enough arguments");
+                return 1;
+        }
+        input_file = fopen(argv[1], "r");
+        yyin = input_file;
+        yyparse();
 
 }
 

@@ -26,6 +26,17 @@ void freeReg(){
 	count --;
 }
 
+void writeheader(FILE *fptr){
+
+        fprintf(fptr,"0\n2056\n0\n0\n0\n0\n0\n0\nBRKP\n");
+
+}
+
+void helperfunction(struct tnode*t, FILE *fptr){
+	makepgrm(t,fptr);
+	writeheader(fptr);
+
+}
 void  makepgrm(struct tnode *t, FILE *fptr){
 	if(t==NULL)
 		return;
@@ -53,9 +64,7 @@ void  makepgrm(struct tnode *t, FILE *fptr){
 	else if(t->type == 4){
 		 t->val = (int)*t->varname-97;
 		 int d=getReg();
-		 int e= getReg();
-		 fprintf(fptr, "MOV R%d, %d\n", e, t->val+4096);
-		 fprintf(fptr, "MOV R%d, [R%d]\n",d,e);	
+		 fprintf(fptr, "MOV R%d, [%d]\n",d,t->val+4096);	
 		 freeReg();
 	}
 	else if(t->type ==  2){
@@ -88,24 +97,38 @@ void  makepgrm(struct tnode *t, FILE *fptr){
 		fprintf(fptr, "POP R%d\n",d);
 		freeReg();
 	}
+	        else if (t->type == 10){
+                int     d= getReg();
+                fprintf(fptr, "MOV R%d, \"Exit\"\n", d);
+                fprintf(fptr, "PUSH R%d\n",d);
+                fprintf(fptr, "PUSH R%d\n",d);
+                fprintf(fptr, "PUSH R%d\n",d);
+                fprintf(fptr, "PUSH R%d\n",d);
+                fprintf(fptr, "PUSH R%d\n",d);
+                fprintf(fptr, "CALL 0\n",d);
+                freeReg();
+
+
+        }
+
  else if(t->type == 6){
 	if(strcmp(t->varname, "Then") == 0){
-		fprintf(fptr, "JMP IF_END_%d\n",ifcount-1);
+		fprintf(fptr, "JMP L%d\n",(2*ifcount)-1);
 
 	}
 	else{
-		fprintf(fptr, "IF_END_%d\n",ifcount);
+		fprintf(fptr, "L%d:\n",(2*ifcount)-1);
+		ifcount --;
 	}
 
  }
 	else if(t->type == 7){
 		if(strcmp(t->varname,"then") == 0){
-			fprintf(fptr,"JZ R%d, ELSE_%d\n",count-1,ifcount);
+			fprintf(fptr,"JZ R%d, L%d\n",count-1,2*ifcount);
 			ifcount++;
 		}
 		else{
-			ifcount--;
-			fprintf(fptr,"ELSE_%d\n",ifcount);
+			fprintf(fptr,"L%d:\n",2*(ifcount-1));
 		}
 	}
 
