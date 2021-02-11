@@ -74,7 +74,9 @@ extern int yydebug;
     LT = 275,                      /* LT  */
     LTE = 276,                     /* LTE  */
     GT = 277,                      /* GT  */
-    GTE = 278                      /* GTE  */
+    GTE = 278,                     /* GTE  */
+    ELSE = 279,                    /* ELSE  */
+    THEN = 280                     /* THEN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -103,17 +105,19 @@ extern int yydebug;
 #define LTE 276
 #define GT 277
 #define GTE 278
+#define ELSE 279
+#define THEN 280
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 12 "staticalloc.y"
+#line 14 "staticalloc.y"
 
 
 	struct tnode *no;
 
-#line 117 "y.tab.h"
+#line 121 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

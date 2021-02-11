@@ -1,0 +1,20 @@
+0
+2056
+0
+0
+0
+0
+0
+0
+BRKP
+L2:
+MOV A,B
+L1:
+JMP L2
+JZ R2, L1
+L3:
+JMP L4
+MOV R4, 2
+L4:
+MOV AB, A
+

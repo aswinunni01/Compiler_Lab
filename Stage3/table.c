@@ -17,11 +17,16 @@ struct node* addnode(struct node* head, char* label, int add){
 }
 
 int getadd(struct node* head, char* label){
-	char* label1 = strcat(strdup(label),":");
+	char* label1 = strcat(strcat(strdup(label),":"),"\n");
 	while(strcmp(head ->label,label1) !=0){
 		head = head->next;
 	}
 	return head->add;
 
 
+}
+
+breakfn(){
+
+	return;
 }

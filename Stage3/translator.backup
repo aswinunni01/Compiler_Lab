@@ -441,19 +441,20 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "label_translator.l"
-#line 2 "label_translator.l"
-
+#line 1 "translator.l"
+#line 2 "translator.l"
+  
 #include<stdio.h>
 #include<stdlib.h>
-#include "table.c"
+#include"table.c"
+
 struct node* head = NULL;
 FILE *input_file;
 FILE *fptr;
 int c=0;
-int ip=-9;
-#line 456 "lex.yy.c"
+int ip=-10;
 #line 457 "lex.yy.c"
+#line 458 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -670,9 +671,9 @@ YY_DECL
 		}
 
 	{
-#line 17 "label_translator.l"
+#line 19 "translator.l"
 
-#line 676 "lex.yy.c"
+#line 677 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -732,38 +733,38 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 18 "label_translator.l"
+#line 20 "translator.l"
 { printf("label detected"); 
-			  head =  addnode(head, yytext, 2058+(2*ip));
-		}
+			  head =  addnode(head, yytext, 2056+2*(ip-1));	
+			}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 21 "label_translator.l"
+#line 23 "translator.l"
 { if(c==1){
-                 int d = getadd(head, yytext);
-                 fprintf(fptr,"%d",d); }
-          else
-                fprintf(fptr, "%s",yytext);
+		 int d = getadd(head, yytext);
+		 fprintf(fptr,"%d",d); }
+	  else
+		fprintf(fptr, "%s",yytext);
 }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 28 "label_translator.l"
-{ fprintf(fptr, "\n"); ip+=1; }
+#line 30 "translator.l"
+{ fprintf(fptr,"\n");ip +=1; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 29 "label_translator.l"
-{ fprintf(fptr, "%s", yytext); }	
+#line 31 "translator.l"
+{ fprintf(fptr, "%s",yytext); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 30 "label_translator.l"
+#line 32 "translator.l"
 ECHO;
 	YY_BREAK
-#line 767 "lex.yy.c"
+#line 768 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1768,24 +1769,24 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 30 "label_translator.l"
+#line 32 "translator.l"
 
 
 
 int  yywrap(){
-        if(c==1){
-                printf("Pass 2 done");
-                return 1;
-        }
-        else{
-                printf("Pass 1 done");
-                fclose(fptr);
-                input_file = fopen("output_translated.xsm", "r");
-                yyin = input_file;
-                fptr = fopen("output_labeled.xsm","w");
-                c=1;
-                return 0;
-        }
+	if(c==1){
+		printf("Pass 2 done");
+	        return 1;
+	}
+	else{
+		printf("Pass 1 done");
+		fclose(fptr);
+		input_file = fopen("output_translated.xsm", "r");
+		yyin = input_file;
+		fptr = fopen("output_labeled.xsm","w");
+		c=1;
+		return 0;
+	}
 }
 int main(int argc, char *argv[]){
         if(argc<2){
@@ -1794,7 +1795,7 @@ int main(int argc, char *argv[]){
         }
         input_file = fopen(argv[1], "r");
         yyin = input_file;
-        fptr = fopen("output_translated.xsm","w");
+	fptr = fopen("output_translated.xsm","w");
         yylex();
 }
 
