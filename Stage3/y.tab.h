@@ -76,7 +76,10 @@ extern int yydebug;
     GT = 277,                      /* GT  */
     GTE = 278,                     /* GTE  */
     ELSE = 279,                    /* ELSE  */
-    THEN = 280                     /* THEN  */
+    THEN = 280,                    /* THEN  */
+    WHILE = 281,                   /* WHILE  */
+    ENDWHILE = 282,                /* ENDWHILE  */
+    DO = 283                       /* DO  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -107,6 +110,9 @@ extern int yydebug;
 #define GTE 278
 #define ELSE 279
 #define THEN 280
+#define WHILE 281
+#define ENDWHILE 282
+#define DO 283
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -117,7 +123,7 @@ union YYSTYPE
 
 	struct tnode *no;
 
-#line 121 "y.tab.h"
+#line 127 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

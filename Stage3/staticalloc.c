@@ -3,8 +3,6 @@
 #define boolType 22
 int ifcount=0;
 int count=0;
-int reg;
-int count;
 int label;
 int varstart = 4096;
 
@@ -28,6 +26,11 @@ struct tnode* createTree(int val, int type, char* c,int nodetype, struct tnode* 
 
 struct tnode* createIfNode(struct tnode* l, struct tnode* m, struct tnode* r){
 	return createTree(NULL, NULL, NULL, 5, l, m, r);
+}
+
+struct tnode* createWhileNode(struct tnode* l, struct tnode* r){
+
+	return createTree(NULL, NULL, NULL,6, l, NULL, r); 
 }
 
 struct tnode* createOpNode(char *c, int type, struct tnode* l, struct tnode* r){
@@ -63,10 +66,24 @@ void freeReg(){
 	count --;
 }
 
+void freeAllReg(){
+        count =0;
+
+}
+
+int getLabel(){
+
+        return label++;
+}
+
 void writeheader(FILE *fptr){
 
         fprintf(fptr,"0\n2056\n0\n0\n0\n0\n0\n0\nBRKP\n");
 
+}
+
+void writefooter(FILE *fptr){
+	fprintf(fptr, "INT 10");
 }
 
 void helperfunction(struct tnode*t, FILE *fptr){
@@ -74,6 +91,7 @@ void helperfunction(struct tnode*t, FILE *fptr){
 	writeheader(fptr);
 
 }
+
 void  makepgrm(struct tnode *t, FILE *fptr){
 	if(t==NULL)
 		return;
@@ -175,43 +193,43 @@ void  makepgrm(struct tnode *t, FILE *fptr){
 
 int  codeGen(struct tnode *t, FILE *fptr){
 
-	int loc, reg, p, q;
+	int reg_1, reg_2;
 	switch((t->nodetype)){
 
 		case 0:
-			reg = getReg();
-			fprintf(fptr, "MOV R%d, %d\n", reg, t->val);
-			return reg;
+			reg_1 = getReg();
+			fprintf(fptr, "MOV R%d, %d\n", reg_1, t->val);
+			return reg_1;
 
 		case 4:
-			reg = getReg();
-			fprintf(fptr,"MOV R%d, [%d]\n", reg, varstart-'a'+ *t->varname);
-			return reg;
+			reg_1 = getReg();
+			fprintf(fptr,"MOV R%d, [%d]\n", reg_1, varstart-'a'+ *t->varname);
+			return reg_1;
 		case 2:
-			reg = getReg();
+			reg_1 = getReg();
 			fprintf(fptr, "MOV SP, 4121\n");
-			fprintf(fptr, "MOV R%d, \"%s\"\n",reg, t->varname);
-			fprintf(fptr, "PUSH R%d\n",reg);
-			fprintf(fptr, "MOV R%d, %d\n",reg,t->val);
-			fprintf(fptr, "PUSH R%d\n",reg);
+			fprintf(fptr, "MOV R%d, \"%s\"\n",reg_1, t->varname);
+			fprintf(fptr, "PUSH R%d\n",reg_1);
+			fprintf(fptr, "MOV R%d, %d\n",reg_1,t->val);
+			fprintf(fptr, "PUSH R%d\n",reg_1);
 			if(strcmp(t->varname,"Read")==0){
-			    	fprintf(fptr, "MOV R%d,%d\n",reg,4096-'a'+*t->right->varname);
-				fprintf(fptr, "PUSH R%d\n",reg);
+			    	fprintf(fptr, "MOV R%d,%d\n",reg_1,4096-'a'+*t->right->varname);
+				fprintf(fptr, "PUSH R%d\n",reg_1);
 
 			}
 			else{
 
-				fprintf(fptr, "MOV R%d, [%d]\n",reg,4096+*t->right->varname-'a');
-				fprintf(fptr, "PUSH R%d\n",reg);
+				fprintf(fptr, "MOV R%d, [%d]\n",reg_1,4096+*t->right->varname-'a');
+				fprintf(fptr, "PUSH R%d\n",reg_1);
 			}
-			fprintf(fptr, "PUSH R%d\n",reg);
-			fprintf(fptr, "PUSH R%d\n",reg);
+			fprintf(fptr, "PUSH R%d\n",reg_1);
+			fprintf(fptr, "PUSH R%d\n",reg_1);
 			fprintf(fptr, "CALL 0\n");
-			fprintf(fptr, "POP R%d\n",reg);
-			fprintf(fptr, "POP R%d\n",reg);
-			fprintf(fptr, "POP R%d\n",reg);
-			fprintf(fptr, "POP R%d\n",reg);
-			fprintf(fptr, "POP R%d\n",reg);
+			fprintf(fptr, "POP R%d\n",reg_1);
+			fprintf(fptr, "POP R%d\n",reg_1);
+			fprintf(fptr, "POP R%d\n",reg_1);
+			fprintf(fptr, "POP R%d\n",reg_1);
+			fprintf(fptr, "POP R%d\n",reg_1);
 			freeReg();
 			return -1;
 
@@ -224,12 +242,12 @@ int  codeGen(struct tnode *t, FILE *fptr){
 		case 5:{
 			int label_1 = getLabel();
 			int label_2 = getLabel();
-			p = codeGen(t->left, fptr);
-			fprintf(fptr, "JZ R%d, L%d\n",p,label_1);
+			reg_1 = codeGen(t->left, fptr);
+			fprintf(fptr, "JZ R%d, L%d\n",reg_1,label_1);
 			codeGen(t->middle,fptr);
 			if(t->right==NULL){
 				fprintf (fptr, "L%d:\n", label_1);
-				printf("%d",label_2);
+				fprintf("%d",label_2);
 				return -1;
 			}
 			else{
@@ -240,29 +258,30 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			}
 			return -1;
 			}
+		case 6: {
+			 int label_1 = getLabel();
+			 int label_2 = getLabel();
+			 fprintf(fptr, "L%d:\n",label_1);
+			 reg_1 = codeGen(t->left, fptr);
+			 fprintf(fptr,"JZ R%d, L%d\n",reg_1,label_2);
+			 codeGen(t->right, fptr);
+			 fprintf(fptr, "JMP L%d\n",label_1);
+			 fprintf(fptr, "L%d:\n", label_2);
+			 return -1;
+			}
 		default:
 			if(strcmp(t->varname,"EQU")==0){
-				reg = codeGen(t->right, fptr);
-				fprintf(fptr, "MOV [%d], R%d\n",*t->left->varname+4096-'a',reg);
+				reg_1 = codeGen(t->right, fptr);
+				fprintf(fptr, "MOV [%d], R%d\n",*t->left->varname+4096-'a',reg_1);
 				return -1;
 			}
 			else{
-				reg = codeGen(t->left, fptr);
-				loc = codeGen(t->right, fptr);
-				fprintf(fptr, "%s R%d, R%d \n", t->varname, reg, loc);
+				reg_1 = codeGen(t->left, fptr);
+				reg_2 = codeGen(t->right, fptr);
+				fprintf(fptr, "%s R%d, R%d \n", t->varname, reg_1, reg_2);
 				freeReg();
-				return reg;
+				return reg_1;
 			}
 		}
 
 	}
-void freeAllReg(){
-	count =0;
-
-}
-
-int getLabel(){
-
-	return label++;
-}
-

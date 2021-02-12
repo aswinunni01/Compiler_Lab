@@ -21,6 +21,9 @@ char*  var;
 "else"  { return ELSE; }
 "then"	{ return THEN; }
 "endif"	{ return ENDIF; }
+"while" { return WHILE; }
+"endwhile" { return ENDWHILE; }
+"do"	{ return DO; }
 "+"	{ return PLUS; }
 "-"	{ return MINUS; }
 "*"	{ return MUL; }
