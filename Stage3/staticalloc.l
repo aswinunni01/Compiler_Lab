@@ -24,6 +24,8 @@ char*  var;
 "while" { return WHILE; }
 "endwhile" { return ENDWHILE; }
 "do"	{ return DO; }
+"break"	{ return BREAK; }
+"continue" { return CONTINUE; }
 "+"	{ return PLUS; }
 "-"	{ return MINUS; }
 "*"	{ return MUL; }

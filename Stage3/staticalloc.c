@@ -5,8 +5,8 @@ int ifcount=0;
 int count=0;
 int label;
 int varstart = 4096;
-
-
+struct stack* Breakhead=NULL;
+struct stack* Continuehead=NULL;
 struct tnode* createTree(int val, int type, char* c,int nodetype, struct tnode* l,struct tnode*m, struct tnode* r){
 
 	struct tnode* temp;
@@ -74,6 +74,41 @@ void freeAllReg(){
 int getLabel(){
 
         return label++;
+}
+
+void addBreakLabel(int l){
+
+	struct stack* temp;
+	temp = (struct stack*)malloc(sizeof(struct stack));
+	temp->labelno = l;
+	temp->next = Breakhead;
+	Breakhead = temp;
+
+}
+
+int getBreakLabel(){
+	if(Breakhead==NULL)
+		return -1;
+	int l= Breakhead->labelno;
+	Breakhead = Breakhead->next;
+	return l;
+}
+void addContinueLabel(int l){
+
+        struct stack* temp;
+        temp = (struct stack*)malloc(sizeof(struct stack));
+        temp->labelno = l;
+        temp->next = Continuehead;
+        Continuehead = temp;
+
+}
+
+int getContinueLabel(){
+	if(Continuehead==NULL)
+		return -1;
+        int l= Continuehead->labelno;
+        Continuehead = Continuehead->next;
+        return l;
 }
 
 void writeheader(FILE *fptr){
@@ -261,6 +296,8 @@ int  codeGen(struct tnode *t, FILE *fptr){
 		case 6: {
 			 int label_1 = getLabel();
 			 int label_2 = getLabel();
+			 addBreakLabel(label_2);
+			 addContinueLabel(label_1);
 			 fprintf(fptr, "L%d:\n",label_1);
 			 reg_1 = codeGen(t->left, fptr);
 			 fprintf(fptr,"JZ R%d, L%d\n",reg_1,label_2);
@@ -269,6 +306,20 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			 fprintf(fptr, "L%d:\n", label_2);
 			 return -1;
 			}
+		case 10:{
+
+			int break_label = getBreakLabel();
+			if(break_label!=-1)
+				fprintf(fptr, "JMP L%d\n",break_label);
+			return -1;
+			}
+		case 11: {
+			int continue_label = getContinueLabel();
+			if(continue_label !=-1)
+				fprintf(fptr, "JMP L%d\n",continue_label);
+			return -1;
+			 }
+
 		default:
 			if(strcmp(t->varname,"EQU")==0){
 				reg_1 = codeGen(t->right, fptr);

@@ -10,6 +10,13 @@ typedef struct tnode{
 
 }tnode;
 
+typedef struct stack{
+
+	int labelno;
+	struct stack* next;
+};
+
+
 struct tnode* createTree(int val, int type, char* c,int nodetype, struct tnode* l, struct tnode* m, struct tnode* r);
 
 int getReg();

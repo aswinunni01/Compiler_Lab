@@ -17,8 +17,8 @@ struct tnode* end_node;
 }
 
 
-%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt
-%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO
+%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt 
+%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE
 %left PLUS MINUS
 %left MUL DIV
 
@@ -53,6 +53,8 @@ Stmt	: InputStmt ';'	{ $$ = $1; }
 	| AsgStmt';'	{ $$ = $1; } 
 	| Ifstmt	{ $$ = $1; }
 	| Whilestmt	{ $$ = $1; }
+	|  BREAK       { $$ = createTree(NULL, NULL, NULL, 10, NULL, NULL, NULL); }
+	| CONTINUE     { $$ = createTree(NULL, NULL, NULL, 11, NULL, NULL, NULL); }
 ;
 
 InputStmt : READ '(' E ')' { $$ =createIONode(-1,"Read",$3);}
