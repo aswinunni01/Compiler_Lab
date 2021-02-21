@@ -3,7 +3,7 @@ b=1;
 a=0;
 while(b!=0) do
 write(a);
-if(a==50) then
+if(a+50) then
 if(b==10) then
 a=a+b;
 continue

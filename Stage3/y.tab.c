@@ -1288,7 +1288,7 @@ yyreduce:
                         {	         end_node = createTree(NULL, 10, NULL,10, NULL,NULL, (yyvsp[-1].no));
 
       					printf("Completed\n");
-      					FILE *fptr = fopen("out.xexe", "w");
+      					FILE *fptr = fopen("out.xsm", "w");
 					 writeheader(fptr);
      					 codeGen((yyvsp[-1].no),fptr);
 					writefooter(fptr); 

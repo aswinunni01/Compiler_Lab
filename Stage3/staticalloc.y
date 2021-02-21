@@ -28,7 +28,7 @@ struct tnode* end_node;
 start : BEG Stlist END	{	         end_node = createTree(NULL, 10, NULL,10, NULL,NULL, $2);
 
       					printf("Completed\n");
-      					FILE *fptr = fopen("out.xexe", "w");
+      					FILE *fptr = fopen("out.xsm", "w");
 					 writeheader(fptr);
      					 codeGen($2,fptr);
 					writefooter(fptr); 

@@ -25,19 +25,34 @@ struct tnode* createTree(int val, int type, char* c,int nodetype, struct tnode* 
 }
 
 struct tnode* createIfNode(struct tnode* l, struct tnode* m, struct tnode* r){
-	return createTree(NULL, NULL, NULL, 5, l, m, r);
+	if(l->type == boolType)
+		return createTree(NULL, NULL, NULL, 5, l, m, r);
+	else{
+		yyerror("Type mismatch");
+		exit(1);
+	}
 }
 
 struct tnode* createWhileNode(struct tnode* l, struct tnode* r){
-
-	return createTree(NULL, NULL, NULL,6, l, NULL, r); 
+	if(l->type == boolType)
+		return createTree(NULL, NULL, NULL,6, l, NULL, r); 
+	else{
+		yyerror("Type mismatch");
+		exit(1);
+	}
 }
 
 struct tnode* createOpNode(char *c, int type, struct tnode* l, struct tnode* r){
-	if((l->type == intType) && (r->type == intType))
-		return createTree(NULL, intType, c, 1, l, NULL, r);
-	else	
-		return createTree(NULL, boolType, c, 1, l, NULL, r);
+	if((l->type == intType) && (r->type == intType)){
+		if(type == intType)
+			return createTree(NULL, intType, c, 1, l, NULL, r);
+		else	
+			return createTree(NULL, boolType, c, 1, l, NULL, r);
+	}
+	else{
+		yyerror("Cannot operate on boolType objects");
+		exit(1);
+	}
 }
 
 struct tnode* createVarNode(char *c){

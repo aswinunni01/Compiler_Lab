@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 31
-#define YY_END_OF_BUFFER 32
+#define YY_NUM_RULES 32
+#define YY_END_OF_BUFFER 33
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,13 +362,13 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[76] =
     {   0,
-        0,    0,   32,   30,   25,   31,   30,   27,   16,   14,
-       15,   17,    1,   26,   19,   18,   20,    2,    2,    2,
+        0,    0,   33,   31,   25,   26,   31,   28,   16,   14,
+       15,   17,    1,   27,   19,   18,   20,    2,    2,    2,
         2,    2,    2,    2,    2,    2,   23,    1,   21,   24,
        22,    0,    0,    0,   11,    0,    0,    5,    0,    0,
-        0,    0,    0,    0,    0,    0,   28,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,   29,    0,    0,    0,
         0,    0,    0,    0,    6,    0,    0,    4,    7,    0,
-        0,   29,   12,    0,    8,    0,    9,    3,    0,    0,
+        0,   30,   12,    0,    8,    0,    9,    3,    0,    0,
         0,    0,   13,   10,    0
     } ;
 
@@ -899,9 +899,10 @@ YY_RULE_SETUP
 {}
 	YY_BREAK
 case 26:
+/* rule 26 can match eol */
 YY_RULE_SETUP
 #line 41 "staticalloc.l"
-{ return *yytext; }
+;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
@@ -911,24 +912,29 @@ YY_RULE_SETUP
 case 28:
 YY_RULE_SETUP
 #line 43 "staticalloc.l"
-{ return END; }
+{ return *yytext; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 44 "staticalloc.l"
-{ return BEG; }
+{ return END; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 45 "staticalloc.l"
-{ yyerror("unknown character\n");exit(1);}
+{ return BEG; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 49 "staticalloc.l"
+#line 46 "staticalloc.l"
+{ yyerror("unknown character\n");exit(1);}
+	YY_BREAK
+case 32:
+YY_RULE_SETUP
+#line 50 "staticalloc.l"
 ECHO;
 	YY_BREAK
-#line 932 "lex.yy.c"
+#line 938 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1933,7 +1939,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 49 "staticalloc.l"
+#line 50 "staticalloc.l"
 
 
 int yywrap(void){

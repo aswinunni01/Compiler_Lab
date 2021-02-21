@@ -38,6 +38,7 @@ char*  var;
 "!="	{ return NE; }
 "=="	{ return EQU; }
 [ \t]	{}
+[\n]	;
 [;]	{ return *yytext; }
 [()]	{ return *yytext; }
 "end"	{ return END; }
