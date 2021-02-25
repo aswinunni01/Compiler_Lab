@@ -81,7 +81,11 @@ extern int yydebug;
     ENDWHILE = 282,                /* ENDWHILE  */
     DO = 283,                      /* DO  */
     BREAK = 284,                   /* BREAK  */
-    CONTINUE = 285                 /* CONTINUE  */
+    CONTINUE = 285,                /* CONTINUE  */
+    INT = 286,                     /* INT  */
+    STR = 287,                     /* STR  */
+    DECL = 288,                    /* DECL  */
+    ENDDECL = 289                  /* ENDDECL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -117,17 +121,21 @@ extern int yydebug;
 #define DO 283
 #define BREAK 284
 #define CONTINUE 285
+#define INT 286
+#define STR 287
+#define DECL 288
+#define ENDDECL 289
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 14 "staticalloc.y"
+#line 18 "staticalloc.y"
 
-
+	int num;
 	struct tnode *no;
 
-#line 131 "y.tab.h"
+#line 139 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
