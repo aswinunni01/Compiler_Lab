@@ -7,9 +7,9 @@ enddecl
 	read(name);
 	m=0;
 	n=0;
-	while(m<1) do
+	while(m<2) do
 		n=0;
-		while(n<2) do
+		while(n<5) do
 			read(arar[m][n]);
 			n=n+1;
 		endwhile;
@@ -17,9 +17,9 @@ enddecl
 	endwhile;
 	m=0;
 	n=0;
-	while(m<1) do
+	while(m<2) do
 		n=0;
-		while(n<2) do
+		while(n<5) do
 			write(arar[m][n]);
 			n=n+1;
 			endwhile;
