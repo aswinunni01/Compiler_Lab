@@ -1,29 +1,30 @@
 begin
 decl
-   int n,arr[50],i,j,dup;
+	int arar[10][10], i, m,n;
+	str name;
 enddecl
-  read(n);
-  i=0;
-  while(i<n) do
-    read(arr[i]);
-    i = i+1;
-  endwhile
-  i=0;
-  while(i<n) do
-    j=i;
-    while(j<n) do
-      if(arr[i]>arr[j]) then
-        dup = arr[i];
-        arr[i] = arr[j];
-        arr[j] = dup;
-      endif
-      j = j + 1;
-    endwhile
-    i = i+1;
-  endwhile
-  i=0;
-  while(i<n) do
-    write(arr[i]);
-    i = i+1;
-  endwhile
+
+	read(name);
+	m=0;
+	n=0;
+	while(m<1) do
+		n=0;
+		while(n<2) do
+			read(arar[m][n]);
+			n=n+1;
+		endwhile;
+		m=m+1;
+	endwhile;
+	m=0;
+	n=0;
+	while(m<1) do
+		n=0;
+		while(n<2) do
+			write(arar[m][n]);
+			n=n+1;
+			endwhile;
+		m=m+1;
+	endwhile;
+	write(name);
+	write(arar[0][0]);
 end

@@ -3,10 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "staticalloc.c"
+
 #define intType 21
 #define boolType 22
 #define strType 23
 #define arType 24
+#define matType 25
+
 int yylex(void);
 FILE *input_file;
 struct tnode* end_node;
@@ -24,20 +27,20 @@ struct tnode* end_node;
 %left PLUS MINUS
 %left MUL DIV
 
-
 %%
 
-start : BEG Declarations Stlist END	{	         end_node = createTree(NULL, 10, NULL,10, NULL, NULL,NULL, $3);
+start	: BEG Declarations Stlist END	{
 
-					printtable();
-      					printf("Completed\n");
-      					FILE *fptr = fopen("out.xsm", "w");
-					 writeheader(fptr);
-     					 codeGen($3,fptr);
-					writefooter(fptr); 
-      					exit(1); }
-      | BEG END	{ exit(1); }
-;
+						printtable();
+      						printf("Completed\n");
+	      					FILE *fptr = fopen("out.xsm", "w");
+						writeheader(fptr);
+	  					codeGen($3,fptr);
+						writefooter(fptr); 
+      						exit(1); 
+					}
+	| BEG END			{ exit(1); }
+	;
 
 Declarations : DECL DeclList ENDDECL | DECL ENDDECL {}
 	     ;
@@ -45,61 +48,67 @@ Declarations : DECL DeclList ENDDECL | DECL ENDDECL {}
 DeclList : DeclList Decl | Decl {}
 	 ;
 
-Decl : Type VarList ';' { while($2 != NULL) {
-     				struct Gsymbol* temp = Lookup($2->varname);
-				temp->type = $1;
-				$2 = $2->left;
-			  }
-			}
+Decl : Type VarList ';' 		{ 
+     						while($2 != NULL) {
+			     				struct Gsymbol* temp = Lookup($2->varname);
+							temp->type = $1;
+							$2 = $2->left;
+						}
+					}
 				
      ;
 
 
-Type : INT  { $$ = intType; }
-     | STR  { $$ = strType; }
+Type : INT  				{ $$ = intType; }
+     | STR  				{ $$ = strType; }
      ;
 
-VarList : VarList ',' ID { if(Lookup($3->varname) != NULL){
-                                yyerror("Variable already declared");   
-                                exit(1);}     
-			 Install($3->varname, NULL, 1,1); $3->left = $1; $$=$3; }
+VarList : VarList ',' ID 		{
+       						if(Lookup($3->varname) != NULL){
+			                                yyerror("Variable already declared");   
+			                                exit(1);}     
+					  	Install($3->varname, NULL, 1,1); $3->left = $1; $$=$3; }
 
-	| VarList ',' ID '[' NUM ']' { if(Lookup($3->varname) != NULL){
-                                yyerror("Variable already declared");
-                                exit(1);}
-                         Install($3->varname, NULL,$5->val, 1); $3->left = $1; $$=$3;
-			address= address + ($5->val-1);}
-        | VarList ',' ID '[' NUM ']''['NUM']' { if(Lookup($3->varname) != NULL){
-                                yyerror("Variable already declared");
-                                exit(1);}
-                         Install($3->varname, NULL, $5->val, $8->val); $3->left = $1; $$=$3;
-                        address= address + (($5->val*$8->val)-1);}
-
-
-	| ID '[' NUM ']' { if(Lookup($1->varname) != NULL){
-                                yyerror("Variable already declared");
-                                exit(1);}
-                        Install($1->varname, NULL,$3->val, 1); $$ = $1;
-			address = address + ($3->val-1); }
-        | ID '[' NUM ']''['NUM']' {if(Lookup($1->varname) != NULL){
-                                yyerror("Variable already declared");
-                                exit(1);}
-                        Install($1->varname, NULL,$3->val,$6->val, 1); $$ = $1;
-                        address = address + (($3->val*$6->val)-1); }
+	| VarList ',' ID '[' NUM ']' 	{
+						 if(Lookup($3->varname) != NULL){
+			                                yyerror("Variable already declared");
+			                                exit(1);}
+			                         Install($3->varname, NULL,$5->val, 1); $3->left = $1; $$=$3;
+						 address= address + ($5->val-1);}
+        | VarList ',' ID '[' NUM ']''['NUM']' { 
+						if(Lookup($3->varname) != NULL){
+			                                yyerror("Variable already declared");
+			                                exit(1);}
+			                        Install($3->varname, NULL, $5->val, $8->val); $3->left = $1; $$=$3;
+                        			address= address + (($5->val*$8->val)-1);}
 
 
-	| ID		{ if(Lookup($1->varname) != NULL){
-				yyerror("Variable already declared");
-				exit(1);}	
-			Install($1->varname, NULL,1, 1); $$ = $1; }
+	| ID '[' NUM ']'		{ 
+						if(Lookup($1->varname) != NULL){
+			                                yyerror("Variable already declared");
+			                                exit(1);}
+			                        Install($1->varname, NULL,$3->val, 1); $$ = $1;
+						address = address + ($3->val-1); }
+        | ID '[' NUM ']''['NUM']' 	{
+						if(Lookup($1->varname) != NULL){
+			                                yyerror("Variable already declared");
+			                                exit(1);}
+			                        Install($1->varname, NULL,$3->val,$6->val); $$ = $1;
+			                        address = address + (($3->val*$6->val)-1); }
+
+	| ID				{
+						 if(Lookup($1->varname) != NULL){
+							yyerror("Variable already declared");
+							exit(1);}	
+						Install($1->varname, NULL,1, 1); $$ = $1; }
 	;
 
 
-Ifstmt	:	IF  '('E')' THEN Stlist ELSE Stlist ENDIF {  $$ = createIfNode($3,$6,$8); }
-       |	IF '('E')' THEN Stlist ENDIF	    { $$ = createIfNode($3, $6, NULL); }
+Ifstmt	:	IF  '('E')' THEN Stlist ELSE Stlist ENDIF ';' {  $$ = createIfNode($3,$6,$8); }
+       	|	IF '('E')' THEN Stlist ENDIF ';'	      { $$ = createIfNode($3, $6, NULL); }
 ;
 
-Whilestmt :	WHILE '('E')' DO Stlist ENDWHILE	{ $$ = createWhileNode($3, $6); }
+Whilestmt :	WHILE '('E')' DO Stlist ENDWHILE ';'	  { $$ = createWhileNode($3, $6); }
 	;
 
 Stlist : Stlist Stmt 	{ $$ = createTree(NULL,3, NULL,3, NULL, $1,NULL, $2); }
@@ -151,12 +160,12 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 			$1->left = $3;
                         $$ = $1; }
 
-  | ID '[' NUM ']' '[' NUM ']' { if(Lookup($1->varname)==NULL){
+  | ID '[' E ']' '[' E ']' { if(Lookup($1->varname)==NULL){
 
 				   yyerror("Variable not declared\n");
 				   exit(1);
 				}
-				$1->nodeType = matType;
+				$1->nodetype = matType;
 
 				$1->type = Lookup($1->varname)->type;
 				$1->Gentry = Lookup($1->varname);

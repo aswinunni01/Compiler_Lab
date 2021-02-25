@@ -73,15 +73,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "staticalloc.c"
+
 #define intType 21
 #define boolType 22
 #define strType 23
 #define arType 24
+#define matType 25
+
 int yylex(void);
 FILE *input_file;
 struct tnode* end_node;
 
-#line 85 "y.tab.c"
+#line 88 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -201,12 +204,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "staticalloc.y"
+#line 18 "staticalloc.y"
 
 	int num;
 	struct tnode *no;
 
-#line 210 "y.tab.c"
+#line 213 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -589,16 +592,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   242
+#define YYLAST   261
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  41
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  15
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  45
+#define YYNRULES  46
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  102
+#define YYNSTATES  108
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   289
@@ -650,11 +653,11 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    30,    30,    39,    42,    42,    45,    45,    48,    58,
-      59,    62,    67,    72,    79,    84,    91,    98,    99,   102,
-     105,   106,   109,   110,   111,   112,   113,   114,   115,   118,
-     121,   125,   128,   129,   130,   131,   132,   133,   134,   135,
-     136,   137,   138,   139,   145,   154
+       0,    32,    32,    42,    45,    45,    48,    48,    51,    62,
+      63,    66,    72,    78,    86,    92,    99,   107,   108,   111,
+     114,   115,   118,   119,   120,   121,   122,   123,   124,   127,
+     130,   134,   137,   138,   139,   140,   141,   142,   143,   144,
+     145,   146,   147,   148,   154,   163,   176
 };
 #endif
 
@@ -699,7 +702,7 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-57)
+#define YYPACT_NINF (-85)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -713,17 +716,17 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      -6,     9,    14,   -57,    24,    75,   -57,   -57,   -57,   -57,
-      28,   -57,    13,    -8,     4,     7,   -57,     6,    10,   -57,
-     -57,     0,   -57,   -57,    22,   -57,    15,    29,    32,   187,
-     -57,   -57,    26,     5,     0,     0,     0,     0,     0,   122,
-     -57,   -57,   -57,   -57,   -57,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,    57,   -57,    61,   128,
-     151,    -3,   157,   180,   -57,   205,   213,   213,   219,   219,
-     205,   205,   205,   205,   205,   205,    37,    44,   -57,   -57,
-     -57,    55,    62,    54,    81,    75,    75,    83,    58,    -2,
-      43,    59,    63,   -57,    75,   -57,   -57,    84,    73,    60,
-     -57,   -57
+      -7,    27,    11,   -85,    21,   116,   -85,   -85,   -85,   -85,
+     100,   -85,     2,    -1,     3,     8,   -85,     7,    10,   -85,
+     -85,    40,   -85,   -85,    70,   -85,     5,    19,    23,   208,
+     -85,   -85,    24,   -31,    40,    40,    40,    40,    40,     1,
+     -85,   -85,   -85,   -85,   -85,    40,    40,    40,    40,    40,
+      40,    40,    40,    40,    40,    40,    45,   -85,    54,   129,
+     152,    83,   158,   181,   -85,   226,   232,   232,   238,   238,
+     226,   226,   226,   226,   226,   226,    28,    32,   -85,   -85,
+      34,    50,    42,    39,    66,    40,   116,   116,    72,    47,
+     187,    33,    84,    48,    56,   -85,    62,   116,    73,   -85,
+      96,   -85,   114,   -85,    74,    80,   -85,   -85
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -732,7 +735,7 @@ static const yytype_int16 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     3,     0,     0,     1,     9,    10,     5,
-       0,     7,     0,     0,     0,    43,    45,     0,     0,    27,
+       0,     7,     0,     0,     0,    43,    46,     0,     0,    27,
       28,     0,    25,    26,     0,    21,     0,     0,     0,     0,
        4,     6,    16,     0,     0,     0,     0,     0,     0,     0,
        2,    20,    22,    23,    24,     0,     0,     0,     0,     0,
@@ -740,15 +743,15 @@ static const yytype_int8 yydefact[] =
        0,     0,     0,     0,    42,    31,    32,    34,    33,    35,
       41,    36,    37,    39,    38,    40,     0,    11,    30,    29,
       44,     0,     0,    14,     0,     0,     0,     0,     0,     0,
-       0,     0,    12,    18,     0,    19,    15,     0,     0,     0,
-      17,    13
+       0,     0,     0,     0,    12,    45,     0,     0,     0,    15,
+       0,    18,     0,    19,     0,     0,    13,    17
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -57,   -57,   -57,   -57,   101,   -57,   -57,   -57,   -57,   -56,
-     -24,   -57,   -57,   -57,    72
+     -85,   -85,   -85,   -85,   106,   -85,   -85,   -85,   -85,   -84,
+     -24,   -85,   -85,   -85,   -20
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -763,60 +766,64 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      41,    13,    14,    46,    47,    48,    49,     1,    15,    16,
-      15,    16,    17,    93,     6,    50,    51,    52,    53,    54,
-      55,     3,    94,    32,    18,    13,    14,    19,    20,    89,
-      90,    34,    15,    16,    40,    80,    17,    21,    98,    21,
-      57,    58,     4,    35,    36,    37,    13,    14,    18,    38,
-      42,    19,    20,    15,    16,     7,     8,    17,     9,     7,
-       8,    21,    30,    56,    43,    41,    41,    44,    76,    18,
-      95,    77,    19,    20,    41,    83,    13,    14,    13,    14,
-      85,    84,    21,    15,    16,    15,    16,    17,   100,    17,
-      86,    87,    88,    39,    91,    99,    92,    96,   101,    18,
-      97,    18,    19,    20,    19,    20,    59,    60,    61,    62,
-      63,    31,    21,     0,    21,     0,     0,    65,    66,    67,
-      68,    69,    70,    71,    72,    73,    74,    75,    46,    47,
-      48,    49,     0,     0,    46,    47,    48,    49,     0,     0,
+      41,    39,    91,    92,    57,    58,     1,    46,    47,    48,
+      49,     6,    32,   102,    59,    60,    61,    62,    63,    50,
+      51,    52,    53,    54,    55,    65,    66,    67,    68,    69,
+      70,    71,    72,    73,    74,    75,    13,    14,    34,     3,
+      42,    64,    35,    15,    16,    36,    37,    17,    96,    38,
+      15,    16,     7,     8,    43,     9,    76,    97,    44,    18,
+       4,    56,    19,    20,    77,    90,    83,    41,    41,    84,
+      87,    85,    21,    13,    14,    86,    88,    89,    41,    21,
+      15,    16,    40,    93,    17,    94,    99,    13,    14,    46,
+      47,    48,    49,   100,    15,    16,    18,   101,    17,    19,
+      20,    50,    51,    52,    53,    54,    55,   104,   103,    21,
+      18,    98,   106,    19,    20,   107,    31,    13,    14,    13,
+      14,    80,     0,    21,    15,    16,    15,    16,    17,   105,
+      17,     7,     8,     0,    30,    46,    47,    48,    49,     0,
+      18,     0,    18,    19,    20,    19,    20,    50,    51,    52,
+      53,    54,    55,    21,     0,    21,     0,     0,    46,    47,
+      48,    49,     0,     0,    46,    47,    48,    49,     0,    78,
       50,    51,    52,    53,    54,    55,    50,    51,    52,    53,
       54,    55,     0,     0,     0,     0,     0,    46,    47,    48,
-      49,     0,    64,    46,    47,    48,    49,     0,    78,    50,
+      49,     0,    79,    46,    47,    48,    49,     0,    81,    50,
       51,    52,    53,    54,    55,    50,    51,    52,    53,    54,
-      55,     0,     0,     0,     0,     0,    46,    47,    48,    49,
-       0,    79,    45,    46,    47,    48,    49,    81,    50,    51,
-      52,    53,    54,    55,     0,    50,    51,    52,    53,    54,
-      55,    46,    47,    48,    49,     0,     0,     0,     0,     0,
-      82,    48,    49,    50,    51,    52,    53,    54,    55,     0,
-       0,    50,    51,    52,    53,    54,    55,    50,    51,    52,
-      53,    54,    55
+      55,     0,     0,    45,    46,    47,    48,    49,     0,     0,
+       0,    82,     0,     0,     0,    95,    50,    51,    52,    53,
+      54,    55,    46,    47,    48,    49,     0,     0,     0,     0,
+      48,    49,     0,     0,    50,    51,    52,    53,    54,    55,
+      50,    51,    52,    53,    54,    55,    50,    51,    52,    53,
+      54,    55
 };
 
 static const yytype_int8 yycheck[] =
 {
-      24,     3,     4,     6,     7,     8,     9,    13,    10,    11,
-      10,    11,    14,    15,     0,    18,    19,    20,    21,    22,
-      23,    12,    24,    10,    26,     3,     4,    29,    30,    85,
-      86,    39,    10,    11,    12,    38,    14,    39,    94,    39,
-      35,    36,    33,    39,    37,    39,     3,     4,    26,    39,
-      35,    29,    30,    10,    11,    31,    32,    14,    34,    31,
-      32,    39,    34,    37,    35,    89,    90,    35,    11,    26,
-      27,    10,    29,    30,    98,    38,     3,     4,     3,     4,
-      25,    37,    39,    10,    11,    10,    11,    14,    15,    14,
-      28,    37,    11,    21,    11,    11,    38,    38,    38,    26,
-      37,    26,    29,    30,    29,    30,    34,    35,    36,    37,
-      38,    10,    39,    -1,    39,    -1,    -1,    45,    46,    47,
-      48,    49,    50,    51,    52,    53,    54,    55,     6,     7,
-       8,     9,    -1,    -1,     6,     7,     8,     9,    -1,    -1,
+      24,    21,    86,    87,    35,    36,    13,     6,     7,     8,
+       9,     0,    10,    97,    34,    35,    36,    37,    38,    18,
+      19,    20,    21,    22,    23,    45,    46,    47,    48,    49,
+      50,    51,    52,    53,    54,    55,     3,     4,    39,    12,
+      35,    40,    39,    10,    11,    37,    39,    14,    15,    39,
+      10,    11,    31,    32,    35,    34,    11,    24,    35,    26,
+      33,    37,    29,    30,    10,    85,    38,    91,    92,    37,
+      28,    37,    39,     3,     4,    25,    37,    11,   102,    39,
+      10,    11,    12,    11,    14,    38,    38,     3,     4,     6,
+       7,     8,     9,    37,    10,    11,    26,    35,    14,    29,
+      30,    18,    19,    20,    21,    22,    23,    11,    35,    39,
+      26,    27,    38,    29,    30,    35,    10,     3,     4,     3,
+       4,    38,    -1,    39,    10,    11,    10,    11,    14,    15,
+      14,    31,    32,    -1,    34,     6,     7,     8,     9,    -1,
+      26,    -1,    26,    29,    30,    29,    30,    18,    19,    20,
+      21,    22,    23,    39,    -1,    39,    -1,    -1,     6,     7,
+       8,     9,    -1,    -1,     6,     7,     8,     9,    -1,    40,
       18,    19,    20,    21,    22,    23,    18,    19,    20,    21,
       22,    23,    -1,    -1,    -1,    -1,    -1,     6,     7,     8,
        9,    -1,    40,     6,     7,     8,     9,    -1,    40,    18,
       19,    20,    21,    22,    23,    18,    19,    20,    21,    22,
-      23,    -1,    -1,    -1,    -1,    -1,     6,     7,     8,     9,
-      -1,    40,     5,     6,     7,     8,     9,    40,    18,    19,
-      20,    21,    22,    23,    -1,    18,    19,    20,    21,    22,
-      23,     6,     7,     8,     9,    -1,    -1,    -1,    -1,    -1,
-      40,     8,     9,    18,    19,    20,    21,    22,    23,    -1,
-      -1,    18,    19,    20,    21,    22,    23,    18,    19,    20,
-      21,    22,    23
+      23,    -1,    -1,     5,     6,     7,     8,     9,    -1,    -1,
+      -1,    40,    -1,    -1,    -1,    38,    18,    19,    20,    21,
+      22,    23,     6,     7,     8,     9,    -1,    -1,    -1,    -1,
+       8,     9,    -1,    -1,    18,    19,    20,    21,    22,    23,
+      18,    19,    20,    21,    22,    23,    18,    19,    20,    21,
+      22,    23
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -831,9 +838,9 @@ static const yytype_int8 yystos[] =
       18,    19,    20,    21,    22,    23,    37,    35,    36,    55,
       55,    55,    55,    55,    40,    55,    55,    55,    55,    55,
       55,    55,    55,    55,    55,    55,    11,    10,    40,    40,
-      38,    40,    40,    38,    37,    25,    28,    37,    11,    50,
-      50,    11,    38,    15,    24,    27,    38,    37,    50,    11,
-      15,    38
+      38,    40,    40,    38,    37,    37,    25,    28,    37,    11,
+      55,    50,    50,    11,    38,    38,    15,    24,    27,    38,
+      37,    35,    50,    35,    11,    15,    38,    35
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -843,17 +850,17 @@ static const yytype_int8 yyr1[] =
       46,    47,    47,    47,    47,    47,    47,    48,    48,    49,
       50,    50,    51,    51,    51,    51,    51,    51,    51,    52,
       53,    54,    55,    55,    55,    55,    55,    55,    55,    55,
-      55,    55,    55,    55,    55,    55
+      55,    55,    55,    55,    55,    55,    55
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     4,     2,     3,     2,     2,     1,     3,     1,
-       1,     3,     6,     9,     4,     7,     1,     9,     7,     7,
+       1,     3,     6,     9,     4,     7,     1,    10,     8,     8,
        2,     1,     2,     2,     2,     1,     1,     1,     1,     4,
        4,     3,     3,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     1,     4,     1
+       3,     3,     3,     1,     4,     7,     1
 };
 
 
@@ -1321,306 +1328,331 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* start: BEG Declarations Stlist END  */
-#line 30 "staticalloc.y"
-                                        {	         end_node = createTree(NULL, 10, NULL,10, NULL, NULL,NULL, (yyvsp[-1].no));
+#line 32 "staticalloc.y"
+                                        {
 
-					printtable();
-      					printf("Completed\n");
-      					FILE *fptr = fopen("out.xsm", "w");
-					 writeheader(fptr);
-     					 codeGen((yyvsp[-1].no),fptr);
-					writefooter(fptr); 
-      					exit(1); }
-#line 1335 "y.tab.c"
+						printtable();
+      						printf("Completed\n");
+	      					FILE *fptr = fopen("out.xsm", "w");
+						writeheader(fptr);
+	  					codeGen((yyvsp[-1].no),fptr);
+						writefooter(fptr); 
+      						exit(1); 
+					}
+#line 1343 "y.tab.c"
     break;
 
   case 3: /* start: BEG END  */
-#line 39 "staticalloc.y"
-                { exit(1); }
-#line 1341 "y.tab.c"
+#line 42 "staticalloc.y"
+                                        { exit(1); }
+#line 1349 "y.tab.c"
     break;
 
   case 5: /* Declarations: DECL ENDDECL  */
-#line 42 "staticalloc.y"
+#line 45 "staticalloc.y"
                                                     {}
-#line 1347 "y.tab.c"
+#line 1355 "y.tab.c"
     break;
 
   case 7: /* DeclList: Decl  */
-#line 45 "staticalloc.y"
+#line 48 "staticalloc.y"
                                 {}
-#line 1353 "y.tab.c"
+#line 1361 "y.tab.c"
     break;
 
   case 8: /* Decl: Type VarList ';'  */
-#line 48 "staticalloc.y"
-                        { while((yyvsp[-1].no) != NULL) {
-     				struct Gsymbol* temp = Lookup((yyvsp[-1].no)->varname);
-				temp->type = (yyvsp[-2].num);
-				(yyvsp[-1].no) = (yyvsp[-1].no)->left;
-			  }
-			}
-#line 1364 "y.tab.c"
+#line 51 "staticalloc.y"
+                                        { 
+     						while((yyvsp[-1].no) != NULL) {
+			     				struct Gsymbol* temp = Lookup((yyvsp[-1].no)->varname);
+							temp->type = (yyvsp[-2].num);
+							(yyvsp[-1].no) = (yyvsp[-1].no)->left;
+						}
+					}
+#line 1373 "y.tab.c"
     break;
 
   case 9: /* Type: INT  */
-#line 58 "staticalloc.y"
-            { (yyval.num) = intType; }
-#line 1370 "y.tab.c"
+#line 62 "staticalloc.y"
+                                        { (yyval.num) = intType; }
+#line 1379 "y.tab.c"
     break;
 
   case 10: /* Type: STR  */
-#line 59 "staticalloc.y"
-            { (yyval.num) = strType; }
-#line 1376 "y.tab.c"
-    break;
-
-  case 11: /* VarList: VarList ',' ID  */
-#line 62 "staticalloc.y"
-                         { if(Lookup((yyvsp[0].no)->varname) != NULL){
-                                yyerror("Variable already declared");   
-                                exit(1);}     
-			 Install((yyvsp[0].no)->varname, NULL, 1); (yyvsp[0].no)->left = (yyvsp[-2].no); (yyval.no)=(yyvsp[0].no); }
+#line 63 "staticalloc.y"
+                                        { (yyval.num) = strType; }
 #line 1385 "y.tab.c"
     break;
 
-  case 12: /* VarList: VarList ',' ID '[' NUM ']'  */
-#line 67 "staticalloc.y"
-                                     { if(Lookup((yyvsp[-3].no)->varname) != NULL){
-                                yyerror("Variable already declared");
-                                exit(1);}
-                         Install((yyvsp[-3].no)->varname, NULL, 1); (yyvsp[-3].no)->left = (yyvsp[-5].no); (yyval.no)=(yyvsp[-3].no);
-			address= address + ((yyvsp[-1].no)->val-1);}
+  case 11: /* VarList: VarList ',' ID  */
+#line 66 "staticalloc.y"
+                                        {
+       						if(Lookup((yyvsp[0].no)->varname) != NULL){
+			                                yyerror("Variable already declared");   
+			                                exit(1);}     
+					  	Install((yyvsp[0].no)->varname, NULL, 1,1); (yyvsp[0].no)->left = (yyvsp[-2].no); (yyval.no)=(yyvsp[0].no); }
 #line 1395 "y.tab.c"
     break;
 
-  case 13: /* VarList: VarList ',' ID '[' NUM ']' '[' NUM ']'  */
+  case 12: /* VarList: VarList ',' ID '[' NUM ']'  */
 #line 72 "staticalloc.y"
-                                              { if(Lookup((yyvsp[-6].no)->varname) != NULL){
-                                yyerror("Variable already declared");
-                                exit(1);}
-                         Install((yyvsp[-6].no)->varname, NULL, 1); (yyvsp[-6].no)->left = (yyvsp[-8].no); (yyval.no)=(yyvsp[-6].no);
-                        address= address + (((yyvsp[-4].no)->val*(yyvsp[-1].no)->val)-1);}
-#line 1405 "y.tab.c"
+                                        {
+						 if(Lookup((yyvsp[-3].no)->varname) != NULL){
+			                                yyerror("Variable already declared");
+			                                exit(1);}
+			                         Install((yyvsp[-3].no)->varname, NULL,(yyvsp[-1].no)->val, 1); (yyvsp[-3].no)->left = (yyvsp[-5].no); (yyval.no)=(yyvsp[-3].no);
+						 address= address + ((yyvsp[-1].no)->val-1);}
+#line 1406 "y.tab.c"
+    break;
+
+  case 13: /* VarList: VarList ',' ID '[' NUM ']' '[' NUM ']'  */
+#line 78 "staticalloc.y"
+                                              { 
+						if(Lookup((yyvsp[-6].no)->varname) != NULL){
+			                                yyerror("Variable already declared");
+			                                exit(1);}
+			                        Install((yyvsp[-6].no)->varname, NULL, (yyvsp[-4].no)->val, (yyvsp[-1].no)->val); (yyvsp[-6].no)->left = (yyvsp[-8].no); (yyval.no)=(yyvsp[-6].no);
+                        			address= address + (((yyvsp[-4].no)->val*(yyvsp[-1].no)->val)-1);}
+#line 1417 "y.tab.c"
     break;
 
   case 14: /* VarList: ID '[' NUM ']'  */
-#line 79 "staticalloc.y"
-                         { if(Lookup((yyvsp[-3].no)->varname) != NULL){
-                                yyerror("Variable already declared");
-                                exit(1);}
-                        Install((yyvsp[-3].no)->varname, NULL, 1); (yyval.no) = (yyvsp[-3].no);
-			address = address + ((yyvsp[-1].no)->val-1); }
-#line 1415 "y.tab.c"
+#line 86 "staticalloc.y"
+                                        { 
+						if(Lookup((yyvsp[-3].no)->varname) != NULL){
+			                                yyerror("Variable already declared");
+			                                exit(1);}
+			                        Install((yyvsp[-3].no)->varname, NULL,(yyvsp[-1].no)->val, 1); (yyval.no) = (yyvsp[-3].no);
+						address = address + ((yyvsp[-1].no)->val-1); }
+#line 1428 "y.tab.c"
     break;
 
   case 15: /* VarList: ID '[' NUM ']' '[' NUM ']'  */
-#line 84 "staticalloc.y"
-                                  {if(Lookup((yyvsp[-6].no)->varname) != NULL){
-                                yyerror("Variable already declared");
-                                exit(1);}
-                        Install((yyvsp[-6].no)->varname, NULL, 1); (yyval.no) = (yyvsp[-6].no);
-                        address = address + (((yyvsp[-4].no)->val*(yyvsp[-1].no)->val)-1); }
-#line 1425 "y.tab.c"
+#line 92 "staticalloc.y"
+                                        {
+						if(Lookup((yyvsp[-6].no)->varname) != NULL){
+			                                yyerror("Variable already declared");
+			                                exit(1);}
+			                        Install((yyvsp[-6].no)->varname, NULL,(yyvsp[-4].no)->val,(yyvsp[-1].no)->val); (yyval.no) = (yyvsp[-6].no);
+			                        address = address + (((yyvsp[-4].no)->val*(yyvsp[-1].no)->val)-1); }
+#line 1439 "y.tab.c"
     break;
 
   case 16: /* VarList: ID  */
-#line 91 "staticalloc.y"
-                        { if(Lookup((yyvsp[0].no)->varname) != NULL){
-				yyerror("Variable already declared");
-				exit(1);}	
-			Install((yyvsp[0].no)->varname, NULL, 1); (yyval.no) = (yyvsp[0].no); }
-#line 1434 "y.tab.c"
-    break;
-
-  case 17: /* Ifstmt: IF '(' E ')' THEN Stlist ELSE Stlist ENDIF  */
-#line 98 "staticalloc.y"
-                                                          {  (yyval.no) = createIfNode((yyvsp[-6].no),(yyvsp[-3].no),(yyvsp[-1].no)); }
-#line 1440 "y.tab.c"
-    break;
-
-  case 18: /* Ifstmt: IF '(' E ')' THEN Stlist ENDIF  */
 #line 99 "staticalloc.y"
-                                                    { (yyval.no) = createIfNode((yyvsp[-4].no), (yyvsp[-1].no), NULL); }
-#line 1446 "y.tab.c"
+                                        {
+						 if(Lookup((yyvsp[0].no)->varname) != NULL){
+							yyerror("Variable already declared");
+							exit(1);}	
+						Install((yyvsp[0].no)->varname, NULL,1, 1); (yyval.no) = (yyvsp[0].no); }
+#line 1449 "y.tab.c"
     break;
 
-  case 19: /* Whilestmt: WHILE '(' E ')' DO Stlist ENDWHILE  */
-#line 102 "staticalloc.y"
-                                                        { (yyval.no) = createWhileNode((yyvsp[-4].no), (yyvsp[-1].no)); }
-#line 1452 "y.tab.c"
+  case 17: /* Ifstmt: IF '(' E ')' THEN Stlist ELSE Stlist ENDIF ';'  */
+#line 107 "staticalloc.y"
+                                                              {  (yyval.no) = createIfNode((yyvsp[-7].no),(yyvsp[-4].no),(yyvsp[-2].no)); }
+#line 1455 "y.tab.c"
+    break;
+
+  case 18: /* Ifstmt: IF '(' E ')' THEN Stlist ENDIF ';'  */
+#line 108 "staticalloc.y"
+                                                              { (yyval.no) = createIfNode((yyvsp[-5].no), (yyvsp[-2].no), NULL); }
+#line 1461 "y.tab.c"
+    break;
+
+  case 19: /* Whilestmt: WHILE '(' E ')' DO Stlist ENDWHILE ';'  */
+#line 111 "staticalloc.y"
+                                                          { (yyval.no) = createWhileNode((yyvsp[-5].no), (yyvsp[-2].no)); }
+#line 1467 "y.tab.c"
     break;
 
   case 20: /* Stlist: Stlist Stmt  */
-#line 105 "staticalloc.y"
+#line 114 "staticalloc.y"
                         { (yyval.no) = createTree(NULL,3, NULL,3, NULL, (yyvsp[-1].no),NULL, (yyvsp[0].no)); }
-#line 1458 "y.tab.c"
+#line 1473 "y.tab.c"
     break;
 
   case 21: /* Stlist: Stmt  */
-#line 106 "staticalloc.y"
+#line 115 "staticalloc.y"
                         { (yyval.no) = (yyvsp[0].no); }
-#line 1464 "y.tab.c"
+#line 1479 "y.tab.c"
     break;
 
   case 22: /* Stmt: InputStmt ';'  */
-#line 109 "staticalloc.y"
+#line 118 "staticalloc.y"
                         { (yyval.no) = (yyvsp[-1].no); }
-#line 1470 "y.tab.c"
+#line 1485 "y.tab.c"
     break;
 
   case 23: /* Stmt: OutputStmt ';'  */
-#line 110 "staticalloc.y"
+#line 119 "staticalloc.y"
                            { (yyval.no) = (yyvsp[-1].no); }
-#line 1476 "y.tab.c"
+#line 1491 "y.tab.c"
     break;
 
   case 24: /* Stmt: AsgStmt ';'  */
-#line 111 "staticalloc.y"
+#line 120 "staticalloc.y"
                         { (yyval.no) = (yyvsp[-1].no); }
-#line 1482 "y.tab.c"
+#line 1497 "y.tab.c"
     break;
 
   case 25: /* Stmt: Ifstmt  */
-#line 112 "staticalloc.y"
+#line 121 "staticalloc.y"
                         { (yyval.no) = (yyvsp[0].no); }
-#line 1488 "y.tab.c"
+#line 1503 "y.tab.c"
     break;
 
   case 26: /* Stmt: Whilestmt  */
-#line 113 "staticalloc.y"
+#line 122 "staticalloc.y"
                         { (yyval.no) = (yyvsp[0].no); }
-#line 1494 "y.tab.c"
+#line 1509 "y.tab.c"
     break;
 
   case 27: /* Stmt: BREAK  */
-#line 114 "staticalloc.y"
+#line 123 "staticalloc.y"
                        { (yyval.no) = createTree(NULL, NULL, NULL, 10,NULL, NULL, NULL, NULL); }
-#line 1500 "y.tab.c"
+#line 1515 "y.tab.c"
     break;
 
   case 28: /* Stmt: CONTINUE  */
-#line 115 "staticalloc.y"
+#line 124 "staticalloc.y"
                        { (yyval.no) = createTree(NULL, NULL, NULL, 11,NULL, NULL, NULL, NULL); }
-#line 1506 "y.tab.c"
+#line 1521 "y.tab.c"
     break;
 
   case 29: /* InputStmt: READ '(' E ')'  */
-#line 118 "staticalloc.y"
+#line 127 "staticalloc.y"
                            { (yyval.no) =createIONode(-1,"Read",(yyvsp[-1].no));}
-#line 1512 "y.tab.c"
+#line 1527 "y.tab.c"
     break;
 
   case 30: /* OutputStmt: WRITE '(' E ')'  */
-#line 121 "staticalloc.y"
+#line 130 "staticalloc.y"
                              { (yyval.no) = createIONode(-2,"Write",(yyvsp[-1].no)); }
-#line 1518 "y.tab.c"
+#line 1533 "y.tab.c"
     break;
 
   case 31: /* AsgStmt: E EQ E  */
-#line 125 "staticalloc.y"
+#line 134 "staticalloc.y"
                   { (yyval.no) = createTree(NULL, 1, "EQU",1,NULL, (yyvsp[-2].no),NULL, (yyvsp[0].no)); }
-#line 1524 "y.tab.c"
+#line 1539 "y.tab.c"
     break;
 
   case 32: /* E: E PLUS E  */
-#line 128 "staticalloc.y"
+#line 137 "staticalloc.y"
                 { (yyval.no) = createOpNode("ADD",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1530 "y.tab.c"
+#line 1545 "y.tab.c"
     break;
 
   case 33: /* E: E MUL E  */
-#line 129 "staticalloc.y"
+#line 138 "staticalloc.y"
                 { (yyval.no) = createOpNode("MUL",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1536 "y.tab.c"
+#line 1551 "y.tab.c"
     break;
 
   case 34: /* E: E MINUS E  */
-#line 130 "staticalloc.y"
+#line 139 "staticalloc.y"
                 { (yyval.no) = createOpNode("SUB",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1542 "y.tab.c"
+#line 1557 "y.tab.c"
     break;
 
   case 35: /* E: E DIV E  */
-#line 131 "staticalloc.y"
+#line 140 "staticalloc.y"
                 { (yyval.no) = createOpNode("DIV",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1548 "y.tab.c"
+#line 1563 "y.tab.c"
     break;
 
   case 36: /* E: E EQU E  */
-#line 132 "staticalloc.y"
+#line 141 "staticalloc.y"
                 { (yyval.no) = createOpNode("EQ",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1554 "y.tab.c"
+#line 1569 "y.tab.c"
     break;
 
   case 37: /* E: E LT E  */
-#line 133 "staticalloc.y"
+#line 142 "staticalloc.y"
                 { (yyval.no) = createOpNode("LT",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1560 "y.tab.c"
+#line 1575 "y.tab.c"
     break;
 
   case 38: /* E: E GT E  */
-#line 134 "staticalloc.y"
+#line 143 "staticalloc.y"
                 { (yyval.no) = createOpNode("GT",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1566 "y.tab.c"
+#line 1581 "y.tab.c"
     break;
 
   case 39: /* E: E LTE E  */
-#line 135 "staticalloc.y"
+#line 144 "staticalloc.y"
                 { (yyval.no) = createOpNode("LE",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1572 "y.tab.c"
+#line 1587 "y.tab.c"
     break;
 
   case 40: /* E: E GTE E  */
-#line 136 "staticalloc.y"
+#line 145 "staticalloc.y"
                 { (yyval.no) = createOpNode("GE",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1578 "y.tab.c"
+#line 1593 "y.tab.c"
     break;
 
   case 41: /* E: E NE E  */
-#line 137 "staticalloc.y"
+#line 146 "staticalloc.y"
                 { (yyval.no) = createOpNode("NE",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1584 "y.tab.c"
+#line 1599 "y.tab.c"
     break;
 
   case 42: /* E: '(' E ')'  */
-#line 138 "staticalloc.y"
+#line 147 "staticalloc.y"
                 { (yyval.no) = (yyvsp[-1].no); }
-#line 1590 "y.tab.c"
+#line 1605 "y.tab.c"
     break;
 
   case 43: /* E: ID  */
-#line 139 "staticalloc.y"
+#line 148 "staticalloc.y"
                 { if(Lookup((yyvsp[0].no)->varname) == NULL){
-			yyerror("Variable not declared");
+			yyerror("Variable not declared\n");
 			exit(1); }
 			(yyvsp[0].no)->type = Lookup((yyvsp[0].no)->varname)->type;
 			(yyvsp[0].no)->Gentry = Lookup((yyvsp[0].no)->varname);
 			(yyval.no) = (yyvsp[0].no); }
-#line 1601 "y.tab.c"
+#line 1616 "y.tab.c"
     break;
 
   case 44: /* E: ID '[' E ']'  */
-#line 145 "staticalloc.y"
+#line 154 "staticalloc.y"
                  { if(Lookup((yyvsp[-3].no)->varname) == NULL){
-                        yyerror("Variable not declared");
+                        yyerror("Variable not declared\n");
                         exit(1); }
                         (yyvsp[-3].no)->nodetype = arType;
 			(yyvsp[-3].no)->type = Lookup((yyvsp[-3].no)->varname)->type;
                         (yyvsp[-3].no)->Gentry = Lookup((yyvsp[-3].no)->varname);
 			(yyvsp[-3].no)->left = (yyvsp[-1].no);
                         (yyval.no) = (yyvsp[-3].no); }
-#line 1614 "y.tab.c"
+#line 1629 "y.tab.c"
     break;
 
-  case 45: /* E: NUM  */
-#line 154 "staticalloc.y"
+  case 45: /* E: ID '[' E ']' '[' E ']'  */
+#line 163 "staticalloc.y"
+                           { if(Lookup((yyvsp[-6].no)->varname)==NULL){
+
+				   yyerror("Variable not declared\n");
+				   exit(1);
+				}
+				(yyvsp[-6].no)->nodetype = matType;
+
+				(yyvsp[-6].no)->type = Lookup((yyvsp[-6].no)->varname)->type;
+				(yyvsp[-6].no)->Gentry = Lookup((yyvsp[-6].no)->varname);
+				(yyvsp[-6].no)->left = (yyvsp[-4].no);
+				(yyvsp[-6].no)->right = (yyvsp[-1].no);
+				(yyval.no) = (yyvsp[-6].no); }
+#line 1646 "y.tab.c"
+    break;
+
+  case 46: /* E: NUM  */
+#line 176 "staticalloc.y"
                 { (yyval.no) = (yyvsp[0].no); }
-#line 1620 "y.tab.c"
+#line 1652 "y.tab.c"
     break;
 
 
-#line 1624 "y.tab.c"
+#line 1656 "y.tab.c"
 
       default: break;
     }
@@ -1814,7 +1846,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 158 "staticalloc.y"
+#line 180 "staticalloc.y"
 
 
 yyerror(char const* s){

@@ -130,7 +130,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "staticalloc.y"
+#line 18 "staticalloc.y"
 
 	int num;
 	struct tnode *no;

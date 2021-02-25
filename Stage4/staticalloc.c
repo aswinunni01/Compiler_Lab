@@ -3,6 +3,7 @@
 #define boolType 22
 #define strType 23
 #define arType 24
+#define matType 25
 int ifcount=0;
 int count=0;
 int label;
@@ -68,7 +69,7 @@ struct tnode* createVarNode(char *c){
 }
 
 struct tnode* createIONode(int val, char *c, struct tnode* r){
-	if(r->type == intType || r->type == arType){
+	if(r->type == intType || r->type == arType || r->type == matType || r->type  == strType){
 		return	createTree(val,NULL, c, 2, NULL, NULL, NULL, r);
 	}
 	else{
@@ -261,8 +262,14 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			fprintf(fptr,"MOV R%d, [%d]\n", reg_1, t->Gentry->binding);
 			return reg_1;
 		case 2:
+			if(strcmp(t->varname,"Read")==0){
+                                reg_2 = getLoc(t->right, fptr);
+                        }
+                        else{
+                                reg_2 = codeGen(t->right, fptr);
+                        }
+
 			reg_1 = getReg();
-			reg_2 = getLoc(t->right, fptr);
 			fprintf(fptr, "MOV SP, 4121\n");
 			fprintf(fptr, "MOV R%d, \"%s\"\n",reg_1, t->varname);
 			fprintf(fptr, "PUSH R%d\n",reg_1);
@@ -274,8 +281,7 @@ int  codeGen(struct tnode *t, FILE *fptr){
 
 			}
 			else{
-
-				fprintf(fptr, "MOV R%d, [R%d]\n",reg_1,reg_2);
+				fprintf(fptr, "MOV R%d, R%d\n",reg_1,reg_2);
 				fprintf(fptr, "PUSH R%d\n",reg_1);
 			}
 			fprintf(fptr, "PUSH R%d\n",reg_1);
@@ -392,8 +398,8 @@ int getLoc(struct tnode* t, FILE *fptr){
 		case matType: {
 				int offset_1 = codeGen(t->left, fptr);
 				int offset_2 = codeGen(t->right, fptr);
-				int offset = offset_1*t->Gentry->size[0] + offset_2;
-				fprintf(fptr,"MUL R%d, %d\n", offet_1, t->Gentry->size[0]);
+				int offset = offset_1*t->Gentry->size[1] + offset_2;
+				fprintf(fptr,"MUL R%d, %d\n", offset_1, t->Gentry->size[1]);
 				fprintf(fptr, "ADD R%d, R%d\n",  offset_1, offset_2);
 				fprintf(fptr, "ADD R%d, %d\n", offset_1, loc);
 				return offset_1;			
