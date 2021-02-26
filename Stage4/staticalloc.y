@@ -29,13 +29,21 @@ struct tnode* end_node;
 
 %%
 
-start	: BEG Declarations Stlist END	{
+start	: BEG Declarations Stlist END 	{
+                                                printf("Completed\n");
+                                                FILE *fptr = fopen("out.xsm", "w");
+                                                writeheader(fptr);
+                                                codeGen($3,fptr);
+                                                writefooter(fptr);
+                                                exit(1);
+                                        }
 
-						printtable();
+      	| BEG Stlist END
+					 {
       						printf("Completed\n");
 	      					FILE *fptr = fopen("out.xsm", "w");
 						writeheader(fptr);
-	  					codeGen($3,fptr);
+	  					codeGen($2,fptr);
 						writefooter(fptr); 
       						exit(1); 
 					}
@@ -180,7 +188,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 %%
 
 yyerror(char const* s){
-	printf("yyerror %s", s);
+	printf("yyerror %s\n", s);
 }
 
 int main(int argc, char *argv[]){
