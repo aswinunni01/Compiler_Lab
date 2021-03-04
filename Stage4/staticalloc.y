@@ -13,6 +13,7 @@
 int yylex(void);
 FILE *input_file;
 struct tnode* end_node;
+
 %}
 
 %union{
@@ -32,6 +33,7 @@ struct tnode* end_node;
 start	: BEG Declarations Stlist END 	{
                                                 printf("Completed\n");
                                                 FILE *fptr = fopen("out.xsm", "w");
+						printtable();
                                                 writeheader(fptr);
                                                 codeGen($3,fptr);
                                                 writefooter(fptr);
@@ -60,8 +62,7 @@ Decl : Type VarList ';' 		{
      						while($2 != NULL) {
 			     				struct Gsymbol* temp = Lookup($2->varname);
 							temp->type = $1;
-							$2 = $2->left;
-						}
+							$2 = $2->left;}
 					}
 				
      ;
@@ -70,6 +71,7 @@ Decl : Type VarList ';' 		{
 Type : INT  				{ $$ = intType; }
      | STR  				{ $$ = strType; }
      ;
+
 
 VarList : VarList ',' ID 		{
        						if(Lookup($3->varname) != NULL){

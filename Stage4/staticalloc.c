@@ -4,14 +4,18 @@
 #define strType 23
 #define arType 24
 #define matType 25
+
 int ifcount=0;
 int count=0;
 int label;
 int varstart = 4096;
 int address = 4095;
+
 struct Gsymbol *st = NULL;
 struct stack* Breakhead=NULL;
 struct stack* Continuehead=NULL;
+
+
 struct tnode* createTree(int val, int type, char* c,int nodetype, struct Gsymbol *Gentry, struct tnode* l,struct tnode*m, struct tnode* r){
 
 	struct tnode* temp;
@@ -301,6 +305,7 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			codeGen(t->right, fptr);
 			freeAllReg();
 			return -1;
+
 		case 5:{
 			int label_1 = getLabel();
 			int label_2 = getLabel();
@@ -320,6 +325,7 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			}
 			return -1;
 			}
+
 		case 6: {
 			 int label_1 = getLabel();
 			 int label_2 = getLabel();
@@ -333,6 +339,7 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			 fprintf(fptr, "L%d:\n", label_2);
 			 return -1;
 			}
+
 		case 10:{
 
 			int break_label = getBreakLabel();
@@ -340,19 +347,21 @@ int  codeGen(struct tnode *t, FILE *fptr){
 				fprintf(fptr, "JMP L%d\n",break_label);
 			return -1;
 			}
+
 		case 11: {
 			int continue_label = getContinueLabel();
 			if(continue_label !=-1)
 				fprintf(fptr, "JMP L%d\n",continue_label);
 			return -1;
 			 }
+
 		case arType: {
                         reg_1 = getReg();
 			int locReg = getLoc(t, fptr);
 			fprintf(fptr,"MOV R%d, [R%d]\n", reg_1 ,locReg);	
 			return reg_1;
-
 			     }
+
 		case matType: {
 			reg_1 = getReg();
 			int locReg = getLoc(t,fptr);
@@ -373,9 +382,8 @@ int  codeGen(struct tnode *t, FILE *fptr){
 				freeReg();
 				return reg_1;
 			}
-		}
-
 	}
+}
 
 int getLoc(struct tnode* t, FILE *fptr){
 

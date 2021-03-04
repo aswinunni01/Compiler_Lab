@@ -1,6 +1,6 @@
 file = staticalloc
 
-all : out
+all : out clean
 
 yacc :
 	yacc -d $(file).y

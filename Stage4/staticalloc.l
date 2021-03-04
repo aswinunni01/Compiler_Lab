@@ -5,6 +5,7 @@
 #include "staticalloc.h"
 #define intType 21
 #define boolType 22
+
 int c=0;
 int number;
 char*  var;
