@@ -1,5 +1,5 @@
 decl 
-  int n,arr[10],i,j,dup, BubbleSort(int first, int last); 
+  int n,arr[10],i,j, BubbleSort(int first, int last), dup;
 enddecl
 
 int BubbleSort(int first, int last)
@@ -30,7 +30,7 @@ int BubbleSort(int first, int last)
 int main()
 {
   decl
-    int r;
+   int r;
   enddecl
 
   begin

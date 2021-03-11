@@ -224,7 +224,7 @@ OutputStmt : WRITE '(' E ')' { $$ = createIONode(-2,"Write",$3); }
 	   ;
 
 
-AsgStmt : E EQ E  { $$ = createTree(NULL, 1, "EQU",1,NULL, $1,NULL, $3); }
+AsgStmt : E EQ E  { $$ = createEQNode($1, $3); }
 	;
 
 E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }

@@ -1765,7 +1765,7 @@ yyreduce:
 
   case 52: /* AsgStmt: E EQ E  */
 #line 227 "staticalloc.y"
-                  { (yyval.no) = createTree(NULL, 1, "EQU",1,NULL, (yyvsp[-2].no),NULL, (yyvsp[0].no)); }
+                  { (yyval.no) = createEQNode((yyvsp[-2].no), (yyvsp[0].no)); }
 #line 1770 "y.tab.c"
     break;
 

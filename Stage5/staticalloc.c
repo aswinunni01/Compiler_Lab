@@ -44,6 +44,13 @@ struct tnode* createTree(int val, int type, char* c,int nodetype, struct Gsymbol
 	return temp;
 }
 
+struct tnode* createEQNode(struct tnode* l, struct tnode*r){
+	if(l->type != r->type){
+		yyerror("Equation LHS and RHS donot match types");
+		exit(1);
+	}
+	return createTree(NULL, 1, "EQU", 1, NULL, l, NULL, r);
+}
 struct tnode* createIfNode(struct tnode* l, struct tnode* m, struct tnode* r){
 	if(l->type == boolType)
 		return createTree(NULL, NULL, NULL, 5,NULL, l, m, r);
