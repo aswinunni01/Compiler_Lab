@@ -149,7 +149,7 @@ int getContinueLabel(){
 
 void writeheader(FILE *fptr){
 
-        fprintf(fptr,"0\nMAIN\n0\n0\n0\n0\n0\n0\nMOV SP, 4095\nMOV BP, 4096\nPUSH R0\nCALL MAIN\nINT 10\n");
+        fprintf(fptr,"0\n2056\n0\n0\n0\n0\n0\n0\nBRKP\nMOV SP, %d\nMOV BP, 4096\nPUSH R0\nCALL MAIN\nINT 10\n", address+1);
 
 }
 
@@ -457,7 +457,6 @@ int  codeGen(struct tnode *t, FILE *fptr){
 		case FnCall: {
 			int n_reg = -1;
 			for(int i=0; i<count; i++){
-				printf("%d\n",count);
 				fprintf(fptr, "PUSH R%d\n",i);
 				n_reg++;
 			}
@@ -577,10 +576,8 @@ void Linstall(char *name, int type, int binding){
 }
 
 struct Lsymbol* Llookup(char *name){
-	printf("New Lookup %s\n",name);
 	struct Lsymbol* temp = Lhead;
 	while(temp!=NULL){
-		printf("%s %d\n",temp->name, temp->binding);
 		if(strcmp(temp->name, name)==0)
 			return temp;
 		temp = temp->next;}

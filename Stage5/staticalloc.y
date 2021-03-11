@@ -169,10 +169,12 @@ Body : BEG Stlist Retstmt END		{ $3->left=$2; $$ = $3; }
      ;
 
 Retstmt : RET E ';'			{ $$ = createTree(NULL, RetNode, NULL, RetNode, NULL, NULL, NULL, $2); }
-MainBlock : INT MAIN '(' ')'  '{'LdeclBlock Body '}'		{ 	Lhead=NULL;
+MainBlock : INT MAIN '(' ')'  '{'LdeclBlock Body '}'		{ 	ploc=-3; lloc=0;
 	  								struct tnode* temp = $7->left;
 									$7->left = NULL;
-	  								$$ = createTree(NULL, NULL, "main", MnNode, NULL, temp, NULL,$7); }
+	  								$$ = createTree(NULL, NULL, "main", MnNode, NULL, temp, NULL,$7);
+									$$->Lentry = Lhead;
+									Lhead = NULL; }
 	  ;
 
 LdeclBlock : DECL LDecList ENDDECL	{}
@@ -300,7 +302,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 				}
   ;
 
-ArgList : ArgList',' E		{ $3->middle = $1; }
+ArgList : ArgList',' E		{ $3->middle = $1; $$=$3;}
 	| E			{ $$=$1; }
 
         ;
