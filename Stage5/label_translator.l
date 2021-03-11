@@ -12,13 +12,15 @@ int ip=-9;
 
 
 labels	[\AL][0-9][0-9]*
+flabels [\AF][0-9][0-9]*
 label	[L][0-9][0-9]*
-
+flabel  [F][0-9][0-9]*
+main "MAIN"
 %%
-({labels})([:])([\n])	{ 
+({labels}|{flabels}|{main})([:])([\n])	{ 
 			  head =  addnode(head, yytext, 2058+(2*ip));
 		}
-{label}		 { if(c==1){
+({label}|{flabel}|{main})		 { if(c==1){
                  int d = getadd(head, yytext);
                  fprintf(fptr,"%d",d); }
           else

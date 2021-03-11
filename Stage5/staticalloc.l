@@ -31,7 +31,8 @@ struct Gsymbol *Gentry;
 "int"	{ return INT; }
 "str"	{ return STR; }
 "decl"	{ return DECL; }
-"return" { return Retstmt; }
+"main"	{ return MAIN; }
+"return" { return RET; }
 "enddecl" { return ENDDECL; }
 [a-zA-Z]+[a-zA-Z0-9]* { var = strdup(yytext); yylval.no = createTree(NULL, NULL, var, 4, NULL, NULL, NULL, NULL);   return ID; }
 "+"	{ return PLUS; }

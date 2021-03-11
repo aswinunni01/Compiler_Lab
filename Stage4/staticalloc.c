@@ -432,8 +432,10 @@ void Install(char *name, int type, int size_0, int size_1){
 }
 
 struct Gsymbol* Lookup(char *name){
+	printf("New Lookup for %s \n",name);
 	struct Gsymbol* head = st;
 	while(head!=NULL ){
+		printf("%s\n",head->name);
 		if(strcmp(head->name, name)==0)
 			return head;
 		head=head->next;

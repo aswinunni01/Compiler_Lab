@@ -12,11 +12,16 @@
 
 #define FnNode 12
 #define FnBlock 13
+#define MnNode 14
+#define FnCall 15
+#define ArgType 16
+#define RetNode 17
 
 int yylex(void);
 FILE *input_file;
 struct tnode* end_node;
-
+int ploc=-3;
+int lloc=0;
 %}
 
 %union{
@@ -26,22 +31,23 @@ struct tnode* end_node;
 }
 
 
-%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt GidList FdefBlock Fdef Body 
+%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt GidList FdefBlock Fdef Body MainBlock ArgList Retstmt
 %type <np> ParamList Param
 %type <num> Type
-%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE INT STR DECL ENDDECL MAIN Retstmt
+%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE INT STR DECL ENDDECL MAIN RET
 %left PLUS MINUS
 %left MUL DIV
 
 %%
 
-start	: BEG GdeclBlock FdefBlock MainBlock END 	{
+start	: GdeclBlock FdefBlock MainBlock 	{
                                                 printf("Completed\n");
                                                 FILE *fptr = fopen("out.xsm", "w");
 						printtable();
                                                 writeheader(fptr);
-                                               // codeGen($3,fptr);
-                                                writefooter(fptr);
+						codeGen($2, fptr);
+                                        	codeGen($3,fptr);
+ //                                               writefooter(fptr);
                                                 exit(1);
                                         }
 
@@ -51,11 +57,11 @@ start	: BEG GdeclBlock FdefBlock MainBlock END 	{
 	      					FILE *fptr = fopen("out.xsm", "w");
 						writeheader(fptr);
 	  					//codeGen($2,fptr);
-						writefooter(fptr); 
+//						writefooter(fptr); 
       						exit(1); 
 					}
 	| BEG MainBlock END			{ exit(1); }
-	| GdeclBlock	{ printf("Completed now \n"); printtable(); exit(1); }
+	| GdeclBlock FdefBlock 		{ printf("Completed now \n"); printtable(); exit(1); }
 	;
 
 
@@ -102,7 +108,9 @@ GidList : GidList ',' ID		{
                                                 if(Lookup($3->varname)!=NULL){
                                                         yyerror("Function name already declared");
                                                         exit(1);}
-                                                Install($3->varname, NULL, 1, 1,$5, getFlabel()); $$ = $3; }
+                                                Install($3->varname, NULL, 1, 1,$5, getFlabel()); $3->left = $1;  $$ = $3;
+						ploc=-3; lloc=0; Lhead=NULL;
+						 }
 
 
 
@@ -129,7 +137,9 @@ GidList : GidList ',' ID		{
 						if(Lookup($1->varname)!=NULL){
 							yyerror("Function name already declared");
 							exit(1);}
-						Install($1->varname, NULL, 1, 1,$3, getFlabel()); $$ = $1; }
+						Install($1->varname, NULL, 1, 1,$3, getFlabel()); $$ = $1;
+						ploc=-3; lloc=0; Lhead=NULL;
+					}
 					
 	;
 
@@ -137,36 +147,51 @@ GidList : GidList ',' ID		{
 FdefBlock	: FdefBlock Fdef				{ $$ = createTree(NULL,FnBlock, NULL,FnBlock, NULL, $1,NULL, $2);}
 	  	| Fdef						{ $$ = $1; }
 ;
-Fdef 	: Type ID '(' ParamList ')' '{' LdeclBlock Body '}'	{ checkvalid($1, $4, Lookup($2->varname));
-								  $$ = createTree( NULL, NULL, $2->varname, FnNode, Lookup($2->varname), NULL, NULL, $8);  	     
- }
+Fdef 	: Type ID '(' ParamList ')' '{' LdeclBlock Body '}'	{ checkvalid($1, $4, Lookup($2->varname)); 
+      								  ploc=-3; lloc=0; 
+								  struct tnode *temp = $8->left;
+								  $8->left = NULL;
+								  $$ = createTree( NULL, NULL, $2->varname, FnNode, Lookup($2->varname), temp, NULL, $8);
+								  $$->Lentry = Lhead;
+								  Lhead = NULL;
+								}
       ;
 
-ParamList : ParamList',' Param 		{ $3->next = $1; $$ = $3; }
-	  | Param			{ $$ = $1; }
+ParamList : ParamList',' Param 		{ $3->next = $1; $$ = $3; Linstall($3->name, $3->type, ploc--); }
+	  | Param			{ $$ = $1; Linstall($1->name, $1->type, ploc--); }
 	  | 				{ $$ = NULL; }
 	  ;
 
 Param : Type ID				{ $$ = Pinstall($2->varname, $1, NULL); }
       ;
 
-Body : BEG Stlist Retstmt END		{ $$ = $2; }
+Body : BEG Stlist Retstmt END		{ $3->left=$2; $$ = $3; }
      ;
-MainBlock : INT MAIN '(' ')'  '{'LdeclBlock Body '}'
+
+Retstmt : RET E ';'			{ $$ = createTree(NULL, RetNode, NULL, RetNode, NULL, NULL, NULL, $2); }
+MainBlock : INT MAIN '(' ')'  '{'LdeclBlock Body '}'		{ 	Lhead=NULL;
+	  								struct tnode* temp = $7->left;
+									$7->left = NULL;
+	  								$$ = createTree(NULL, NULL, "main", MnNode, NULL, temp, NULL,$7); }
 	  ;
 
-LdeclBlock : DECL LDecList ENDDECL
-	   | DECL ENDDECL
+LdeclBlock : DECL LDecList ENDDECL	{}
+	   | DECL ENDDECL		{}
+	;	
 
-
-LDecList : LDecList LDecl
-	 | LDecl 
+LDecList : LDecList LDecl		{}
+	 | LDecl 			{}
 	 ;
 
-LDecl    : Type IdList
+LDecl    : Type IdList ';'			{	struct Lsymbol *Ltemp = Lhead;
+                                                while(Ltemp != NULL) {
+                                                        Ltemp->type = $1;
+                                                        Ltemp = Ltemp->next;}
+                                        }
 	 ;
-IdList : IdList',' ID
-       | ID
+
+IdList : IdList',' ID			{ Linstall($3->varname, NULL, ++lloc); }
+       | ID				{ Linstall($1->varname, NULL, ++lloc); }
        ;
 
 
@@ -182,7 +207,7 @@ Stlist : Stlist Stmt 	{ $$ = createTree(NULL,3, NULL,3, NULL, $1,NULL, $2); }
 ;
 
 Stmt	: InputStmt ';'	{ $$ = $1; }
-     	| OutputStmt';'    { $$ = $1; }
+     	| OutputStmt';'    {$$ = $1; }
 	| AsgStmt';'	{ $$ = $1; } 
 	| Ifstmt	{ $$ = $1; }
 	| Whilestmt	{ $$ = $1; }
@@ -211,12 +236,22 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
   | E GTE E 	{ $$ = createOpNode("GE",boolType, $1, $3); } 
   | E NE E 	{ $$ = createOpNode("NE",boolType, $1, $3); } 
   | '(' E ')' 	{ $$ = $2; }
-  | ID		{ if(Lookup($1->varname) == NULL){
-			yyerror("Variable not declared\n");
-			exit(1); }
+  | ID		{ 
+		  if(Llookup($1->varname)==NULL){
+			if(Lookup($1->varname) == NULL){
+	                        yyerror("Variable not declared\n");
+        	                exit(1); }
 			$1->type = Lookup($1->varname)->type;
-			$1->Gentry = Lookup($1->varname);
-			$$ = $1; }
+                        $1->Gentry = Lookup($1->varname);
+			$1->Lentry = NULL;
+                        $$ = $1; }
+		  else{
+			$1->type = Llookup($1->varname)->type;
+			$1->Gentry = NULL;
+			$1->Lentry = Llookup($1->varname);
+			$$ = $1;
+		   }
+		}
   | ID '[' E ']' { if(Lookup($1->varname) == NULL){
                         yyerror("Variable not declared\n");
                         exit(1); }
@@ -240,12 +275,34 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 				$$ = $1; }
 
   | NUM		{ $$ = $1; }
-  | ID '(' ')'
-  | ID '(' ArgList ')'
+  | ID '(' ')' 		{
+				if(Lookup($1->varname) == NULL){
+                                        yyerror("Function not declared before calling \n");
+                                        exit(1);
+                                }
+				$1->nodetype = FnCall;
+				$1->Gentry = Lookup($1->varname);
+				$1->type = $1->Gentry->type;
+				$1->left = NULL;
+				$$ = $1;
+}
+
+  | ID '(' ArgList ')' 		{ 
+				if(Lookup($1->varname) == NULL){
+					yyerror("Function not declared before calling \n");
+					exit(1);
+				}	
+				$1->nodetype = FnCall;
+				$1->Gentry = Lookup($1->varname);
+				$1->type = $1->Gentry->type;
+				$1->middle = $3;
+				$$ = $1;
+				}
   ;
 
-ArgList : ArgList',' E
-	| E
+ArgList : ArgList',' E		{ $3->middle = $1; }
+	| E			{ $$=$1; }
+
         ;
 
 

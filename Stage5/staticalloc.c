@@ -5,6 +5,13 @@
 #define arType 24
 #define matType 25
 
+#define FnNode 12
+#define FnBlock 13
+#define MnNode 14
+#define FnCall 15
+#define ArgType 16
+#define RetNode 17
+
 int ifcount=0;
 int count=0;
 int label;
@@ -13,6 +20,7 @@ int address = 4095;
 int flabel = 0;
 
 struct Gsymbol *st = NULL;
+struct Lsymbol *Lhead = NULL;
 struct stack* Breakhead=NULL;
 struct stack* Continuehead=NULL;
 
@@ -141,7 +149,7 @@ int getContinueLabel(){
 
 void writeheader(FILE *fptr){
 
-        fprintf(fptr,"0\n2056\n0\n0\n0\n0\n0\n0\nBRKP\n");
+        fprintf(fptr,"0\nMAIN\n0\n0\n0\n0\n0\n0\nMOV SP, 4095\nMOV BP, 4096\nPUSH R0\nCALL MAIN\nINT 10\n");
 
 }
 
@@ -265,7 +273,7 @@ int  codeGen(struct tnode *t, FILE *fptr){
 
 		case 4:
 			reg_1 = getReg();
-			fprintf(fptr,"MOV R%d, [%d]\n", reg_1, t->Gentry->binding);
+			fprintf(fptr,"MOV R%d, [R%d]\n", reg_1,getLoc(t));
 			return reg_1;
 		case 2:
 			if(strcmp(t->varname,"Read")==0){
@@ -276,7 +284,6 @@ int  codeGen(struct tnode *t, FILE *fptr){
                         }
 
 			reg_1 = getReg();
-			fprintf(fptr, "MOV SP, 4121\n");
 			fprintf(fptr, "MOV R%d, \"%s\"\n",reg_1, t->varname);
 			fprintf(fptr, "PUSH R%d\n",reg_1);
 			fprintf(fptr, "MOV R%d, %d\n",reg_1,t->val);
@@ -284,11 +291,13 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			if(strcmp(t->varname,"Read")==0){
 			    	fprintf(fptr, "MOV R%d, R%d\n",reg_1,reg_2);
 				fprintf(fptr, "PUSH R%d\n",reg_1);
+				
 
 			}
 			else{
 				fprintf(fptr, "MOV R%d, R%d\n",reg_1,reg_2);
 				fprintf(fptr, "PUSH R%d\n",reg_1);
+				
 			}
 			fprintf(fptr, "PUSH R%d\n",reg_1);
 			fprintf(fptr, "PUSH R%d\n",reg_1);
@@ -298,6 +307,7 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			fprintf(fptr, "POP R%d\n",reg_1);
 			fprintf(fptr, "POP R%d\n",reg_1);
 			fprintf(fptr, "POP R%d\n",reg_1);
+			freeReg();
 			freeReg();
 			return -1;
 
@@ -370,6 +380,110 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			fprintf(fptr,"MOV R%d, [R%d]\n",reg_1,locReg);
 			return reg_1;
 			      }
+		case FnBlock: {
+			codeGen(t->left,fptr);
+			freeAllReg();
+			codeGen(t->right,fptr);
+			freeAllReg();
+			return -1;
+			      }
+		case FnNode: {
+			fprintf(fptr, "F%d:\n",t->Gentry->flabel);
+			fprintf(fptr, "PUSH BP\n");
+			fprintf(fptr, "MOV BP, SP\n");
+			struct Lsymbol *Ltemp = t->Lentry;
+			while(Ltemp!=NULL){
+				if(Ltemp->binding>0)
+					fprintf(fptr, "PUSH R0\n");
+			Ltemp = Ltemp->next;
+			}
+			codeGen(t->left, fptr);
+			freeAllReg();
+			reg_1 = codeGen(t->right, fptr);
+			reg_2 = getReg();
+			fprintf(fptr, "MOV R%d, -2\n", reg_2);
+			fprintf(fptr, "ADD R%d, BP\n", reg_2);
+			fprintf(fptr, "MOV [R%d], R%d\n", reg_2, reg_1);
+			freeReg();
+                        Ltemp = t->Lentry;
+                        reg_2 = getReg();
+                        while(Ltemp!=NULL){
+                                if(Ltemp->binding>0)
+                                        fprintf(fptr, "POP R%d\n", reg_2);
+                                Ltemp = Ltemp->next;
+                        }
+                        freeReg();
+
+			fprintf(fptr, "POP BP\n");
+			fprintf(fptr, "RET\n");
+			freeAllReg();
+			return -1;
+			     }
+		case RetNode: {
+			reg_1 = codeGen(t->right, fptr);
+			return reg_1;
+			      }
+		case MnNode: {
+			fprintf(fptr, "MAIN:\n");
+			fprintf(fptr, "PUSH BP\n");
+			fprintf(fptr, "MOV BP, SP\n");
+			struct Lsymbol *Ltemp = t->Lentry;
+			 while(Ltemp!=NULL){
+                                if(Ltemp->binding>0)
+                                        fprintf(fptr, "PUSH R0\n");
+                        Ltemp = Ltemp->next;
+                        }
+			codeGen(t->left, fptr);
+			freeAllReg();
+			reg_1 = codeGen(t->right, fptr);
+			reg_2 = getReg();
+                        fprintf(fptr, "MOV R%d, -2\n", reg_2);
+                        fprintf(fptr, "ADD R%d, BP\n", reg_2);
+                        fprintf(fptr, "MOV [R%d], R%d\n", reg_2, reg_1);
+			freeReg();
+			Ltemp = t->Lentry;
+		        reg_2 = getReg();
+                        while(Ltemp!=NULL){
+                                if(Ltemp->binding>0)
+                                        fprintf(fptr, "POP R%d\n", reg_2);
+                                Ltemp = Ltemp->next;
+                        }
+                        freeReg();
+			fprintf(fptr, "POP BP\n");
+			fprintf(fptr, "RET\n");
+			freeAllReg();
+			return -1;
+			     }
+		case FnCall: {
+			int n_reg = -1;
+			for(int i=0; i<count; i++){
+				printf("%d\n",count);
+				fprintf(fptr, "PUSH R%d\n",i);
+				n_reg++;
+			}
+			struct tnode* temp = t->middle;
+			while(temp!=NULL){
+				reg_1 = codeGen(temp, fptr);
+				fprintf(fptr, "PUSH R%d\n",reg_1);
+				freeReg();
+				temp = temp->middle;
+			}
+			fprintf(fptr, "PUSH R0\n"); 	//Empty Space for return value
+			fprintf(fptr, "CALL F%d\n", t->Gentry->flabel);
+			reg_1 = getReg();
+			fprintf(fptr, "POP R%d\n",reg_1);
+			reg_2 = getReg();
+			temp = t->middle;
+                        while(temp!=NULL){
+                                fprintf(fptr, "POP R%d\n",reg_2);
+                                temp = temp->middle;
+                        }
+			freeReg();
+			for(int j=n_reg; j>=0; j--){
+				fprintf(fptr, "POP R%d\n",j);
+			}
+			return reg_1;
+			    }
 		default:
 			if(strcmp(t->varname,"EQU")==0){
 				reg_1 = codeGen(t->right, fptr);
@@ -388,6 +502,19 @@ int  codeGen(struct tnode *t, FILE *fptr){
 }
 
 int getLoc(struct tnode* t, FILE *fptr){
+	if(t->Lentry!=NULL){
+		switch(t->nodetype){
+
+			case 4:{
+				int loc = t->Lentry->binding;
+				int reg = getReg();
+				fprintf(fptr, "MOV R%d, BP\n", reg);
+				fprintf(fptr, "ADD R%d, %d\n",reg, loc);
+				return reg;
+			       }
+		}
+	}
+	else{
 
 	int loc = t->Gentry->binding;
 
@@ -416,6 +543,7 @@ int getLoc(struct tnode* t, FILE *fptr){
 			      }
 	}
 
+	}
 }
 int getnextadd(){
 	address++;
@@ -438,6 +566,27 @@ void Install(char *name, int type, int size_0, int size_1, struct Paramstruct *p
 	st = temp;	
 }
 
+void Linstall(char *name, int type, int binding){
+	struct Lsymbol* temp;
+	temp = (struct Lsymbol*)malloc(sizeof(struct Gsymbol));
+	temp->name = name;
+	temp->type = type;
+	temp->binding = binding;
+	temp->next = Lhead;
+	Lhead = temp;
+}
+
+struct Lsymbol* Llookup(char *name){
+	printf("New Lookup %s\n",name);
+	struct Lsymbol* temp = Lhead;
+	while(temp!=NULL){
+		printf("%s %d\n",temp->name, temp->binding);
+		if(strcmp(temp->name, name)==0)
+			return temp;
+		temp = temp->next;}
+	return NULL;
+
+}
 struct Gsymbol* Lookup(char *name){
 	struct Gsymbol* head = st;
 	while(head!=NULL ){
@@ -451,7 +600,7 @@ struct Gsymbol* Lookup(char *name){
 void printtable(){
 	struct Gsymbol *head = st;
 	while(head!=NULL){
-		printf("name : %s, binding : %d\n",head->name, head->binding);
+		printf("name : %s, binding : %d, type : %d \n",head->name, head->binding, head->type);
 		printparams(head->paramlist);
 		head = head->next;
 	}
@@ -481,17 +630,30 @@ void printparams(struct Paramstruct *paramlist){
 }
 
 void checkvalid(int type, struct Paramstruct *paramlist, struct Gsymbol* Gentry){
-
+	if(Gentry==NULL){
+		yyerror("Function not declared");
+		exit(1);
+	}
 	if( type != Gentry->type){
 		yyerror("Function return type doesnot match with declaration");
 		exit(1);}
 	struct Paramstruct *Gparam = Gentry->paramlist;
 	while(paramlist!=NULL){
-		if((paramlist->name != Gparam->name) ||(paramlist->type  != Gparam->type)){
+		if((strcmp(paramlist->name, Gparam->name)==1) ||(paramlist->type  != Gparam->type)){
 			yyerror("Function parameter type/name doesnot match with declaration");
 			exit(1);
 			}
 		paramlist = paramlist->next;
 		Gparam = Gparam->next;
 	}
+}
+
+void AddParamToLocal(struct Paramstruct *plist , struct Lsymbol* Lhead){
+	struct Lsymbol *temp;
+	while(plist!=NULL){
+//		Linstall(plist->name, plist->type);
+		plist= plist->next;
+	}
+
+
 }

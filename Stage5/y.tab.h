@@ -87,7 +87,7 @@ extern int yydebug;
     DECL = 288,                    /* DECL  */
     ENDDECL = 289,                 /* ENDDECL  */
     MAIN = 290,                    /* MAIN  */
-    Retstmt = 291                  /* Retstmt  */
+    RET = 291                      /* RET  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -128,13 +128,13 @@ extern int yydebug;
 #define DECL 288
 #define ENDDECL 289
 #define MAIN 290
-#define Retstmt 291
+#define RET 291
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "staticalloc.y"
+#line 27 "staticalloc.y"
 
 	int num;
 	struct tnode *no;
