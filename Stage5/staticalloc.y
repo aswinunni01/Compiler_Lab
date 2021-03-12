@@ -192,8 +192,14 @@ LDecl    : Type IdList ';'			{	struct Lsymbol *Ltemp = Lhead;
                                         }
 	 ;
 
-IdList : IdList',' ID			{ Linstall($3->varname, NULL, ++lloc); }
-       | ID				{ Linstall($1->varname, NULL, ++lloc); }
+IdList : IdList',' ID			{ if(Llookup($3->varname)!=NULL){
+       						yyerror("Local variable already declared");
+						exit(1);}						
+					  Linstall($3->varname, NULL, ++lloc); }
+       | ID				{ if(Llookup($1->varname)!=NULL){
+                                                yyerror("Local variable already declared");
+                                                exit(1);} 
+					  Linstall($1->varname, NULL, ++lloc); }
        ;
 
 

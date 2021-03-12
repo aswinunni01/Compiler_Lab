@@ -5,7 +5,7 @@ enddecl
 int BubbleSort(int first, int last)
 {
   decl
-    int temp;
+	  int temp;
   enddecl
 
   begin
