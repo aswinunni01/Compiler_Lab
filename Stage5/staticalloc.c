@@ -661,3 +661,33 @@ void AddParamToLocal(struct Paramstruct *plist , struct Lsymbol* Lhead){
 
 
 }
+
+
+void checkvalidfncall(struct Gsymbol* Gentry, struct tnode* arg){
+	struct Paramstruct* temp1 = Gentry->paramlist;
+	int count1=0;
+	struct tnode* temp2 = arg;
+        int count2=0;
+	while(temp1!=NULL && temp2!=NULL){
+		 if(temp1->type!=temp2->type){
+                 	yyerror("Function call arguments type error");
+                        exit(1);
+                }
+		temp1 = temp1->next;
+		temp2 = temp2->middle;
+	}
+	if(temp1!=NULL || temp2!=NULL){
+		yyerror("Number of arguments to function call doesnot match definition");
+		exit(1);
+	}
+}
+void Pcheck(struct Paramstruct *p1, struct Paramstruct *p2){
+	while(p1!=NULL){
+		if(strcmp(p1->name, p2->name)==0){
+			yyerror("Function parameter cannot have same name");
+			exit(1);
+		}
+		p1 = p1->next;
+	}
+
+}

@@ -1,6 +1,6 @@
 decl
   int a,b,n,arr[10];
-  int swap(int index, int newindex);
+  str swap(int index, int newindex);
   int readarr(int temp);
   int writearr(int temp);
   int partition (int low, int high);

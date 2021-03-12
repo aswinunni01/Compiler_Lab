@@ -1,11 +1,14 @@
 decl 
   int n,arr[10],i,j, BubbleSort(int first, int last), dup;
+  str tempfn(str z, str z);
+
 enddecl
 
 int BubbleSort(int first, int last)
 {
   decl
 	  int temp;
+  str z;
   enddecl
 
   begin
@@ -17,7 +20,7 @@ int BubbleSort(int first, int last)
         arr[first] = arr[first+1];
         arr[first+1] = temp;
       endif;
-
+      z = tempfn(z, z);
       dup = BubbleSort(first+1, last);
       dup = BubbleSort(first, last-1);
       endif;

@@ -31,7 +31,7 @@ int lloc=0;
 }
 
 
-%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt GidList FdefBlock Fdef Body MainBlock ArgList Retstmt
+%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt GidList FdefBlock Fdef Body MainBlock ArgList Retstmt IdList LDecl
 %type <np> ParamList Param
 %type <num> Type
 %token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE INT STR DECL ENDDECL MAIN RET
@@ -157,8 +157,10 @@ Fdef 	: Type ID '(' ParamList ')' '{' LdeclBlock Body '}'	{ checkvalid($1, $4, L
 								}
       ;
 
-ParamList : ParamList',' Param 		{ $3->next = $1; $$ = $3; Linstall($3->name, $3->type, ploc--); }
-	  | Param			{ $$ = $1; Linstall($1->name, $1->type, ploc--); }
+ParamList : ParamList',' Param 		{ 	Pcheck($1, $3);
+						$3->next = $1; $$ = $3; Linstall($3->name, $3->type, ploc--); }
+	  | Param			{ 
+					  $$ = $1; Linstall($1->name, $1->type, ploc--); }
 	  | 				{ $$ = NULL; }
 	  ;
 
@@ -185,21 +187,23 @@ LDecList : LDecList LDecl		{}
 	 | LDecl 			{}
 	 ;
 
-LDecl    : Type IdList ';'			{	struct Lsymbol *Ltemp = Lhead;
-                                                while(Ltemp != NULL) {
-                                                        Ltemp->type = $1;
-                                                        Ltemp = Ltemp->next;}
+LDecl    : Type IdList ';'			{	struct tnode* ttemp = $2;
+                                                while(ttemp != NULL) {
+							struct Lsymbol* Ltemp = Llookup(ttemp->varname);
+							if(Ltemp->binding>0){
+                                                        Ltemp->type = $1;}
+                                                        ttemp=ttemp->left;}
                                         }
 	 ;
 
 IdList : IdList',' ID			{ if(Llookup($3->varname)!=NULL){
        						yyerror("Local variable already declared");
 						exit(1);}						
-					  Linstall($3->varname, NULL, ++lloc); }
+					  Linstall($3->varname, NULL, ++lloc); $3->left = $$=$3; }
        | ID				{ if(Llookup($1->varname)!=NULL){
                                                 yyerror("Local variable already declared");
                                                 exit(1);} 
-					  Linstall($1->varname, NULL, ++lloc); }
+					  Linstall($1->varname, NULL, ++lloc); $$=$1; }
        ;
 
 
@@ -254,9 +258,12 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 			$1->Lentry = NULL;
                         $$ = $1; }
 		  else{
-			$1->type = Llookup($1->varname)->type;
+			struct Lsymbol* Ltemp = Llookup($1->varname);
+		
+			$1->type = Ltemp->type;
 			$1->Gentry = NULL;
-			$1->Lentry = Llookup($1->varname);
+			$1->Lentry = Ltemp;
+		
 			$$ = $1;
 		   }
 		}
@@ -302,6 +309,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 				}	
 				$1->nodetype = FnCall;
 				$1->Gentry = Lookup($1->varname);
+				checkvalidfncall($1->Gentry, $3);
 				$1->type = $1->Gentry->type;
 				$1->middle = $3;
 				$$ = $1;

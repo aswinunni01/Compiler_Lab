@@ -4,8 +4,8 @@ enddecl
 
 int fun(int x)
 {
-decl
-	enddecl
+ decl
+ enddecl	 
  begin
   if(x >= 91) then
    a = 91;
