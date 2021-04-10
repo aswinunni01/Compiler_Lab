@@ -6,6 +6,7 @@
 #define intType 21
 #define boolType 22
 #define strType 23
+
 int c=0;
 int number;
 char*  var;
@@ -14,7 +15,7 @@ struct Gsymbol *Gentry;
 
 %%
 
-[0-9]+	{ number = atoi(yytext); yylval.no = createTree(number, intType, NULL,0, NULL,NULL, NULL, NULL); return NUM; }
+[0-9]+	{ number = atoi(yytext); yylval.no = createTree(number, TLookup("INT"), NULL,0, NULL,NULL, NULL, NULL); return NUM; }
 "begin" { return BEG; }
 "end"	{ return END; }
 "write"	{ return WRITE; }
@@ -30,12 +31,19 @@ struct Gsymbol *Gentry;
 "continue" { return CONTINUE; }
 "int"	{ return INT; }
 "str"	{ return STR; }
+"null"	{ return NUL; }
+"void"  { return VOID; }
 "decl"	{ return DECL; }
+"type"	{ return TYPE; }
 "main"	{ return MAIN; }
 "return" { return RET; }
 "enddecl" { return ENDDECL; }
+"endtype" { return ENDTYPE; }
+"alloc()" { return ALLOC; }
+"free"  { return FREE; }
+"initialize()" { return INIT; }
 [a-zA-Z]+[a-zA-Z0-9]* { var = strdup(yytext); yylval.no = createTree(NULL, NULL, var, 4, NULL, NULL, NULL, NULL);   return ID; }
-[\"].*[\"] { var = strdup(yytext); yylval.no = createTree(NULL, strType, var, 0, NULL, NULL, NULL, NULL); return LIT; }
+[\"].*[\"] { var = strdup(yytext); yylval.no = createTree(NULL, TLookup("STR"), var, 0, NULL, NULL, NULL, NULL); return LIT; }
 "+"	{ return PLUS; }
 "-"	{ return MINUS; }
 "*"	{ return MUL; }
@@ -55,6 +63,7 @@ struct Gsymbol *Gentry;
 [\n]	;
 [,]	{ return *yytext; }
 [;]	{ return *yytext; }
+[.]	{ return *yytext; }
 [()]	{ return *yytext; }
 .	{ yyerror("unknown character\n");exit(1);}
 

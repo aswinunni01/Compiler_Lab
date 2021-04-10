@@ -11,6 +11,12 @@
 #define FnCall 15
 #define ArgType 16
 #define RetNode 17
+#define FieldNode 18
+#define AllocNode 19
+#define FreeNode 20
+#define InitNode 50
+
+
 
 int ifcount=0;
 int count=0;
@@ -18,14 +24,16 @@ int label;
 int varstart = 4096;
 int address = 4095;
 int flabel = 0;
+int Findex = 0;
 
 struct Gsymbol *st = NULL;
 struct Lsymbol *Lhead = NULL;
 struct stack* Breakhead=NULL;
 struct stack* Continuehead=NULL;
+struct Fieldlist * Fhead = NULL;
+struct Typetable * Thead = NULL;
 
-
-struct tnode* createTree(int val, int type, char* c,int nodetype, struct Gsymbol *Gentry, struct tnode* l,struct tnode*m, struct tnode* r){
+struct tnode* createTree(int val, struct Typetable  *type, char* c,int nodetype, struct Gsymbol *Gentry, struct tnode* l,struct tnode*m, struct tnode* r){
 
 	struct tnode* temp;
 	temp = (struct tnode*)malloc(sizeof(struct tnode));
@@ -44,15 +52,34 @@ struct tnode* createTree(int val, int type, char* c,int nodetype, struct Gsymbol
 	return temp;
 }
 
+
+struct tnode* createAllocNode(struct tnode* t){
+	return createTree(NULL, TLookup("INT"), "Alloc", AllocNode, NULL, NULL, t, NULL);
+}
+
+struct tode* createFreeNode(struct tnode* t){
+        return createTree(NULL, TLookup("INT"), "Free", FreeNode, NULL, NULL, t, NULL);
+}
+
+
+struct tnode* createInitNode(struct tnode* t){
+        return createTree(NULL, TLookup("INT"), "Heapset", InitNode, NULL, NULL, t, NULL);
+}
 struct tnode* createEQNode(struct tnode* l, struct tnode*r){
 	if(l->type != r->type){
+		if(l->type == TLookup("VOID") | r->type == TLookup("VOID"))
+			 return createTree(NULL, 1, "EQU", 1, NULL, l, NULL, r);
+		printf("%s, %s", l->type->name, r->type->name);
 		yyerror("Equation LHS and RHS donot match types");
 		exit(1);
 	}
 	return createTree(NULL, 1, "EQU", 1, NULL, l, NULL, r);
 }
 struct tnode* createIfNode(struct tnode* l, struct tnode* m, struct tnode* r){
-	if(l->type == boolType)
+	struct Typetable *temp;
+       temp	= TLookup("BOOL");
+
+	if(l->type == temp)
 		return createTree(NULL, NULL, NULL, 5,NULL, l, m, r);
 	else{
 		yyerror("Type mismatch");
@@ -61,7 +88,9 @@ struct tnode* createIfNode(struct tnode* l, struct tnode* m, struct tnode* r){
 }
 
 struct tnode* createWhileNode(struct tnode* l, struct tnode* r){
-	if(l->type == boolType)
+        struct Typetable *temp;
+       temp	= TLookup("BOOL");
+	if(l->type == temp)
 		return createTree(NULL, NULL, NULL,6,NULL, l, NULL, r); 
 	else{
 		yyerror("Type mismatch");
@@ -70,11 +99,14 @@ struct tnode* createWhileNode(struct tnode* l, struct tnode* r){
 }
 
 struct tnode* createOpNode(char *c, int type, struct tnode* l, struct tnode* r){
-	if((l->type == intType) && (r->type == intType)){
+        struct Typetable *temp_int, *temp_void;
+      temp_int	= TLookup("INT");
+      temp_void = TLookup("VOID");
+	if(((l->type == temp_int ) && (r->type == temp_int)) || (r->type == temp_void)){
 		if(type == intType)
-			return createTree(NULL, intType, c, 1, NULL, l, NULL, r);
+			return createTree(NULL, TLookup("INT"), c, 1, NULL, l, NULL, r);
 		else	
-			return createTree(NULL, boolType, c, 1, NULL, l, NULL, r);
+			return createTree(NULL, TLookup("BOOL"), c, 1, NULL, l, NULL, r);
 	}
 	else{
 		yyerror("Cannot operate on boolType objects");
@@ -84,19 +116,21 @@ struct tnode* createOpNode(char *c, int type, struct tnode* l, struct tnode* r){
 
 struct tnode* createVarNode(char *c){
 	struct tnode* temp;
-	
-	temp =  createTree(NULL, intType, c, 4, NULL, NULL, NULL, NULL);
+	struct Typetable *temp_int;
+	temp_int = TLookup("INT");	
+	temp =  createTree(NULL, temp_int, c, 4, NULL, NULL, NULL, NULL);
 	return temp;
 }
 
 struct tnode* createIONode(int val, char *c, struct tnode* r){
-	if(r->type == intType || r->type == arType || r->type == matType || r->type  == strType){
-		return	createTree(val,NULL, c, 2, NULL, NULL, NULL, r);
-	}
-	else{
+        struct Typetable *temp = TLookup("BOOL");
+	if(r->type == temp){
 		printf("%d",r->type);
 		yyerror("Cannot read/write boolean values\n");
 		exit(1);
+	}
+	else{
+		return  createTree(val,NULL, c, 2, NULL, NULL, NULL, r);
 	}
 }
 
@@ -274,22 +308,91 @@ int  codeGen(struct tnode *t, FILE *fptr){
 	switch((t->nodetype)){
 
 		case 0:{
-			if(t->type == intType){
-			reg_1 = getReg();
-			fprintf(fptr, "MOV R%d, %d\n", reg_1, t->val);
-			return reg_1;
-			}
-			else{
-			reg_1 = getReg();
-			fprintf(fptr, "MOV R%d, %s\n", reg_1, t->varname);
-			return reg_1;
-			}
+			if(t->type == TLookup("INT") || t->type == TLookup("VOID")){
+                        reg_1 = getReg();
+                        fprintf(fptr, "MOV R%d, %d\n", reg_1, t->val);
+                        return reg_1;
+                        }
+                        else{
+                        reg_1 = getReg();
+                        fprintf(fptr, "MOV R%d, %s\n", reg_1, t->varname);
+                        return reg_1;
+                        }
 		       }
 
 		case 4:
 			reg_1 = getReg();
-			fprintf(fptr,"MOV R%d, [R%d]\n", reg_1,getLoc(t));
+			fprintf(fptr,"MOV R%d, [R%d]\n", reg_1,getLoc(t,fptr));
 			return reg_1;
+		case FieldNode: {
+					reg_1 = getReg();
+					fprintf(fptr, "MOV R%d, [R%d]\n",reg_1, getLoc(t,fptr));
+					return reg_1;
+				}
+		case AllocNode: {
+					reg_1 = getReg();
+					fprintf(fptr, "MOV R%d, \"Alloc\"\n", reg_1);
+					fprintf(fptr, "PUSH R%d\n", reg_1);
+					fprintf(fptr, "MOV R%d, %d\n", reg_1, 8);
+					fprintf(fptr, "PUSH R%d\n",reg_1);
+					fprintf(fptr, "PUSH R%d\n",reg_1);				
+					fprintf(fptr, "PUSH R%d\n",reg_1);				
+					fprintf(fptr, "PUSH R%d\n",reg_1);			
+					
+					fprintf(fptr, "CALL 0\n");
+					fprintf(fptr, "POP R%d\n",reg_1	);
+					reg_2 = getReg();
+					fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+					freeReg();
+					reg_2 = getLoc(t->middle, fptr);
+					fprintf(fptr, "MOV [R%d], R%d\n",reg_2, reg_1);
+					freeReg();
+					return -1;
+				}
+		case InitNode: {
+			       		reg_1 = getReg();
+                                        fprintf(fptr, "MOV R%d, \"Heapset\"\n", reg_1);
+                                        fprintf(fptr, "PUSH R%d\n", reg_1);
+                                        fprintf(fptr, "MOV R%d, %d\n", reg_1, 8);
+                                        fprintf(fptr, "PUSH R%d\n",reg_1);
+                                        fprintf(fptr, "PUSH R%d\n",reg_1);
+                                        fprintf(fptr, "PUSH R%d\n",reg_1);
+                                        fprintf(fptr, "PUSH R%d\n",reg_1);
+
+                                        fprintf(fptr, "CALL 0\n");
+                                        fprintf(fptr, "POP R%d\n",reg_1 );
+                                        reg_2 = getReg();
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        freeReg();
+					reg_2 = getLoc(t->middle, fptr);
+					fprintf(fptr, "MOV [R%d], R%d\n",reg_2, reg_1);
+					freeReg();
+                                        return -1;
+			       }
+		case FreeNode: {
+					reg_1 = getReg();
+					fprintf(fptr, "MOV R%d, \"Free\"\n", reg_1);
+					reg_2 = getLoc(t->middle, fptr);
+					fprintf(fptr, "MOV R%d, [R%d]\n",reg_1, reg_2);
+					fprintf(fptr, "PUSH R%d\n", reg_1);
+					fprintf(fptr, "PUSH R%d\n", reg_1);
+					fprintf(fptr, "PUSH R%d\n", reg_1);
+					fprintf(fptr, "CALL 0\n");
+					fprintf(fptr, "POP R%d\n",reg_1);
+					fprintf(fptr, "POP R%d\n",reg_1);
+					fprintf(fptr, "POP R%d\n",reg_1);
+					fprintf(fptr, "POP R%d\n",reg_1);
+					fprintf(fptr, "POP R%d\n",reg_1);
+					freeReg();
+					return -1;
+
+			       }
 		case 2:
 			if(strcmp(t->varname,"Read")==0){
                                 reg_2 = getLoc(t->right, fptr);
@@ -526,6 +629,22 @@ int getLoc(struct tnode* t, FILE *fptr){
 				fprintf(fptr, "ADD R%d, %d\n",reg, loc);
 				return reg;
 			       }
+			case FieldNode: {
+				int loc = t->Lentry->binding;
+				int reg=getReg();
+				fprintf(fptr, "MOV R%d, BP\n",reg);
+				fprintf(fptr, "ADD R%d, %d\n",reg,loc);
+				fprintf(fptr, "MOV R%d, [R%d]\n", reg, reg);
+				struct Typetable *Ttemp = t->type;
+				t=t->right;
+				while(t->right!=NULL){
+					fprintf(fptr, "ADD R%d, %d\n",reg,t->val);
+					fprintf(fptr, "MOV R%d, [R%d]\n",reg,reg);
+					t=t->right;
+				}
+				fprintf(fptr, "ADD R%d, %d\n",reg,t->val);
+				return reg;
+					}
 		}
 	}
 	else{
@@ -555,15 +674,30 @@ int getLoc(struct tnode* t, FILE *fptr){
 				fprintf(fptr, "ADD R%d, %d\n", offset_1, loc);
 				return offset_1;			
 			      }
-	}
+		case FieldNode: {
+				int reg = getReg();
+				fprintf(fptr, "MOV R%d, %d\n",reg,loc);
+				fprintf(fptr, "MOV R%d, [R%d]\n",reg, reg);
+				struct Typetable *Ttemp = t->type;
+				t=t->right;
+				while(t->right!=NULL){
+					fprintf(fptr, "ADD R%d, %d\n",reg,t->val);
+					fprintf(fptr, "MOV R%d, [R%d]\n",reg,reg);
+					t=t->right;
+
+				}
+				fprintf(fptr, "ADD R%d, %d\n",reg,t->val);
+				return reg;
+				}
 
 	}
+}
 }
 int getnextadd(){
 	address++;
 	return address;
 }
-void Install(char *name, int type, int size_0, int size_1, struct Paramstruct *p, int Flabel){
+void Install(char *name, struct Typetable *type, int size_0, int size_1, struct Paramstruct *p, int Flabel){
 	struct Gsymbol* temp;
         temp = (struct Gsymbol*)malloc(sizeof(struct Gsymbol));
 	temp->name = name;
@@ -580,7 +714,7 @@ void Install(char *name, int type, int size_0, int size_1, struct Paramstruct *p
 	st = temp;	
 }
 
-void Linstall(char *name, int type, int binding){
+void Linstall(char *name, struct Typetable * type, int binding){
 	struct Lsymbol* temp;
 	temp = (struct Lsymbol*)malloc(sizeof(struct Gsymbol));
 	temp->name = name;
@@ -612,7 +746,7 @@ struct Gsymbol* Lookup(char *name){
 void printtable(){
 	struct Gsymbol *head = st;
 	while(head!=NULL){
-		printf("name : %s, binding : %d, type : %d \n",head->name, head->binding, head->type);
+		printf("name : %s, binding : %d, type : %s \n",head->name, head->binding, head->type->name);
 		printparams(head->paramlist);
 		head = head->next;
 	}
@@ -620,7 +754,7 @@ void printtable(){
 
 }
 
-struct Paramstruct* Pinstall(char* name, int type, struct Paramstruct* next){
+struct Paramstruct* Pinstall(char* name, struct Typetable * type, struct Paramstruct* next){
 	struct Paramstruct *temp;
 	temp = (struct Paramstruct*)malloc(sizeof(struct Paramstruct));
 	temp->name = name;
@@ -637,11 +771,11 @@ int getFlabel(){
 void printparams(struct Paramstruct *paramlist){
 
 	while(paramlist!=NULL){
-	printf("name : %s type : %d\n",paramlist->name, paramlist->type);
+	printf("name : %s type : %s\n",paramlist->name, paramlist->type->name);
 	paramlist = paramlist->next;}
 }
 
-void checkvalid(int type, struct Paramstruct *paramlist, struct Gsymbol* Gentry){
+void checkvalid(struct Typetable * type, struct Paramstruct *paramlist, struct Gsymbol* Gentry){
 	if(Gentry==NULL){
 		yyerror("Function not declared");
 		exit(1);
@@ -698,4 +832,78 @@ void Pcheck(struct Paramstruct *p1, struct Paramstruct *p2){
 		p1 = p1->next;
 	}
 
+}
+
+
+void TypeTableCreate(){
+	
+	Tinstall("INT", 1, NULL);
+	Tinstall("STR", 1, NULL);
+	Tinstall("BOOL ",1, NULL);
+	Tinstall("VOID", 1, NULL);
+	
+}
+
+void  Tinstall(char *name, int size, struct Fieldlist *fields){
+        struct Typetable *temp;
+        temp = (struct Typetable*)malloc(sizeof(struct Typetable));
+	temp->name = name;
+	temp->size = size;
+	temp-> fields = fields;
+	temp->next = Thead;
+	Thead = temp;
+}
+struct Typetable *TLookup(char *name){
+        struct Typetable* temp = Thead;
+        while(temp!=NULL){
+                if(strcmp(temp->name, name)==0)
+                        return temp;
+                temp = temp->next;}
+        return NULL;
+}
+
+struct FieldList *  Finstall(char *name, char* temp_type){
+	struct Fieldlist *temp;
+	temp = (struct Typetable*)malloc(sizeof(struct Typetable));
+	temp->name = name;
+	temp->fieldIndex = Findex++;
+	temp->temp_type = temp_type;
+	temp->next = NULL;
+	return temp;	
+}	
+
+int GetSize(struct Typetable *Tentry){
+	struct Fieldlist *temp=Tentry->fields;
+	int size=0;
+	while(temp!=NULL){
+
+		size = size + temp->type->size;
+		temp = temp->next;
+
+	}
+	return size;
+	
+}
+struct Typetable * checkvalidfieldandType(struct Typetable *ttemp, struct tnode* Node){
+	struct Fieldlist *Flist = ttemp->fields;
+	while(Flist!=NULL){
+		if(strcmp(Node->varname, Flist->name)==0){
+			return	Flist->type;
+		}
+		Flist = Flist->next;
+	}
+	yyerror("Field not member of the datatype");
+	exit(1);
+	return;
+}
+
+struct Fieldlist * FLookup(struct Typetable *type, char *name){
+	struct Fieldlist *field = type->fields;
+	while(field!=NULL){
+		if(strcmp(name, field->name)==0){
+			return field;
+		}
+		field = field->next;
+	}
+	return NULL;
 }

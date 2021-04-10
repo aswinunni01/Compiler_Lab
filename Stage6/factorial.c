@@ -23,16 +23,12 @@ int main()
 {
   decl
     int a,res;
-  
   enddecl
 
   begin
     read(a);
     res = fact(a);
     write(res);
-    abc = "hello";
-
-    write(abc);
 
     return 0;
   end  

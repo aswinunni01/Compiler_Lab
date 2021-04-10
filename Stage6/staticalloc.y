@@ -16,40 +16,54 @@
 #define FnCall 15
 #define ArgType 16
 #define RetNode 17
+#define FieldNode 18
 
 int yylex(void);
 FILE *input_file;
 struct tnode* end_node;
 int ploc=-3;
 int lloc=0;
+int size=0;
 %}
 
 %union{
-	int num;
+	struct Typetable *Tentry;
 	struct tnode *no;
 	struct Paramstruct *np;
+	struct Fieldlist *fl;
 }
 
 
-%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt GidList FdefBlock Fdef Body MainBlock ArgList Retstmt IdList LDecl LIT
+%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt GidList FdefBlock Fdef Body MainBlock ArgList Retstmt IdList LDecl Field LIT INIT ALLOC FREE
 %type <np> ParamList Param
-%type <num> Type
-%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE INT STR DECL ENDDECL MAIN RET LIT
+%type <Tentry> Type TypeName
+%type <fl> FieldDecl FieldDeclList
+%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE INT STR NUL VOID DECL ENDDECL MAIN RET TYPE ENDTYPE LIT INIT ALLOC FREE
 %left PLUS MINUS
 %left MUL DIV
 
 %%
 
-start	: GdeclBlock FdefBlock MainBlock 	{
+start	: TypeDefBlock GdeclBlock FdefBlock MainBlock 	{
                                                 printf("Completed\n");
                                                 FILE *fptr = fopen("out.xsm", "w");
 						printtable();
                                                 writeheader(fptr);
-						codeGen($2, fptr);
-                                        	codeGen($3,fptr);
+						codeGen($3, fptr);
+                                        	codeGen($4,fptr);
  //                                               writefooter(fptr);
                                                 exit(1);
                                         }
+	| TypeDefBlock GdeclBlock MainBlock {
+						printf("Completed here\n");
+					FILE *fptr = fopen("out.xsm", "w");
+                                                printtable();
+                                                writeheader(fptr);
+                                                codeGen($3, fptr);
+ //                                               writefooter(fptr);
+                                                exit(1);
+					
+	}
 
       	| BEG GdeclBlock MainBlock END
 					 {
@@ -63,6 +77,59 @@ start	: GdeclBlock FdefBlock MainBlock 	{
 	| BEG MainBlock END			{ exit(1); }
 	| GdeclBlock FdefBlock 		{ printf("Completed now \n"); printtable(); exit(1); }
 	;
+
+
+TypeDefBlock : TYPE TypeDefList ENDTYPE {struct Typetable *temp = Thead;
+	     
+     						while(temp!=NULL){		// Check if all members have types that exists
+							struct Fieldlist *Ftemp = temp->fields;
+							while(Ftemp !=NULL){
+								struct Typetable *tttemp = TLookup(Ftemp->temp_type);
+								if(tttemp == NULL){
+									yyerror("Type of member not defined");
+								}
+								Ftemp->type = tttemp;
+								Ftemp = Ftemp->next;}
+							
+							temp = temp->next;}}
+	     | TYPE ENDTYPE {}
+	      ;
+
+TypeDefList : TypeDefList TypeDef | TypeDef {}
+	     ;
+
+TypeDef : ID '{' FieldDeclList '}'	{ 
+					Tinstall($1->varname, size, $3); 
+					size = 0;
+					Findex=0;
+}
+	 ;
+
+FieldDeclList : FieldDeclList FieldDecl	{ $2->next = $1;
+	      				  $$ = $2; }
+	      | FieldDecl	{ $$=$1; }
+	      ;
+
+FieldDecl     :  TypeName ID ';' { 
+
+				size=size+1;
+				$$ = Finstall($2->varname, $1); }
+	      ;
+
+TypeName      : INT { $$ = "INT"; }
+	      | STR { $$ = "STR"; }
+	      | VOID { $$ = "VOID"; }
+	      | ID  {  $$ = $1->varname; }
+			//struct Typetable *temp = TLookup($1->varname);
+			//if(temp==NULL){
+		//		yyerror("Type not defined");
+	//			exit(1);}
+//			$$ = TLookup($1->varname); }
+	      ;
+
+
+
+
 
 
 GdeclBlock : DECL GdeclList ENDDECL | DECL ENDDECL {}
@@ -81,8 +148,10 @@ Gdecl : Type GidList ';' 		{
      ;
 
 
-Type : INT  				{ $$ = intType; }
-     | STR  				{ $$ = strType; }
+Type : INT  				{ $$ = TLookup("INT"); }
+     | STR  				{ $$ = TLookup("STR"); }
+     | VOID				{ $$ = TLookup("VOID"); }
+     | ID				{ $$ = TLookup($1->varname); }
      ;
 
 
@@ -146,6 +215,7 @@ GidList : GidList ',' ID		{
 
 FdefBlock	: FdefBlock Fdef				{ $$ = createTree(NULL,FnBlock, NULL,FnBlock, NULL, $1,NULL, $2);}
 	  	| Fdef						{ $$ = $1; }
+		|				{}; 
 ;
 Fdef 	: Type ID '(' ParamList ')' '{' LdeclBlock Body '}'	{ checkvalid($1, $4, Lookup($2->varname)); 
       								  ploc=-3; lloc=0; 
@@ -199,7 +269,7 @@ LDecl    : Type IdList ';'			{	struct tnode* ttemp = $2;
 IdList : IdList',' ID			{ if(Llookup($3->varname)!=NULL){
        						yyerror("Local variable already declared");
 						exit(1);}						
-					  Linstall($3->varname, NULL, ++lloc); $3->left =$1; $$=$3; }
+					  Linstall($3->varname, NULL, ++lloc); $3->left = $1; $$=$3; }
        | ID				{ if(Llookup($1->varname)!=NULL){
                                                 yyerror("Local variable already declared");
                                                 exit(1);} 
@@ -225,6 +295,9 @@ Stmt	: InputStmt ';'	{ $$ = $1; }
 	| Whilestmt	{ $$ = $1; }
 	|  BREAK       { $$ = createTree(NULL, NULL, NULL, 10,NULL, NULL, NULL, NULL); }
 	| CONTINUE     { $$ = createTree(NULL, NULL, NULL, 11,NULL, NULL, NULL, NULL); }
+	| E EQ ALLOC ';'	{ $$ = createAllocNode($1); }
+	| E EQ INIT ';'	{ $$ = createInitNode($1); }
+	| FREE '(' E ')' ';' { $$ = createFreeNode($1); }
 ;
 
 InputStmt : READ '(' E ')' { $$ =createIONode(-1,"Read",$3);}
@@ -291,6 +364,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 
   | NUM		{ $$ = $1; }
   | LIT 	{ $$ = $1; }
+  | NUL		{ $$ = createTree(0, TLookup("VOID"), NULL, 0, NULL, NULL, NULL, NULL); }
   | ID '(' ')' 		{
 				if(Lookup($1->varname) == NULL){
                                         yyerror("Function not declared before calling \n");
@@ -315,13 +389,55 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 				$1->middle = $3;
 				$$ = $1;
 				}
+  | Field 			{ $$ = $1; }
   ;
 
 ArgList : ArgList',' E		{ $3->middle = $1; $$=$3;}
 	| E			{ $$=$1; }
 
         ;
+Field 	: Field '.' ID	{ struct tnode* temp = $1; 
+							while(temp->right!=NULL){
+ 								temp = temp->right;}
+							struct Fieldlist *Ftemp = FLookup(temp->type, $3->varname);
+							if(Ftemp == NULL){
+								yyerror("Field is not a member of the datatype");
+								exit(1);}
+							$3->type = Ftemp->type;
+							$3->val = Ftemp->fieldIndex;
+							$1->type = Ftemp->type;
+							$1->nodetype = FieldNode;
+							temp->right = $3;
+							 $$ =  $1;}
+	| ID  '.' ID 	{ $1->right = $3; 
+					
+				struct Gsymbol *Gtemp = Lookup($1->varname);
+				struct Lsymbol *Ltemp = Llookup($1->varname);
+				if(Ltemp==NULL){
+					if(Gtemp==NULL){
+		                                yyerror("Variable not declared\n");
+	        	                        exit(1); }
+					$1->type = Gtemp->type;
+					$1->Gentry= Gtemp;
+					$1->Lentry= NULL;}	
+				else{
+	                        struct Lsymbol* Ltemp = Llookup($1->varname);
 
+	                        $1->type = Ltemp->type;
+	                        $1->Gentry = NULL;
+	                        $1->Lentry = Ltemp;
+				}	
+
+				struct Fieldlist *Ftemp = FLookup($1->type, $3->varname);
+				if(Ftemp==NULL){
+					yyerror("Field is not a member of the datatype\n");
+					exit(1);}
+				$1->type = Ftemp->type;
+				$3->type = Ftemp->type;
+				$3->val = Ftemp->fieldIndex;
+				$1->nodetype = FieldNode;
+				$$ = $1; }
+;
 
 %%
 
@@ -337,6 +453,7 @@ int main(int argc, char *argv[]){
         }
         input_file = fopen(argv[1], "r");
         yyin = input_file;
+	TypeTableCreate();
         yyparse();
 
 }
