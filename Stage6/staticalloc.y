@@ -24,6 +24,7 @@ struct tnode* end_node;
 int ploc=-3;
 int lloc=0;
 int size=0;
+int FieldNo=0;
 %}
 
 %union{
@@ -106,8 +107,11 @@ TypeDef : ID '{' FieldDeclList '}'	{
 	 ;
 
 FieldDeclList : FieldDeclList FieldDecl	{ $2->next = $1;
-	      				  $$ = $2; }
-	      | FieldDecl	{ $$=$1; }
+	      				  $$ = $2; FieldNo++;if(FieldNo>=8){
+							yyerror("Number of fields cannot exceed 8\n");
+							exit(1);
+}}
+	      | FieldDecl	{  FieldNo = 0;$$=$1; }
 	      ;
 
 FieldDecl     :  TypeName ID ';' { 

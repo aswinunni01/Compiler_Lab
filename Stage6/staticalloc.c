@@ -54,6 +54,10 @@ struct tnode* createTree(int val, struct Typetable  *type, char* c,int nodetype,
 
 
 struct tnode* createAllocNode(struct tnode* t){
+	if(t->nodetype != 4){
+		yyerror("Only variables can be allocated\n");
+		exit(1);
+	}
 	return createTree(NULL, TLookup("INT"), "Alloc", AllocNode, NULL, NULL, t, NULL);
 }
 
@@ -329,7 +333,12 @@ int  codeGen(struct tnode *t, FILE *fptr){
 					fprintf(fptr, "MOV R%d, [R%d]\n",reg_1, getLoc(t,fptr));
 					return reg_1;
 				}
-		case AllocNode: {
+		case AllocNode: {	
+					int n_reg = -1;
+	        	                for(int i=0; i<count; i++){
+        	        	                fprintf(fptr, "PUSH R%d\n",i);
+		                                n_reg++;
+                		        }
 					reg_1 = getReg();
 					fprintf(fptr, "MOV R%d, \"Alloc\"\n", reg_1);
 					fprintf(fptr, "PUSH R%d\n", reg_1);
@@ -337,8 +346,7 @@ int  codeGen(struct tnode *t, FILE *fptr){
 					fprintf(fptr, "PUSH R%d\n",reg_1);
 					fprintf(fptr, "PUSH R%d\n",reg_1);				
 					fprintf(fptr, "PUSH R%d\n",reg_1);				
-					fprintf(fptr, "PUSH R%d\n",reg_1);			
-					
+					fprintf(fptr, "PUSH R%d\n",reg_1);				
 					fprintf(fptr, "CALL 0\n");
 					fprintf(fptr, "POP R%d\n",reg_1	);
 					reg_2 = getReg();
@@ -346,13 +354,29 @@ int  codeGen(struct tnode *t, FILE *fptr){
                                         fprintf(fptr, "POP R%d\n",reg_2);
                                         fprintf(fptr, "POP R%d\n",reg_2);
                                         fprintf(fptr, "POP R%d\n",reg_2);
+					fprintf(fptr, "MOV R%d, %d\n",reg_2, -1);
+                                        fprintf(fptr, "EQ R%d, R%d\n",reg_2, reg_1);
+                                        int label_1 = getLabel();
+                                        fprintf(fptr, "JZ R%d, L%d\n",reg_2, label_1);
+                                        fprintf(fptr, "INT 10\n");
+                                        fprintf(fptr, "L%d:\n",label_1);
 					freeReg();
+					for(int j=n_reg; j>=0; j--){
+                		                fprintf(fptr, "POP R%d\n",j);
+		                        }
+
 					reg_2 = getLoc(t->middle, fptr);
 					fprintf(fptr, "MOV [R%d], R%d\n",reg_2, reg_1);
 					freeReg();
 					return -1;
 				}
-		case InitNode: {
+		case InitNode: {	
+				       int n_reg = -1;
+                                        for(int i=0; i<count; i++){
+                                                fprintf(fptr, "PUSH R%d\n",i);
+                                                n_reg++;
+                                        }
+
 			       		reg_1 = getReg();
                                         fprintf(fptr, "MOV R%d, \"Heapset\"\n", reg_1);
                                         fprintf(fptr, "PUSH R%d\n", reg_1);
@@ -369,13 +393,22 @@ int  codeGen(struct tnode *t, FILE *fptr){
                                         fprintf(fptr, "POP R%d\n",reg_2);
                                         fprintf(fptr, "POP R%d\n",reg_2);
                                         fprintf(fptr, "POP R%d\n",reg_2);
-                                        freeReg();
+					for(int j=n_reg; j>=0; j--){
+                                                fprintf(fptr, "POP R%d\n",j);
+                                        }
+
 					reg_2 = getLoc(t->middle, fptr);
 					fprintf(fptr, "MOV [R%d], R%d\n",reg_2, reg_1);
 					freeReg();
                                         return -1;
 			       }
 		case FreeNode: {
+				       int n_reg = -1;
+                                        for(int i=0; i<count; i++){
+                                                fprintf(fptr, "PUSH R%d\n",i);
+                                                n_reg++;
+                                        }
+
 					reg_1 = getReg();
 					fprintf(fptr, "MOV R%d, \"Free\"\n", reg_1);
 					reg_2 = getLoc(t->middle, fptr);
@@ -389,6 +422,10 @@ int  codeGen(struct tnode *t, FILE *fptr){
 					fprintf(fptr, "POP R%d\n",reg_1);
 					fprintf(fptr, "POP R%d\n",reg_1);
 					fprintf(fptr, "POP R%d\n",reg_1);
+					for(int j=n_reg; j>=0; j--){
+                                                fprintf(fptr, "POP R%d\n",j);
+                                        }
+
 					freeReg();
 					return -1;
 

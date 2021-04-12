@@ -94,8 +94,9 @@ struct tnode* end_node;
 int ploc=-3;
 int lloc=0;
 int size=0;
+int FieldNo=0;
 
-#line 99 "y.tab.c"
+#line 100 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -235,14 +236,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 29 "staticalloc.y"
+#line 30 "staticalloc.y"
 
 	struct Typetable *Tentry;
 	struct tnode *no;
 	struct Paramstruct *np;
 	struct Fieldlist *fl;
 
-#line 246 "y.tab.c"
+#line 247 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -719,16 +720,16 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    47,    47,    57,    68,    77,    78,    82,    95,    98,
-      98,   101,   108,   110,   113,   119,   120,   121,   122,   135,
-     135,   138,   138,   141,   151,   152,   153,   154,   158,   164,
-     170,   176,   186,   192,   199,   205,   216,   217,   218,   220,
-     230,   232,   234,   237,   240,   243,   244,   252,   253,   256,
-     257,   260,   269,   273,   280,   281,   284,   287,   288,   291,
-     292,   293,   294,   295,   296,   297,   298,   299,   300,   303,
-     306,   310,   313,   314,   315,   316,   317,   318,   319,   320,
-     321,   322,   323,   324,   343,   352,   365,   366,   367,   368,
-     380,   392,   395,   396,   399,   412
+       0,    48,    48,    58,    69,    78,    79,    83,    96,    99,
+      99,   102,   109,   114,   117,   123,   124,   125,   126,   139,
+     139,   142,   142,   145,   155,   156,   157,   158,   162,   168,
+     174,   180,   190,   196,   203,   209,   220,   221,   222,   224,
+     234,   236,   238,   241,   244,   247,   248,   256,   257,   260,
+     261,   264,   273,   277,   284,   285,   288,   291,   292,   295,
+     296,   297,   298,   299,   300,   301,   302,   303,   304,   307,
+     310,   314,   317,   318,   319,   320,   321,   322,   323,   324,
+     325,   326,   327,   328,   347,   356,   369,   370,   371,   372,
+     384,   396,   399,   400,   403,   416
 };
 #endif
 
@@ -1475,7 +1476,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* start: TypeDefBlock GdeclBlock FdefBlock MainBlock  */
-#line 47 "staticalloc.y"
+#line 48 "staticalloc.y"
                                                         {
                                                 printf("Completed\n");
                                                 FILE *fptr = fopen("out.xsm", "w");
@@ -1486,11 +1487,11 @@ yyreduce:
  //                                               writefooter(fptr);
                                                 exit(1);
                                         }
-#line 1490 "y.tab.c"
+#line 1491 "y.tab.c"
     break;
 
   case 3: /* start: TypeDefBlock GdeclBlock MainBlock  */
-#line 57 "staticalloc.y"
+#line 58 "staticalloc.y"
                                             {
 						printf("Completed here\n");
 					FILE *fptr = fopen("out.xsm", "w");
@@ -1501,11 +1502,11 @@ yyreduce:
                                                 exit(1);
 					
 	}
-#line 1505 "y.tab.c"
+#line 1506 "y.tab.c"
     break;
 
   case 4: /* start: BEG GdeclBlock MainBlock END  */
-#line 69 "staticalloc.y"
+#line 70 "staticalloc.y"
                                          {
       						printf("Completed\n");
 	      					FILE *fptr = fopen("out.xsm", "w");
@@ -1514,23 +1515,23 @@ yyreduce:
 //						writefooter(fptr); 
       						exit(1); 
 					}
-#line 1518 "y.tab.c"
+#line 1519 "y.tab.c"
     break;
 
   case 5: /* start: BEG MainBlock END  */
-#line 77 "staticalloc.y"
+#line 78 "staticalloc.y"
                                                 { exit(1); }
-#line 1524 "y.tab.c"
+#line 1525 "y.tab.c"
     break;
 
   case 6: /* start: GdeclBlock FdefBlock  */
-#line 78 "staticalloc.y"
+#line 79 "staticalloc.y"
                                         { printf("Completed now \n"); printtable(); exit(1); }
-#line 1530 "y.tab.c"
+#line 1531 "y.tab.c"
     break;
 
   case 7: /* TypeDefBlock: TYPE TypeDefList ENDTYPE  */
-#line 82 "staticalloc.y"
+#line 83 "staticalloc.y"
                                         {struct Typetable *temp = Thead;
 	     
      						while(temp!=NULL){		// Check if all members have types that exists
@@ -1544,158 +1545,161 @@ yyreduce:
 								Ftemp = Ftemp->next;}
 							
 							temp = temp->next;}}
-#line 1548 "y.tab.c"
+#line 1549 "y.tab.c"
     break;
 
   case 8: /* TypeDefBlock: TYPE ENDTYPE  */
-#line 95 "staticalloc.y"
+#line 96 "staticalloc.y"
                             {}
-#line 1554 "y.tab.c"
+#line 1555 "y.tab.c"
     break;
 
   case 10: /* TypeDefList: TypeDef  */
-#line 98 "staticalloc.y"
+#line 99 "staticalloc.y"
                                             {}
-#line 1560 "y.tab.c"
+#line 1561 "y.tab.c"
     break;
 
   case 11: /* TypeDef: ID '{' FieldDeclList '}'  */
-#line 101 "staticalloc.y"
+#line 102 "staticalloc.y"
                                         { 
 					Tinstall((yyvsp[-3].no)->varname, size, (yyvsp[-1].fl)); 
 					size = 0;
 					Findex=0;
 }
-#line 1570 "y.tab.c"
+#line 1571 "y.tab.c"
     break;
 
   case 12: /* FieldDeclList: FieldDeclList FieldDecl  */
-#line 108 "staticalloc.y"
+#line 109 "staticalloc.y"
                                         { (yyvsp[0].fl)->next = (yyvsp[-1].fl);
-	      				  (yyval.fl) = (yyvsp[0].fl); }
-#line 1577 "y.tab.c"
+	      				  (yyval.fl) = (yyvsp[0].fl); FieldNo++;if(FieldNo>=8){
+							yyerror("Number of fields cannot exceed 8\n");
+							exit(1);
+}}
+#line 1581 "y.tab.c"
     break;
 
   case 13: /* FieldDeclList: FieldDecl  */
-#line 110 "staticalloc.y"
-                                { (yyval.fl)=(yyvsp[0].fl); }
-#line 1583 "y.tab.c"
+#line 114 "staticalloc.y"
+                                {  FieldNo = 0;(yyval.fl)=(yyvsp[0].fl); }
+#line 1587 "y.tab.c"
     break;
 
   case 14: /* FieldDecl: TypeName ID ';'  */
-#line 113 "staticalloc.y"
+#line 117 "staticalloc.y"
                                  { 
 
 				size=size+1;
 				(yyval.fl) = Finstall((yyvsp[-1].no)->varname, (yyvsp[-2].Tentry)); }
-#line 1592 "y.tab.c"
+#line 1596 "y.tab.c"
     break;
 
   case 15: /* TypeName: INT  */
-#line 119 "staticalloc.y"
+#line 123 "staticalloc.y"
                     { (yyval.Tentry) = "INT"; }
-#line 1598 "y.tab.c"
+#line 1602 "y.tab.c"
     break;
 
   case 16: /* TypeName: STR  */
-#line 120 "staticalloc.y"
+#line 124 "staticalloc.y"
                     { (yyval.Tentry) = "STR"; }
-#line 1604 "y.tab.c"
+#line 1608 "y.tab.c"
     break;
 
   case 17: /* TypeName: VOID  */
-#line 121 "staticalloc.y"
+#line 125 "staticalloc.y"
                      { (yyval.Tentry) = "VOID"; }
-#line 1610 "y.tab.c"
+#line 1614 "y.tab.c"
     break;
 
   case 18: /* TypeName: ID  */
-#line 122 "staticalloc.y"
+#line 126 "staticalloc.y"
                     {  (yyval.Tentry) = (yyvsp[0].no)->varname; }
-#line 1616 "y.tab.c"
+#line 1620 "y.tab.c"
     break;
 
   case 20: /* GdeclBlock: DECL ENDDECL  */
-#line 135 "staticalloc.y"
+#line 139 "staticalloc.y"
                                                    {}
-#line 1622 "y.tab.c"
+#line 1626 "y.tab.c"
     break;
 
   case 22: /* GdeclList: Gdecl  */
-#line 138 "staticalloc.y"
+#line 142 "staticalloc.y"
                                     {}
-#line 1628 "y.tab.c"
+#line 1632 "y.tab.c"
     break;
 
   case 23: /* Gdecl: Type GidList ';'  */
-#line 141 "staticalloc.y"
+#line 145 "staticalloc.y"
                                         { 
      						while((yyvsp[-1].no) != NULL) {
 			     				struct Gsymbol* temp = Lookup((yyvsp[-1].no)->varname);
 							temp->type = (yyvsp[-2].Tentry);
 							(yyvsp[-1].no) = (yyvsp[-1].no)->left;}
 					}
-#line 1639 "y.tab.c"
+#line 1643 "y.tab.c"
     break;
 
   case 24: /* Type: INT  */
-#line 151 "staticalloc.y"
+#line 155 "staticalloc.y"
                                         { (yyval.Tentry) = TLookup("INT"); }
-#line 1645 "y.tab.c"
+#line 1649 "y.tab.c"
     break;
 
   case 25: /* Type: STR  */
-#line 152 "staticalloc.y"
+#line 156 "staticalloc.y"
                                         { (yyval.Tentry) = TLookup("STR"); }
-#line 1651 "y.tab.c"
+#line 1655 "y.tab.c"
     break;
 
   case 26: /* Type: VOID  */
-#line 153 "staticalloc.y"
+#line 157 "staticalloc.y"
                                         { (yyval.Tentry) = TLookup("VOID"); }
-#line 1657 "y.tab.c"
+#line 1661 "y.tab.c"
     break;
 
   case 27: /* Type: ID  */
-#line 154 "staticalloc.y"
+#line 158 "staticalloc.y"
                                         { (yyval.Tentry) = TLookup((yyvsp[0].no)->varname); }
-#line 1663 "y.tab.c"
+#line 1667 "y.tab.c"
     break;
 
   case 28: /* GidList: GidList ',' ID  */
-#line 158 "staticalloc.y"
+#line 162 "staticalloc.y"
                                         {
        						if(Lookup((yyvsp[0].no)->varname) != NULL){
 			                                yyerror("Variable already declared");   
 			                                exit(1);}     
 					  	Install((yyvsp[0].no)->varname, NULL, 1,1, NULL, NULL); (yyvsp[0].no)->left = (yyvsp[-2].no); (yyval.no)=(yyvsp[0].no); }
-#line 1673 "y.tab.c"
+#line 1677 "y.tab.c"
     break;
 
   case 29: /* GidList: GidList ',' ID '[' NUM ']'  */
-#line 164 "staticalloc.y"
+#line 168 "staticalloc.y"
                                         {
 						 if(Lookup((yyvsp[-3].no)->varname) != NULL){
 			                                yyerror("Variable name already declared");
 			                                exit(1);}
 			                         Install((yyvsp[-3].no)->varname, NULL,(yyvsp[-1].no)->val, 1, NULL, NULL); (yyvsp[-3].no)->left = (yyvsp[-5].no); (yyval.no)=(yyvsp[-3].no);
 						 address= address + ((yyvsp[-1].no)->val-1);}
-#line 1684 "y.tab.c"
+#line 1688 "y.tab.c"
     break;
 
   case 30: /* GidList: GidList ',' ID '[' NUM ']' '[' NUM ']'  */
-#line 170 "staticalloc.y"
+#line 174 "staticalloc.y"
                                               { 
 						if(Lookup((yyvsp[-6].no)->varname) != NULL){
 			                                yyerror("Variable name already declared");
 			                                exit(1);}
 			                        Install((yyvsp[-6].no)->varname, NULL, (yyvsp[-4].no)->val, (yyvsp[-1].no)->val, NULL, NULL); (yyvsp[-6].no)->left = (yyvsp[-8].no); (yyval.no)=(yyvsp[-6].no);
                         			address= address + (((yyvsp[-4].no)->val*(yyvsp[-1].no)->val)-1);}
-#line 1695 "y.tab.c"
+#line 1699 "y.tab.c"
     break;
 
   case 31: /* GidList: GidList ',' ID '(' ParamList ')'  */
-#line 176 "staticalloc.y"
+#line 180 "staticalloc.y"
                                                 {
                                                 if(Lookup((yyvsp[-3].no)->varname)!=NULL){
                                                         yyerror("Function name already declared");
@@ -1703,43 +1707,43 @@ yyreduce:
                                                 Install((yyvsp[-3].no)->varname, NULL, 1, 1,(yyvsp[-1].np), getFlabel()); (yyvsp[-3].no)->left = (yyvsp[-5].no);  (yyval.no) = (yyvsp[-3].no);
 						ploc=-3; lloc=0; Lhead=NULL;
 						 }
-#line 1707 "y.tab.c"
+#line 1711 "y.tab.c"
     break;
 
   case 32: /* GidList: ID '[' NUM ']'  */
-#line 186 "staticalloc.y"
+#line 190 "staticalloc.y"
                                         { 
 						if(Lookup((yyvsp[-3].no)->varname) != NULL){
 			                                yyerror("Variable name already declared");
 			                                exit(1);}
 			                        Install((yyvsp[-3].no)->varname, NULL,(yyvsp[-1].no)->val, 1, NULL, NULL); (yyval.no) = (yyvsp[-3].no);
 						address = address + ((yyvsp[-1].no)->val-1); }
-#line 1718 "y.tab.c"
+#line 1722 "y.tab.c"
     break;
 
   case 33: /* GidList: ID '[' NUM ']' '[' NUM ']'  */
-#line 192 "staticalloc.y"
+#line 196 "staticalloc.y"
                                         {
 						if(Lookup((yyvsp[-6].no)->varname) != NULL){
 			                                yyerror("Variable name already declared");
 			                                exit(1);}
 			                        Install((yyvsp[-6].no)->varname, NULL,(yyvsp[-4].no)->val,(yyvsp[-1].no)->val, NULL, NULL); (yyval.no) = (yyvsp[-6].no);
 			                        address = address + (((yyvsp[-4].no)->val*(yyvsp[-1].no)->val)-1); }
-#line 1729 "y.tab.c"
+#line 1733 "y.tab.c"
     break;
 
   case 34: /* GidList: ID  */
-#line 199 "staticalloc.y"
+#line 203 "staticalloc.y"
                                         {
 						 if(Lookup((yyvsp[0].no)->varname) != NULL){
 							yyerror("Variable name already declared");
 							exit(1);}	
 						Install((yyvsp[0].no)->varname, NULL,1, 1, NULL, NULL); (yyval.no) = (yyvsp[0].no); }
-#line 1739 "y.tab.c"
+#line 1743 "y.tab.c"
     break;
 
   case 35: /* GidList: ID '(' ParamList ')'  */
-#line 205 "staticalloc.y"
+#line 209 "staticalloc.y"
                                         {
 						if(Lookup((yyvsp[-3].no)->varname)!=NULL){
 							yyerror("Function name already declared");
@@ -1747,29 +1751,29 @@ yyreduce:
 						Install((yyvsp[-3].no)->varname, NULL, 1, 1,(yyvsp[-1].np), getFlabel()); (yyval.no) = (yyvsp[-3].no);
 						ploc=-3; lloc=0; Lhead=NULL;
 					}
-#line 1751 "y.tab.c"
+#line 1755 "y.tab.c"
     break;
 
   case 36: /* FdefBlock: FdefBlock Fdef  */
-#line 216 "staticalloc.y"
+#line 220 "staticalloc.y"
                                                                 { (yyval.no) = createTree(NULL,FnBlock, NULL,FnBlock, NULL, (yyvsp[-1].no),NULL, (yyvsp[0].no));}
-#line 1757 "y.tab.c"
+#line 1761 "y.tab.c"
     break;
 
   case 37: /* FdefBlock: Fdef  */
-#line 217 "staticalloc.y"
+#line 221 "staticalloc.y"
                                                                 { (yyval.no) = (yyvsp[0].no); }
-#line 1763 "y.tab.c"
+#line 1767 "y.tab.c"
     break;
 
   case 38: /* FdefBlock: %empty  */
-#line 218 "staticalloc.y"
+#line 222 "staticalloc.y"
                                                 {}
-#line 1769 "y.tab.c"
+#line 1773 "y.tab.c"
     break;
 
   case 39: /* Fdef: Type ID '(' ParamList ')' '{' LdeclBlock Body '}'  */
-#line 220 "staticalloc.y"
+#line 224 "staticalloc.y"
                                                                 { checkvalid((yyvsp[-8].Tentry), (yyvsp[-5].np), Lookup((yyvsp[-7].no)->varname)); 
       								  ploc=-3; lloc=0; 
 								  struct tnode *temp = (yyvsp[-1].no)->left;
@@ -1778,84 +1782,84 @@ yyreduce:
 								  (yyval.no)->Lentry = Lhead;
 								  Lhead = NULL;
 								}
-#line 1782 "y.tab.c"
+#line 1786 "y.tab.c"
     break;
 
   case 40: /* ParamList: ParamList ',' Param  */
-#line 230 "staticalloc.y"
+#line 234 "staticalloc.y"
                                         { 	Pcheck((yyvsp[-2].np), (yyvsp[0].np));
 						(yyvsp[0].np)->next = (yyvsp[-2].np); (yyval.np) = (yyvsp[0].np); Linstall((yyvsp[0].np)->name, (yyvsp[0].np)->type, ploc--); }
-#line 1789 "y.tab.c"
+#line 1793 "y.tab.c"
     break;
 
   case 41: /* ParamList: Param  */
-#line 232 "staticalloc.y"
+#line 236 "staticalloc.y"
                                         { 
 					  (yyval.np) = (yyvsp[0].np); Linstall((yyvsp[0].np)->name, (yyvsp[0].np)->type, ploc--); }
-#line 1796 "y.tab.c"
+#line 1800 "y.tab.c"
     break;
 
   case 42: /* ParamList: %empty  */
-#line 234 "staticalloc.y"
+#line 238 "staticalloc.y"
                                         { (yyval.np) = NULL; }
-#line 1802 "y.tab.c"
+#line 1806 "y.tab.c"
     break;
 
   case 43: /* Param: Type ID  */
-#line 237 "staticalloc.y"
+#line 241 "staticalloc.y"
                                         { (yyval.np) = Pinstall((yyvsp[0].no)->varname, (yyvsp[-1].Tentry), NULL); }
-#line 1808 "y.tab.c"
+#line 1812 "y.tab.c"
     break;
 
   case 44: /* Body: BEG Stlist Retstmt END  */
-#line 240 "staticalloc.y"
+#line 244 "staticalloc.y"
                                         { (yyvsp[-1].no)->left=(yyvsp[-2].no); (yyval.no) = (yyvsp[-1].no); }
-#line 1814 "y.tab.c"
+#line 1818 "y.tab.c"
     break;
 
   case 45: /* Retstmt: RET E ';'  */
-#line 243 "staticalloc.y"
+#line 247 "staticalloc.y"
                                         { (yyval.no) = createTree(NULL, RetNode, NULL, RetNode, NULL, NULL, NULL, (yyvsp[-1].no)); }
-#line 1820 "y.tab.c"
+#line 1824 "y.tab.c"
     break;
 
   case 46: /* MainBlock: INT MAIN '(' ')' '{' LdeclBlock Body '}'  */
-#line 244 "staticalloc.y"
+#line 248 "staticalloc.y"
                                                                 { 	ploc=-3; lloc=0;
 	  								struct tnode* temp = (yyvsp[-1].no)->left;
 									(yyvsp[-1].no)->left = NULL;
 	  								(yyval.no) = createTree(NULL, NULL, "main", MnNode, NULL, temp, NULL,(yyvsp[-1].no));
 									(yyval.no)->Lentry = Lhead;
 									Lhead = NULL; }
-#line 1831 "y.tab.c"
+#line 1835 "y.tab.c"
     break;
 
   case 47: /* LdeclBlock: DECL LDecList ENDDECL  */
-#line 252 "staticalloc.y"
+#line 256 "staticalloc.y"
                                         {}
-#line 1837 "y.tab.c"
+#line 1841 "y.tab.c"
     break;
 
   case 48: /* LdeclBlock: DECL ENDDECL  */
-#line 253 "staticalloc.y"
+#line 257 "staticalloc.y"
                                         {}
-#line 1843 "y.tab.c"
+#line 1847 "y.tab.c"
     break;
 
   case 49: /* LDecList: LDecList LDecl  */
-#line 256 "staticalloc.y"
+#line 260 "staticalloc.y"
                                         {}
-#line 1849 "y.tab.c"
+#line 1853 "y.tab.c"
     break;
 
   case 50: /* LDecList: LDecl  */
-#line 257 "staticalloc.y"
+#line 261 "staticalloc.y"
                                         {}
-#line 1855 "y.tab.c"
+#line 1859 "y.tab.c"
     break;
 
   case 51: /* LDecl: Type IdList ';'  */
-#line 260 "staticalloc.y"
+#line 264 "staticalloc.y"
                                                 {	struct tnode* ttemp = (yyvsp[-1].no);
                                                 while(ttemp != NULL) {
 							struct Lsymbol* Ltemp = Llookup(ttemp->varname);
@@ -1863,203 +1867,203 @@ yyreduce:
                                                         Ltemp->type = (yyvsp[-2].Tentry);}
                                                         ttemp=ttemp->left;}
                                         }
-#line 1867 "y.tab.c"
+#line 1871 "y.tab.c"
     break;
 
   case 52: /* IdList: IdList ',' ID  */
-#line 269 "staticalloc.y"
+#line 273 "staticalloc.y"
                                         { if(Llookup((yyvsp[0].no)->varname)!=NULL){
        						yyerror("Local variable already declared");
 						exit(1);}						
 					  Linstall((yyvsp[0].no)->varname, NULL, ++lloc); (yyvsp[0].no)->left = (yyvsp[-2].no); (yyval.no)=(yyvsp[0].no); }
-#line 1876 "y.tab.c"
+#line 1880 "y.tab.c"
     break;
 
   case 53: /* IdList: ID  */
-#line 273 "staticalloc.y"
+#line 277 "staticalloc.y"
                                         { if(Llookup((yyvsp[0].no)->varname)!=NULL){
                                                 yyerror("Local variable already declared");
                                                 exit(1);} 
 					  Linstall((yyvsp[0].no)->varname, NULL, ++lloc); (yyval.no)=(yyvsp[0].no); }
-#line 1885 "y.tab.c"
+#line 1889 "y.tab.c"
     break;
 
   case 54: /* Ifstmt: IF '(' E ')' THEN Stlist ELSE Stlist ENDIF ';'  */
-#line 280 "staticalloc.y"
+#line 284 "staticalloc.y"
                                                               {  (yyval.no) = createIfNode((yyvsp[-7].no),(yyvsp[-4].no),(yyvsp[-2].no)); }
-#line 1891 "y.tab.c"
+#line 1895 "y.tab.c"
     break;
 
   case 55: /* Ifstmt: IF '(' E ')' THEN Stlist ENDIF ';'  */
-#line 281 "staticalloc.y"
+#line 285 "staticalloc.y"
                                                               { (yyval.no) = createIfNode((yyvsp[-5].no), (yyvsp[-2].no), NULL); }
-#line 1897 "y.tab.c"
+#line 1901 "y.tab.c"
     break;
 
   case 56: /* Whilestmt: WHILE '(' E ')' DO Stlist ENDWHILE ';'  */
-#line 284 "staticalloc.y"
+#line 288 "staticalloc.y"
                                                           { (yyval.no) = createWhileNode((yyvsp[-5].no), (yyvsp[-2].no)); }
-#line 1903 "y.tab.c"
+#line 1907 "y.tab.c"
     break;
 
   case 57: /* Stlist: Stlist Stmt  */
-#line 287 "staticalloc.y"
+#line 291 "staticalloc.y"
                         { (yyval.no) = createTree(NULL,3, NULL,3, NULL, (yyvsp[-1].no),NULL, (yyvsp[0].no)); }
-#line 1909 "y.tab.c"
+#line 1913 "y.tab.c"
     break;
 
   case 58: /* Stlist: Stmt  */
-#line 288 "staticalloc.y"
+#line 292 "staticalloc.y"
                         { (yyval.no) = (yyvsp[0].no); }
-#line 1915 "y.tab.c"
+#line 1919 "y.tab.c"
     break;
 
   case 59: /* Stmt: InputStmt ';'  */
-#line 291 "staticalloc.y"
+#line 295 "staticalloc.y"
                         { (yyval.no) = (yyvsp[-1].no); }
-#line 1921 "y.tab.c"
+#line 1925 "y.tab.c"
     break;
 
   case 60: /* Stmt: OutputStmt ';'  */
-#line 292 "staticalloc.y"
+#line 296 "staticalloc.y"
                            {(yyval.no) = (yyvsp[-1].no); }
-#line 1927 "y.tab.c"
+#line 1931 "y.tab.c"
     break;
 
   case 61: /* Stmt: AsgStmt ';'  */
-#line 293 "staticalloc.y"
+#line 297 "staticalloc.y"
                         { (yyval.no) = (yyvsp[-1].no); }
-#line 1933 "y.tab.c"
+#line 1937 "y.tab.c"
     break;
 
   case 62: /* Stmt: Ifstmt  */
-#line 294 "staticalloc.y"
+#line 298 "staticalloc.y"
                         { (yyval.no) = (yyvsp[0].no); }
-#line 1939 "y.tab.c"
+#line 1943 "y.tab.c"
     break;
 
   case 63: /* Stmt: Whilestmt  */
-#line 295 "staticalloc.y"
+#line 299 "staticalloc.y"
                         { (yyval.no) = (yyvsp[0].no); }
-#line 1945 "y.tab.c"
+#line 1949 "y.tab.c"
     break;
 
   case 64: /* Stmt: BREAK  */
-#line 296 "staticalloc.y"
+#line 300 "staticalloc.y"
                        { (yyval.no) = createTree(NULL, NULL, NULL, 10,NULL, NULL, NULL, NULL); }
-#line 1951 "y.tab.c"
+#line 1955 "y.tab.c"
     break;
 
   case 65: /* Stmt: CONTINUE  */
-#line 297 "staticalloc.y"
+#line 301 "staticalloc.y"
                        { (yyval.no) = createTree(NULL, NULL, NULL, 11,NULL, NULL, NULL, NULL); }
-#line 1957 "y.tab.c"
+#line 1961 "y.tab.c"
     break;
 
   case 66: /* Stmt: E EQ ALLOC ';'  */
-#line 298 "staticalloc.y"
+#line 302 "staticalloc.y"
                                 { (yyval.no) = createAllocNode((yyvsp[-3].no)); }
-#line 1963 "y.tab.c"
+#line 1967 "y.tab.c"
     break;
 
   case 67: /* Stmt: E EQ INIT ';'  */
-#line 299 "staticalloc.y"
+#line 303 "staticalloc.y"
                         { (yyval.no) = createInitNode((yyvsp[-3].no)); }
-#line 1969 "y.tab.c"
+#line 1973 "y.tab.c"
     break;
 
   case 68: /* Stmt: FREE '(' E ')' ';'  */
-#line 300 "staticalloc.y"
+#line 304 "staticalloc.y"
                              { (yyval.no) = createFreeNode((yyvsp[-4].no)); }
-#line 1975 "y.tab.c"
+#line 1979 "y.tab.c"
     break;
 
   case 69: /* InputStmt: READ '(' E ')'  */
-#line 303 "staticalloc.y"
+#line 307 "staticalloc.y"
                            { (yyval.no) =createIONode(-1,"Read",(yyvsp[-1].no));}
-#line 1981 "y.tab.c"
+#line 1985 "y.tab.c"
     break;
 
   case 70: /* OutputStmt: WRITE '(' E ')'  */
-#line 306 "staticalloc.y"
+#line 310 "staticalloc.y"
                              { (yyval.no) = createIONode(-2,"Write",(yyvsp[-1].no)); }
-#line 1987 "y.tab.c"
+#line 1991 "y.tab.c"
     break;
 
   case 71: /* AsgStmt: E EQ E  */
-#line 310 "staticalloc.y"
+#line 314 "staticalloc.y"
                   { (yyval.no) = createEQNode((yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1993 "y.tab.c"
+#line 1997 "y.tab.c"
     break;
 
   case 72: /* E: E PLUS E  */
-#line 313 "staticalloc.y"
+#line 317 "staticalloc.y"
                 { (yyval.no) = createOpNode("ADD",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 1999 "y.tab.c"
+#line 2003 "y.tab.c"
     break;
 
   case 73: /* E: E MUL E  */
-#line 314 "staticalloc.y"
+#line 318 "staticalloc.y"
                 { (yyval.no) = createOpNode("MUL",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2005 "y.tab.c"
+#line 2009 "y.tab.c"
     break;
 
   case 74: /* E: E MINUS E  */
-#line 315 "staticalloc.y"
+#line 319 "staticalloc.y"
                 { (yyval.no) = createOpNode("SUB",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2011 "y.tab.c"
+#line 2015 "y.tab.c"
     break;
 
   case 75: /* E: E DIV E  */
-#line 316 "staticalloc.y"
+#line 320 "staticalloc.y"
                 { (yyval.no) = createOpNode("DIV",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2017 "y.tab.c"
+#line 2021 "y.tab.c"
     break;
 
   case 76: /* E: E EQU E  */
-#line 317 "staticalloc.y"
+#line 321 "staticalloc.y"
                 { (yyval.no) = createOpNode("EQ",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2023 "y.tab.c"
+#line 2027 "y.tab.c"
     break;
 
   case 77: /* E: E LT E  */
-#line 318 "staticalloc.y"
+#line 322 "staticalloc.y"
                 { (yyval.no) = createOpNode("LT",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2029 "y.tab.c"
+#line 2033 "y.tab.c"
     break;
 
   case 78: /* E: E GT E  */
-#line 319 "staticalloc.y"
+#line 323 "staticalloc.y"
                 { (yyval.no) = createOpNode("GT",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2035 "y.tab.c"
+#line 2039 "y.tab.c"
     break;
 
   case 79: /* E: E LTE E  */
-#line 320 "staticalloc.y"
+#line 324 "staticalloc.y"
                 { (yyval.no) = createOpNode("LE",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2041 "y.tab.c"
+#line 2045 "y.tab.c"
     break;
 
   case 80: /* E: E GTE E  */
-#line 321 "staticalloc.y"
+#line 325 "staticalloc.y"
                 { (yyval.no) = createOpNode("GE",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2047 "y.tab.c"
+#line 2051 "y.tab.c"
     break;
 
   case 81: /* E: E NE E  */
-#line 322 "staticalloc.y"
+#line 326 "staticalloc.y"
                 { (yyval.no) = createOpNode("NE",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2053 "y.tab.c"
+#line 2057 "y.tab.c"
     break;
 
   case 82: /* E: '(' E ')'  */
-#line 323 "staticalloc.y"
+#line 327 "staticalloc.y"
                 { (yyval.no) = (yyvsp[-1].no); }
-#line 2059 "y.tab.c"
+#line 2063 "y.tab.c"
     break;
 
   case 83: /* E: ID  */
-#line 324 "staticalloc.y"
+#line 328 "staticalloc.y"
                 { 
 		  if(Llookup((yyvsp[0].no)->varname)==NULL){
 			if(Lookup((yyvsp[0].no)->varname) == NULL){
@@ -2079,11 +2083,11 @@ yyreduce:
 			(yyval.no) = (yyvsp[0].no);
 		   }
 		}
-#line 2083 "y.tab.c"
+#line 2087 "y.tab.c"
     break;
 
   case 84: /* E: ID '[' E ']'  */
-#line 343 "staticalloc.y"
+#line 347 "staticalloc.y"
                  { if(Lookup((yyvsp[-3].no)->varname) == NULL){
                         yyerror("Variable not declared\n");
                         exit(1); }
@@ -2092,11 +2096,11 @@ yyreduce:
                         (yyvsp[-3].no)->Gentry = Lookup((yyvsp[-3].no)->varname);
 			(yyvsp[-3].no)->left = (yyvsp[-1].no);
                         (yyval.no) = (yyvsp[-3].no); }
-#line 2096 "y.tab.c"
+#line 2100 "y.tab.c"
     break;
 
   case 85: /* E: ID '[' E ']' '[' E ']'  */
-#line 352 "staticalloc.y"
+#line 356 "staticalloc.y"
                            { if(Lookup((yyvsp[-6].no)->varname)==NULL){
 
 				   yyerror("Variable not declared\n");
@@ -2109,29 +2113,29 @@ yyreduce:
 				(yyvsp[-6].no)->left = (yyvsp[-4].no);
 				(yyvsp[-6].no)->right = (yyvsp[-1].no);
 				(yyval.no) = (yyvsp[-6].no); }
-#line 2113 "y.tab.c"
+#line 2117 "y.tab.c"
     break;
 
   case 86: /* E: NUM  */
-#line 365 "staticalloc.y"
+#line 369 "staticalloc.y"
                 { (yyval.no) = (yyvsp[0].no); }
-#line 2119 "y.tab.c"
+#line 2123 "y.tab.c"
     break;
 
   case 87: /* E: LIT  */
-#line 366 "staticalloc.y"
+#line 370 "staticalloc.y"
                 { (yyval.no) = (yyvsp[0].no); }
-#line 2125 "y.tab.c"
+#line 2129 "y.tab.c"
     break;
 
   case 88: /* E: NUL  */
-#line 367 "staticalloc.y"
+#line 371 "staticalloc.y"
                 { (yyval.no) = createTree(0, TLookup("VOID"), NULL, 0, NULL, NULL, NULL, NULL); }
-#line 2131 "y.tab.c"
+#line 2135 "y.tab.c"
     break;
 
   case 89: /* E: ID '(' ')'  */
-#line 368 "staticalloc.y"
+#line 372 "staticalloc.y"
                         {
 				if(Lookup((yyvsp[-2].no)->varname) == NULL){
                                         yyerror("Function not declared before calling \n");
@@ -2143,11 +2147,11 @@ yyreduce:
 				(yyvsp[-2].no)->left = NULL;
 				(yyval.no) = (yyvsp[-2].no);
 }
-#line 2147 "y.tab.c"
+#line 2151 "y.tab.c"
     break;
 
   case 90: /* E: ID '(' ArgList ')'  */
-#line 380 "staticalloc.y"
+#line 384 "staticalloc.y"
                                 { 
 				if(Lookup((yyvsp[-3].no)->varname) == NULL){
 					yyerror("Function not declared before calling \n");
@@ -2160,29 +2164,29 @@ yyreduce:
 				(yyvsp[-3].no)->middle = (yyvsp[-1].no);
 				(yyval.no) = (yyvsp[-3].no);
 				}
-#line 2164 "y.tab.c"
+#line 2168 "y.tab.c"
     break;
 
   case 91: /* E: Field  */
-#line 392 "staticalloc.y"
+#line 396 "staticalloc.y"
                                 { (yyval.no) = (yyvsp[0].no); }
-#line 2170 "y.tab.c"
+#line 2174 "y.tab.c"
     break;
 
   case 92: /* ArgList: ArgList ',' E  */
-#line 395 "staticalloc.y"
+#line 399 "staticalloc.y"
                                 { (yyvsp[0].no)->middle = (yyvsp[-2].no); (yyval.no)=(yyvsp[0].no);}
-#line 2176 "y.tab.c"
+#line 2180 "y.tab.c"
     break;
 
   case 93: /* ArgList: E  */
-#line 396 "staticalloc.y"
+#line 400 "staticalloc.y"
                                 { (yyval.no)=(yyvsp[0].no); }
-#line 2182 "y.tab.c"
+#line 2186 "y.tab.c"
     break;
 
   case 94: /* Field: Field '.' ID  */
-#line 399 "staticalloc.y"
+#line 403 "staticalloc.y"
                         { struct tnode* temp = (yyvsp[-2].no); 
 							while(temp->right!=NULL){
  								temp = temp->right;}
@@ -2196,11 +2200,11 @@ yyreduce:
 							(yyvsp[-2].no)->nodetype = FieldNode;
 							temp->right = (yyvsp[0].no);
 							 (yyval.no) =  (yyvsp[-2].no);}
-#line 2200 "y.tab.c"
+#line 2204 "y.tab.c"
     break;
 
   case 95: /* Field: ID '.' ID  */
-#line 412 "staticalloc.y"
+#line 416 "staticalloc.y"
                         { (yyvsp[-2].no)->right = (yyvsp[0].no); 
 					
 				struct Gsymbol *Gtemp = Lookup((yyvsp[-2].no)->varname);
@@ -2229,11 +2233,11 @@ yyreduce:
 				(yyvsp[0].no)->val = Ftemp->fieldIndex;
 				(yyvsp[-2].no)->nodetype = FieldNode;
 				(yyval.no) = (yyvsp[-2].no); }
-#line 2233 "y.tab.c"
+#line 2237 "y.tab.c"
     break;
 
 
-#line 2237 "y.tab.c"
+#line 2241 "y.tab.c"
 
       default: break;
     }
@@ -2427,7 +2431,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 442 "staticalloc.y"
+#line 446 "staticalloc.y"
 
 
 yyerror(char const* s){
