@@ -20,8 +20,10 @@
 #define SelfNode 53
 #define SelfFnNode 54
 #define MethodCall 55
-
-
+#define Cobj 56
+#define NewNode 57
+#define MethodNode 58
+#define MethodBlock 59
 int ifcount=0;
 int count=0;
 int label;
@@ -59,6 +61,22 @@ struct tnode* createTree(int val, struct Typetable  *type, char* c,int nodetype,
 	return temp;
 }
 
+struct tnode* createNewNode(struct tnode*t, char *cname){
+	struct Classtable * Ctemp = CLookup(cname);
+	if(Ctemp == NULL){
+		yyerror("Class not defined");
+		exit(1);
+	}
+	if(t->nodetype !=Cobj){
+		yyerror("Only Class variables can be allocated\n");
+		exit(1);
+		}
+	struct tnode* temp = createTree(NULL, NULL, "New", NewNode, NULL, NULL, t, NULL);
+	temp->Ctype = Ctemp;
+	return temp;
+
+
+}
 
 struct tnode* createAllocNode(struct tnode* t){
 	if(t->nodetype != 4){
@@ -314,7 +332,9 @@ void  makepgrm(struct tnode *t, FILE *fptr){
 }
 
 int  codeGen(struct tnode *t, FILE *fptr){
-
+	if(t==NULL){
+		return -1;
+	}
 	int reg_1, reg_2;
 	switch((t->nodetype)){
 
@@ -336,8 +356,8 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			fprintf(fptr,"MOV R%d, [R%d]\n", reg_1,getLoc(t,fptr));
 			return reg_1;
 		case FieldNode: {
-					reg_1 = getReg();
-					fprintf(fptr, "MOV R%d, [R%d]\n",reg_1, getLoc(t,fptr));
+					reg_1 = getLoc(t,fptr);
+					fprintf(fptr, "MOV R%d, [R%d]\n",reg_1, reg_1);
 					return reg_1;
 				}
 		case AllocNode: {	
@@ -377,6 +397,47 @@ int  codeGen(struct tnode *t, FILE *fptr){
 					freeReg();
 					return -1;
 				}
+		case NewNode: {
+				int n_reg = -1;
+                                        for(int i=0; i<count; i++){
+                                                fprintf(fptr, "PUSH R%d\n",i);
+                                                n_reg++;
+                                        }
+                                        reg_1 = getReg();
+                                        fprintf(fptr, "MOV R%d, \"Alloc\"\n", reg_1);
+                                        fprintf(fptr, "PUSH R%d\n", reg_1);
+                                        fprintf(fptr, "MOV R%d, %d\n", reg_1, 8);
+                                        fprintf(fptr, "PUSH R%d\n",reg_1);
+                                        fprintf(fptr, "PUSH R%d\n",reg_1);
+                                        fprintf(fptr, "PUSH R%d\n",reg_1);
+                                        fprintf(fptr, "PUSH R%d\n",reg_1);
+                                        fprintf(fptr, "CALL 0\n");
+                                        fprintf(fptr, "POP R%d\n",reg_1 );
+                                        reg_2 = getReg();
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "POP R%d\n",reg_2);
+                                        fprintf(fptr, "MOV R%d, %d\n",reg_2, -1);
+                                        fprintf(fptr, "EQ R%d, R%d\n",reg_2, reg_1);
+                                        int label_1 = getLabel();
+                                        fprintf(fptr, "JZ R%d, L%d\n",reg_2, label_1);
+                                        fprintf(fptr, "INT 10\n");
+                                        fprintf(fptr, "L%d:\n",label_1);
+                                        freeReg();
+                                        for(int j=n_reg; j>=0; j--){
+                                                fprintf(fptr, "POP R%d\n",j);
+                                        }
+
+                                        reg_2 = getLoc(t->middle, fptr);
+                                        fprintf(fptr, "MOV [R%d], R%d\n",reg_2, reg_1);
+                                        freeReg();
+                                        return -1;
+
+
+
+
+			      }
 		case InitNode: {	
 				       int n_reg = -1;
                                         for(int i=0; i<count; i++){
@@ -485,7 +546,13 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			int label_2 = getLabel();
 			reg_1 = codeGen(t->left, fptr);
 			fprintf(fptr, "JZ R%d, L%d\n",reg_1,label_1);
+			freeReg();	//trial
+			int tcount;
+		        tcount	= count;
 			codeGen(t->middle,fptr);
+			while(count>tcount){
+				freeReg();
+			}
 			if(t->right==NULL){
 				fprintf (fptr, "L%d:\n", label_1);
 				fprintf("%d",label_2);
@@ -493,7 +560,11 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			}
 			else{
 			fprintf (fptr, "JMP L%d\n", label_2);
+			
 			fprintf (fptr, "L%d:\n", label_1);
+			while(count>tcount){ //trial
+                                freeReg();
+                        }
 			codeGen(t->right,fptr);
 			fprintf (fptr, "L%d:\n", label_2);
 			}
@@ -542,6 +613,13 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			fprintf(fptr,"MOV R%d, [R%d]\n",reg_1,locReg);
 			return reg_1;
 			      }
+		case MethodBlock: {
+			codeGen(t->left, fptr);
+			freeAllReg();
+			codeGen(t->right, fptr);
+			freeAllReg();
+			return -1;
+				  }
 		case FnBlock: {
 			codeGen(t->left,fptr);
 			freeAllReg();
@@ -549,6 +627,41 @@ int  codeGen(struct tnode *t, FILE *fptr){
 			freeAllReg();
 			return -1;
 			      }
+		case MethodNode: {
+			fprintf(fptr, "F%d:\n",t->val);
+                        fprintf(fptr, "PUSH BP\n");
+                        fprintf(fptr, "MOV BP, SP\n");
+                        struct Lsymbol *Ltemp = t->Lentry;
+                        while(Ltemp!=NULL){
+                                if(Ltemp->binding>0)
+                                        fprintf(fptr, "PUSH R0\n");
+                        Ltemp = Ltemp->next;
+                        }
+                        codeGen(t->left, fptr);
+                        freeAllReg();
+                        reg_1 = codeGen(t->right, fptr);
+                        reg_2 = getReg();
+                        fprintf(fptr, "MOV R%d, -2\n", reg_2);
+                        fprintf(fptr, "ADD R%d, BP\n", reg_2);
+                        fprintf(fptr, "MOV [R%d], R%d\n", reg_2, reg_1);
+                        freeReg();
+                        Ltemp = t->Lentry;
+                        reg_2 = getReg();
+                        while(Ltemp!=NULL){
+                                if(Ltemp->binding>0)
+                                        fprintf(fptr, "POP R%d\n", reg_2);
+                                Ltemp = Ltemp->next;
+                        }
+                        freeReg();
+
+                        fprintf(fptr, "POP BP\n");
+                        fprintf(fptr, "RET\n");
+                        freeAllReg();
+                        return -1;
+
+
+
+				}
 		case FnNode: {
 			fprintf(fptr, "F%d:\n",t->Gentry->flabel);
 			fprintf(fptr, "PUSH BP\n");
@@ -665,6 +778,7 @@ int  codeGen(struct tnode *t, FILE *fptr){
 		case SelfNode: {
 				reg_1 = getLoc(t, fptr);
 				fprintf(fptr, "MOV R%d, [R%d]\n", reg_1, reg_1);
+
 				return reg_1;
 						
 			       }
@@ -676,10 +790,12 @@ int  codeGen(struct tnode *t, FILE *fptr){
 	                                n_reg++;
         	                }
 				//PUSH ADDRESS OF SELF
-				reg_1 = getLoc(t);	// Gets BP-k in reg_1
+				reg_1 = getLoc(t, fptr);	// Gets BP-k in reg_1
 				fprintf(fptr, "MOV R%d, [R%d]\n",reg_1,reg_1);	// reg1 = [BP-k]
 				fprintf(fptr, "PUSH R%d\n",reg_1);
-				t = t->right;
+				while(t->right != NULL){
+					t = t->right;}
+
                 	        struct tnode* temp = t->middle;		// Push the other arguments
 	                        while(temp!=NULL){
 	                                reg_1 = codeGen(temp, fptr);
@@ -689,7 +805,7 @@ int  codeGen(struct tnode *t, FILE *fptr){
         	                }
                 	        fprintf(fptr, "PUSH R0\n");     //Empty Space for return value
 	                        fprintf(fptr, "CALL F%d\n", t->val);
-        	                reg_1 = getReg();
+	       	                reg_1 = getReg(); //trial
 	                        fprintf(fptr, "POP R%d\n",reg_1);
 	                        reg_2 = getReg();
 	                        temp = t->middle;
@@ -697,13 +813,16 @@ int  codeGen(struct tnode *t, FILE *fptr){
 	                                fprintf(fptr, "POP R%d\n",reg_2);
 	                                temp = temp->middle;
 	                        }
-				fprintf(fptr, "R%d\n",reg_2);	//POP SELF
+				fprintf(fptr, "POP R%d\n",reg_2);	//POP SELF
 				freeReg();
 	                        for(int j=n_reg; j>=0; j--){
 	                                fprintf(fptr, "POP R%d\n",j);
 	                        }
 	                        return reg_1;
 				 }
+
+
+		
 		default:
 			if(strcmp(t->varname,"EQU")==0){
 				reg_1 = codeGen(t->right, fptr);
@@ -753,6 +872,7 @@ int getLoc(struct tnode* t, FILE *fptr){
 				int reg = getReg();
 				fprintf(fptr, "MOV R%d, BP\n",reg);
 				fprintf(fptr, "ADD R%d, %d\n", reg,loc);
+				fprintf(fptr, "MOV R%d, [R%d]\n",reg,reg);
 				t = t->right;
 				while(t->right!=NULL){
 					fprintf(fptr, "ADD R%d, %d\n",reg,t->val);
@@ -767,9 +887,32 @@ int getLoc(struct tnode* t, FILE *fptr){
 				int reg = getReg();
 				fprintf(fptr, "MOV R%d, BP\n",reg);
 				fprintf(fptr, "ADD R%d, %d\n",reg,loc);
+				t = t->right;
+				while(t->right!=NULL && t->nodetype != MethodCall){
+					fprintf(fptr, "MOV R%d, [R%d]\n",reg,reg);
+					fprintf(fptr, "ADD R%d, %d\n", reg, t->val);
+					t=t->right;
+				}
 				return reg;
+				}
+			case Cobj :{
+				int loc =  t->Lentry->binding;
+				int reg = getReg();
+				fprintf(fptr, "MOV R%d, BP\n",reg);
+				fprintf(fptr, "ADD R%d, %d\n",reg, loc);
+				fprintf(fptr, "MOV R%d, [R%d]\n",reg,reg);
+				t=t->right;
+				while(t->right!=NULL){
+					fprintf(fptr, "ADD R%d, %d\n", reg,t->val);
+					fprintf(fptr, "MOV R%d, [R%d]\n", reg,reg);
+					t=t->right;
+				}
+                                fprintf(fptr, "ADD R%d, %d\n", reg, t->val);
+                                return reg;
 
-					 }
+
+			}
+
 		}
 	}
 	else{
@@ -814,12 +957,24 @@ int getLoc(struct tnode* t, FILE *fptr){
 				fprintf(fptr, "ADD R%d, %d\n",reg,t->val);
 				return reg;
 				}
-		case Methodcall: {
+		case MethodCall: {
 				int reg = getReg();
-				fprintf(fptr, "MOV R%d, %d\n",reg,loc);		//static allocation memory 4096
-				fprintf(fptr, "MOV R%d, [R%d]\n",reg,reg);	// [4096] = heap memory of obj
+				fprintf(fptr, "MOV R%d, %d\n",reg,loc);
+				t=t->right;
+				while(t->right != NULL && t->nodetype != MethodCall){
+					fprintf(fptr, "MOV R%d, [R%d]\n",reg, reg);
+					fprintf(fptr, "ADD R%d, %d\n", reg, t->val);
+					t=t->right;
+
+				}
 				return reg;
 				 }
+		case Cobj: {
+				int reg = getReg();
+				fprintf(fptr, "MOV R%d, %d\n", reg, loc);
+				return reg;
+
+			   }
 
 	}
 }
@@ -903,7 +1058,7 @@ struct Paramstruct* Pinstall(char* name, struct Typetable * type, struct Paramst
 
 int getFlabel(){
 	flabel++;
-	return flabel;
+	return flabel-1;
 }
 
 void printparams(struct Paramstruct *paramlist){
@@ -1112,7 +1267,7 @@ void Class_Finstall(struct Classtable *cptr, char *typename, char *name){
 	        temp->name = name;
 	        temp->fieldIndex = CFindex++;
 		temp->type = TLookup(typename);
-		temp->Ctype = NULL;
+		temp->Ctype = CLookup(typename);
 	        temp->next = Fhead;
 		cptr->MemberField = temp;
 		cptr->Fieldcount++;
