@@ -26,6 +26,9 @@
 #define NewNode 57
 #define MethodNode 58
 #define MethodBlock 59
+#define ClassEQNode 60
+#define SelfMethodCall 61
+
 
 int yylex(void);
 FILE *input_file;
@@ -42,7 +45,7 @@ struct Classtable *Cptr = NULL;
 	struct tnode *no;
 	struct Paramstruct *np;
 	struct Fieldlist *fl;
-	struct Typeholder *th
+	struct Typeholder *th;
 }
 
 
@@ -51,89 +54,129 @@ struct Classtable *Cptr = NULL;
 %type <Tentry> TypeName
 %type <th> Type
 %type <fl> FieldDecl FieldDeclList
-%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE INT STR NUL VOID DECL ENDDECL MAIN RET TYPE ENDTYPE LIT INIT ALLOC FREE NEW CLASS ENDCLASS SELF 
+%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE INT STR NUL VOID DECL ENDDECL MAIN RET TYPES ENDTYPE LIT INIT ALLOC FREE NEW CLASS ENDCLASS SELF DELETE EXTENDS
 %left PLUS MINUS
 %left MUL DIV
 
 %%
 
 start	: TypeDefBlock ClassDefBlock GdeclBlock FdefBlock MainBlock 	{
-                                                printf("Completed\n");
-                                                FILE *fptr = fopen("out.xsm", "w");
-                                                writeheader(fptr);
+                                                printf("Completed - TypeDef , ClassDef, Gdecl, Fdef, Main\n");
+                                                FILE *fptr = fopen("out.xsm", "a");
+//                                                writeheader(fptr);
+                                                writeheader2(fptr);
 						codeGen($2, fptr);
 						codeGen($4, fptr);
                                         	codeGen($5,fptr);
                                                 exit(1);
                                         }
 	| TypeDefBlock ClassDefBlock  GdeclBlock MainBlock {
-						printf("Completed here\n");
-						FILE *fptr = fopen("out.xsm", "w");
-                                                writeheader(fptr);
+						printf("Completed - TypeDef, ClassDef, Gdecl, Main\n");
+						FILE *fptr = fopen("out.xsm", "a");
+  //                                              writeheader(fptr);
+                                                writeheader2(fptr);
 						codeGen($2, fptr);
 						codeGen($4, fptr);
+						fclose(fptr);
                                                 exit(1);
+						}
 					
-	}
+	| TypeDefBlock GdeclBlock MainBlock {
+
+						printf("Completed - TypeDef, Gdecl, Main\n");
+                                                FILE *fptr = fopen("out.xsm", "a");
+    //                                            writeheader(fptr);
+                                                writeheader2(fptr);
+                                                codeGen($3, fptr);
+						fclose(fptr);
+                                                exit(1);
+
+						}
+	| TypeDefBlock GdeclBlock FdefBlock MainBlock {
+						printf("Completed - TypeDef,  Gdecl, Fdef,  Main\n");
+                                                FILE *fptr = fopen("out.xsm", "a");
+      //                                          writeheader(fptr);
+                                                writeheader2(fptr);
+                                                codeGen($3, fptr);
+                                                codeGen($4, fptr);
+						fclose(fptr);
+                                                exit(1);
+
+
+						}
 	| ClassDefBlock GdeclBlock MainBlock {
-						printf("Completed here\n");
-                                                FILE *fptr = fopen("out.xsm", "w");
-                                                writeheader(fptr);
+						printf("Completed - ClassDef, Gdecl, Main\n");
+                                                FILE *fptr = fopen("out.xsm", "a");
+        //                                        writeheader(fptr);
+                                                writeheader2(fptr);
                                                 codeGen($1, fptr);
                                                 codeGen($3, fptr);
+						fclose(fptr);
                                                 exit(1);
 
 
 						}
 
-      	| BEG GdeclBlock MainBlock END {
-      						printf("Completed\n");
-	      					FILE *fptr = fopen("out.xsm", "w");
-						writeheader(fptr);
+      	| GdeclBlock FdefBlock MainBlock {
+      						printf("Completed - Gdecl, Fdef, Main\n");
+	      					FILE *fptr = fopen("out.xsm", "a");
+	//					writeheader(fptr);
+                                                writeheader2(fptr);
+						codeGen($2, fptr);
+						codeGen($3, fptr);
+						fclose(fptr);
       						exit(1); 
 					}
-	| BEG MainBlock END			{ exit(1); }
-	| GdeclBlock FdefBlock 		{ printf("Completed now \n"); printtable(); exit(1); }
+	|  MainBlock 			{ 	printf("Completed -  Main\n");
+                                                FILE *fptr = fopen("out.xsm", "a");
+          //                                      writeheader(fptr);
+                                                writeheader2(fptr);
+                                                codeGen($1, fptr);
+						fclose(fptr);
+                                                exit(1);
+ }
 	;
 
 
 
-ClassDefBlock : CLASS ClassDefList ENDCLASS	{  $$ = $2; }
-	      | CLASS ENDCLASS			{  $$ = NULL; }
+ClassDefBlock : CLASS ClassDefList ENDCLASS	{  $$ = $2;    }		/* With atleast 1 class */
+	      | CLASS ENDCLASS			{  $$ = NULL;  }		/* Without any class */
 	      ;
 
-ClassDefList	: ClassDefList	ClassDef	{ $$ = createTree(NULL, NULL, NULL, ClBlock,NULL, $1, NULL, $2); }
+ClassDefList	: ClassDefList	ClassDef	{ $$ = createTree(NULL, NULL, NULL, ClBlock,NULL, $1, NULL, $2); }	/* Create class connector node with left = class1 , right = class2*/	
 	        | ClassDef			{ $$ = $1; }
 		;
 
-ClassDef	: Cname '{' DECL Fieldlists MethodDecl ENDDECL MethodDefns '}' { CFindex = 0; CMindex = 0;
-					   	          			$$ = createTree( NULL, NULL, $1->varname, ClNode, NULL , NULL, NULL, $7);
-										Cptr = NULL;
+ClassDef	: Cname '{' DECL Fieldlists MethodDecl ENDDECL MethodDefns '}' { CFindex = 0; CMindex = 0;		/* CFindex for FieldIndex of class , CMindex for MethodIndex*/
+					   	          			$$ = createTree( NULL, NULL, $1->varname, ClNode, NULL , NULL, NULL, $7);	/* Create class node with method at right*/
+										printVirtualTable(Cptr);
+										Cptr = NULL;				/* Clear class pointer after a class is parsed */
 										}
 	        ;
 
-Cname		: ID	{ Cptr = CInstall($1->varname, NULL); $$=$1; }
+Cname		: ID	{ Cptr = CInstall($1->varname, NULL); $$=$1; }				/* Create a class pointer when class name is found */
+       		| ID EXTENDS ID { Cptr = CInstall($1->varname, $3->varname); $$=$1;}		/* Rule for inheritance */
        		;
 
 Fieldlists	: Fieldlists FId {}
 	        | 
 	   	;
 
-FId		: TypeName ID ';'	{ Class_Finstall(Cptr, $1, $2->varname); }
+FId		: TypeName ID ';'	{ Class_Finstall(Cptr, $1, $2->varname); }		/* Install class field to classtable entry*/
      		;
 
 MethodDecl	: MethodDecl MDecl	{}
 	   	| MDecl			{}
 		;
 
-MDecl		: TypeName ID '(' ParamList ')' ';' { if(CMLookup(Cptr, $2->varname)!=NULL){
-	       							yyerror("Method Aleady declared");
-								exit(1);}
+MDecl		: TypeName ID '(' ParamList ')' ';' { //if(CMLookup(Cptr, $2->varname)!=NULL){
+	       						//yyerror("Method Aleady declared");	/* Install class method to classtable entry */
+						//		exit(1);}
 							ploc = -3; lloc = 0; Lhead=NULL;
 							Class_Minstall(Cptr, $2->varname, TLookup($1), $4);}
        		;
 
-MethodDefns	: MethodDefns Fdef		{ struct Memberfunclist *Mtemp = CMLookup(Cptr, $2->varname);  
+MethodDefns	: MethodDefns Fdef		{ struct Memberfunclist *Mtemp = CMLookup(Cptr, $2->varname);  /* Looking up from classtable and assigning Flabel to the node for codeGen purposes*/
 	    					  $2->nodetype = MethodNode; 
  						  $2->val = Mtemp->Flabel; 
 						  $$ = createTree(NULL,FnBlock, NULL,MethodBlock, NULL, $1,NULL, $2); 
@@ -148,10 +191,10 @@ MethodDefns	: MethodDefns Fdef		{ struct Memberfunclist *Mtemp = CMLookup(Cptr, 
 
 
 
-TypeDefBlock : TYPE TypeDefList ENDTYPE 	{ struct Typetable *temp = Thead;
-	     					  while(temp!=NULL){		// Check if all members have types that exists
+TypeDefBlock : TYPES TypeDefList ENDTYPE 	{ struct Typetable *temp = Thead;
+	     					  while(temp!=NULL){					/* Checking valid and assigning Types to Fields of all user defined types */
 							struct Fieldlist *Ftemp = temp->fields;
-							while(Ftemp !=NULL){
+							while(Ftemp !=NULL){				
 								struct Typetable *tttemp = TLookup(Ftemp->temp_type);
 								if(tttemp == NULL){
 									yyerror("Type of member not defined");
@@ -161,24 +204,24 @@ TypeDefBlock : TYPE TypeDefList ENDTYPE 	{ struct Typetable *temp = Thead;
 							
 							temp = temp->next;}
 						}
-	     | TYPE ENDTYPE 			{}
+	     | TYPES ENDTYPE 			{}
 	     ;
 
 TypeDefList : TypeDefList TypeDef | TypeDef 	{}
 	     ;
 
 TypeDef : ID '{' FieldDeclList '}'		{ 
-	                                         Tinstall($1->varname, size, $3); 
+	                                         Tinstall($1->varname, size, $3); 	/* Create TypeTable entry for user defined type */
 	 					 size = 0;
   					   	 Findex=0;
 						}						
 	 ;
 
 FieldDeclList : FieldDeclList FieldDecl		{ $2->next = $1;
-		      				  $$ = $2;
+		      				  $$ = $2;				/* Linking fields of user defined types */
 						  FieldNo++;
 						  if(FieldNo>=8){
-							yyerror("Number of fields cannot exceed 8\n");
+							yyerror("Number of fields cannot exceed 8\n");	/* Checking max number of fields = 8 */
 							exit(1);}}
 
 	      | FieldDecl			{  FieldNo = 0; $$=$1; }
@@ -212,24 +255,27 @@ Gdecl : Type GidList ';' 		{
 			     				struct Gsymbol* temp = Lookup($2->varname);
 							temp->type = $1->Ttype;
 							temp->Ctype = $1->Ctype;
+							if(temp->Ctype != NULL){
+								temp->vfuncbinding = getnextadd();;
+							}
 							$2 = $2->left;}
 					}
 				
      ;
 
 
-Type : INT  				{ $$->Ttype = TLookup("INT"); $$->Ctype = NULL; }
-     | STR  				{ $$->Ttype = TLookup("STR");$$->Ctype = NULL ;}
-     | VOID				{ $$->Ttype = TLookup("VOID");$$->Ctype = NULL; }
+Type : INT  				{ $$ = createTypeholder(TLookup("INT"), NULL); }
+     | STR  				{ $$= createTypeholder(TLookup("STR"), NULL) ; }
+     | VOID				{ $$=createTypeholder(TLookup("VOID"),NULL); }
      | ID				{ struct Typetable *Ttemp = TLookup($1->varname);
 					  if(Ttemp == NULL){
 						struct Classtable *Ctemp = CLookup($1->varname);
-						$$->Ctype = Ctemp;
-						$$->Ttype = NULL;
+						$$= createTypeholder(NULL, Ctemp);
+						
 					  }
 					  else{
-						$$->Ttype = Ttemp;
-						$$->Ctype = NULL;
+						$$ = createTypeholder(Ttemp, NULL);
+						
 						}
 						}
      ;
@@ -295,7 +341,6 @@ GidList : GidList ',' ID		{
 
 FdefBlock	: FdefBlock Fdef				{ $$ = createTree(NULL,FnBlock, NULL,FnBlock, NULL, $1,NULL, $2);}
 	  	| Fdef						{ $$ = $1; }
-		|						{} 
 ;
 Fdef 	: TypeName ID '(' ParamList ')' '{' LdeclBlock Body '}'	{ checkvalid(TLookup($1), $4, $2->varname, Cptr); 
       								  ploc=-3; lloc=0; 
@@ -334,16 +379,19 @@ MainBlock : INT MAIN '(' ')'  '{'LdeclBlock Body '}'		{ 	ploc=-3; lloc=0;
 	  ;
 
 LdeclBlock : DECL LDecList ENDDECL	{	if (Cptr != NULL){
+	   						Linstall("Vfuncptr", TLookup("VOID"), ploc--);
 	   						Linstall("self", TLookup("VOID"), ploc--);
 						}
 					}
 	   | DECL ENDDECL		{
 						if (Cptr != NULL){
+	   						Linstall("Vfuncptr", TLookup("VOID"), ploc--);
                                                	 	Linstall("self", TLookup("VOID"), ploc--);
                                                 }
 
 						}
 	   |				{ if (Cptr != NULL){
+	   						Linstall("Vfuncptr", TLookup("VOID"), ploc--);
                                                         Linstall("self", TLookup("VOID"), ploc--);
                                                 }
 					}
@@ -364,11 +412,23 @@ LDecl    : TypeName IdList ';'			{	struct tnode* ttemp = $2;
 
 IdList : IdList',' ID			{ if(Llookup($3->varname)!=NULL){
        						yyerror("Local variable already declared");
-						exit(1);}						
+						exit(1);}
+				          if(Cptr != NULL){
+						if(CFLookup(Cptr, $3->varname) != NULL){
+							yyerror("Local variables cannot be class variables");
+							exit(1);
+						}	
+					  }
 					  Linstall($3->varname, NULL, ++lloc); $3->left = $1; $$=$3; }
        | ID				{ if(Llookup($1->varname)!=NULL){
                                                 yyerror("Local variable already declared");
                                                 exit(1);} 
+					  if(Cptr != NULL){
+						if(CFLookup(Cptr, $1->varname) != NULL){
+							yyerror("Local variables cannot be class variables");
+						}
+		
+					 }
 					  Linstall($1->varname, NULL, ++lloc); $$=$1; }
        ;
 
@@ -395,7 +455,7 @@ Stmt	: InputStmt ';'	{ $$ = $1; }
 	| E EQ INIT ';'	{ $$ = createInitNode($1); }
 	| FREE '(' E ')' ';' { $$ = createFreeNode($1); }
 	| E EQ NEW '(' ID ')' ';' { $1->nodetype = Cobj; $$ = createNewNode($1, $5->varname);	}
-	| DELETE '(' Field ')' ';' { } 
+	| DELETE '(' Field ')' ';' { $$ = createDelNode($3); } 
 ;
 
 InputStmt : READ '(' E ')' { $$ =createIONode(-1,"Read",$3);}
@@ -422,9 +482,11 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
   | ID		{ 
 		  if(Llookup($1->varname)==NULL){
 			if(Lookup($1->varname) == NULL){
+				printf($1->varname);
 	                        yyerror("Variable not declared\n");
         	                exit(1); }
 			$1->type = Lookup($1->varname)->type;
+			$1->Ctype = Lookup($1->varname)->Ctype;
                         $1->Gentry = Lookup($1->varname);
 			$1->Lentry = NULL;
                         $$ = $1; }
@@ -470,6 +532,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
                                 }
 				$1->nodetype = FnCall;
 				$1->Gentry = Lookup($1->varname);
+				checkvalidfncall($1->Gentry, NULL);
 				$1->type = $1->Gentry->type;
 				$1->left = NULL;
 				$$ = $1;
@@ -487,7 +550,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 				$1->middle = $3;
 				$$ = $1;
 				}
-  | Field 			{ $$ = $1; }
+  | Field 			{ checkifFieldisClass($1); $$ = $1; }
   | Method 			{ $$ = $1; }
   ;
 
@@ -507,8 +570,9 @@ Method : SELF '.' ID '(' ArgList ')' {
                         	                        exit(1);
                                 	        }
 					$3->middle = $5;
-					$3->val = Mtemp->Flabel;
-					$3->nodetype = MethodCall;
+					$3->val = Mtemp->Funcposition;
+					$3->nodetype = SelfMethodCall;
+					checkvalidmethodcall($3->varname, $5, Mtemp);
         	                        $$ = createTree(NULL, NULL, "self", SelfFnNode, NULL, NULL, NULL, $3);   
 					$$->Lentry = Llookup("self");
                                         	$$->type = Mtemp->type;
@@ -524,8 +588,9 @@ Method : SELF '.' ID '(' ArgList ')' {
                                                         exit(1);
                                                 }
 					$3->middle = NULL;
-					$3->val = Mtemp->Flabel;
-					$3->nodetype = MethodCall;
+					$3->val = Mtemp->Funcposition;
+					$3->nodetype = SelfMethodCall;
+					checkvalidmethodcall($3->varname, NULL, Mtemp);
                                         $$ = createTree(NULL, NULL, "self", SelfFnNode, NULL, NULL, NULL, $3);
                                         $$->Lentry = Llookup("self");
 					
@@ -535,6 +600,9 @@ Method : SELF '.' ID '(' ArgList ')' {
 				}
 	| Field '.' ID '(' ArgList ')' {	if($1->nodetype = FieldNode){
 							if(Cptr == NULL){
+								if($1->varname == "self"){
+									yyerror("Self cannot be used outside a class\n");
+									exit(1);}
 							$1->nodetype = MethodCall;}
 							else{
 							$1->nodetype = SelfFnNode;
@@ -545,18 +613,30 @@ Method : SELF '.' ID '(' ArgList ')' {
                                                                 temp = temp->right;}
 						temp->right = $3;
 					if(temp->Ctype == NULL){
+						printf(temp->varname);
 						yyerror("Variable not a class object\n");
+						exit(1);
+					}
+					struct Gsymbol *Gtemp = NULL;
+					if($1->nodetype  == MethodCall){
+						Gtemp = Lookup(temp->varname);
+			
 					}
 					struct Memberfunclist *Mtemp = CMLookup(temp->Ctype, $3->varname);
 					if(Mtemp == NULL){
-
 						yyerror("Method not a member of class\n");
 						exit(1);
 					}
 					$1->type = Mtemp->type;
 					$3->middle = $5;
-					$3->val = Mtemp->Flabel;
+					if($1->nodetype == SelfFnNode){
+					$3->val = Mtemp->Funcposition;
+					$3->nodetype = SelfMethodCall;}
+					else{
+					$3->val = Mtemp->Funcposition;
 					$3->nodetype = MethodCall;
+					}
+					checkvalidmethodcall($3->varname, $5, Mtemp);
 					$$ = $1;
 					}
 	
@@ -564,6 +644,7 @@ Method : SELF '.' ID '(' ArgList ')' {
 					$1->right = $3; 
 					struct Gsymbol *Gtemp = Lookup($1->varname);
 					if(Gtemp == NULL){
+						printf($1->varname);
 						yyerror("Variable not declared \n");
 						exit(1);
 					}
@@ -579,9 +660,9 @@ Method : SELF '.' ID '(' ArgList ')' {
 					}
 					$1->type = Mtemp->type;
 					$1->nodetype = MethodCall;
-				
+					$3->val = Mtemp->Funcposition;
+					checkvalidmethodcall($3->varname, $5, Mtemp);
 					$3->middle = $5;
-					$3->val = Mtemp->Flabel;
 					$1->right = $3;
 					$3->nodetype = MethodCall;
 					$$ = $1;
@@ -590,6 +671,7 @@ Method : SELF '.' ID '(' ArgList ')' {
 					$1->right = $3;
                                         struct Gsymbol *Gtemp = Lookup($1->varname);
                                         if(Gtemp == NULL){
+						printf($1->varname);
                                                 yyerror("Variable not declared \n");
                                                 exit(1);
                                         }
@@ -606,14 +688,15 @@ Method : SELF '.' ID '(' ArgList ')' {
                                         $1->type = Mtemp->type;
                                         $1->nodetype = MethodCall;
 					$3->middle = NULL;
-					$3->val = Mtemp->Flabel;
+					$3->val = Mtemp->Funcposition;
+					checkvalidmethodcall($3->varname, NULL, Mtemp);
 					$1->right = $3;
 					$3->nodetype = MethodCall;
                                         $$ = $1;
 
 				}
 ;
-Field 	: Field '.' ID	{ struct tnode* temp = $1; 
+Field 	: Field '.' ID	{ 				struct tnode* temp = $1; 
 							while(temp->right!=NULL){
  								temp = temp->right;}
 							struct Fieldlist *Ftemp = FLookup(temp->type, temp->Ctype, $3->varname);
@@ -631,6 +714,7 @@ Field 	: Field '.' ID	{ struct tnode* temp = $1;
 				struct Lsymbol *Ltemp = Llookup($1->varname);
 				if(Ltemp==NULL){
 					if(Gtemp==NULL){
+						printf("%s - ", $1->varname);
 		                                yyerror("Variable not declared\n");
 	        	                        exit(1); }
 					$1->type = Gtemp->type;
@@ -664,6 +748,7 @@ Field 	: Field '.' ID	{ struct tnode* temp = $1;
 				$$->Lentry = Llookup("self");
 				struct Fieldlist * Ftemp = CFLookup(Cptr, $3->varname);
 				if(Ftemp == NULL){
+						
 						yyerror("Variable not a memberfield\n");
 						exit(1);
 					}
@@ -691,6 +776,9 @@ int main(int argc, char *argv[]){
         input_file = fopen(argv[1], "r");
         yyin = input_file;
 	TypeTableCreate();
+	FILE *fptr = fopen("out.xsm", "w");
+	writeheader(fptr);
+	fclose(fptr);
         yyparse();
 
 }
