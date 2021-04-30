@@ -50,13 +50,14 @@ type
 	}
 	int printlinkedlist(){
 	decl
-	list temp;
+	list temp, temp2;
 	enddecl
 	begin
 	temp=self.head;
-	while(temp!= null)do
-	write(temp.data);
-	temp=temp.next;
+	temp2 = temp;
+	while(temp2!= null)do
+	write(temp2.data);
+	temp2=temp2.next;
 	endwhile;
 	return 1;
 	end
@@ -64,7 +65,7 @@ type
 	}
 	endclass
 	decl
-	linkedlist obj;
+	linkedlist obj, obj2;
 	enddecl
 	int main(){
 	decl
@@ -81,8 +82,11 @@ type
 	a=obj.insert(y);
 	x=x-1;
 	endwhile;
+	write("List Length");
 	write(obj.getlength());
+	write("List contents");
 	x=obj.printlinkedlist();
+	obj2=obj;
 	return 1;
 	end
 	}

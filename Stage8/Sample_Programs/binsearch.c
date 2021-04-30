@@ -101,9 +101,11 @@ int main()
       Root = insert(Root,val);
       read(val);
     endwhile;
-
+    write("INORDER");
     in = inOrder(Root);
+    write("PREORDER");
     in = preOrder(Root);
+    write("POSTORDER");
     in = postOrder(Root);
   
   return 9;

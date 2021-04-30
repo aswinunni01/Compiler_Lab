@@ -130,8 +130,11 @@ type
 	read(val);
 	endwhile;
 	x = obj.setroot(Root);
+	write("INORDER");
 	in = obj.inOrder_fun(obj.getroot());
+	write("PREORDER");
 	in = obj.preOrder_fun(obj.getroot());
+	write("POSTORDER");
 	in = obj.postOrder_fun(obj.getroot());
 	return 0;
 	end
