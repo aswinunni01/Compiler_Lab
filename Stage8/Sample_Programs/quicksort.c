@@ -1,11 +1,3 @@
-type
-bst{
-	int a;
-	bst right;
-
-
-}
-endtype
 decl
   int a,b,n,arr[10];
   int swap(int index, int newindex);
@@ -13,25 +5,19 @@ decl
   int writearr(int temp);
   int partition (int low, int high);
   int quicksort(int low,int high);
-  bst tree;
 enddecl
 
 int swap(int index ,int newindex)
 {
   decl
     int s;
-    str abdef;
   enddecl
 
   begin
-    s = initialize();
-    tree = alloc();
-    tree.right.right.a=6;
     s = arr[index];
     arr[index] = arr[newindex];
     arr[newindex] = s;
-    abdef="HERE";
-    write(abdef);
+
     return s;
   end
 }

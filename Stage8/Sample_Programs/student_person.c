@@ -79,7 +79,7 @@ class
 	enddecl
 	begin
 	n = initialize();
-	first=new(Person);
+	first=new(Person); 
 	temp = first.createPerson("Rogers", 37);
 	second=new(Student);
 	temp = second.createStudent("Mathew", 35, 999, "CS");
@@ -90,6 +90,7 @@ class
 	arbitrary = second;
 	endif;
 	n = arbitrary.printDetails();
+	delete(first);
 	return 0;
 	end
 	}

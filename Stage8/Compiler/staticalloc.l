@@ -46,6 +46,7 @@ struct Gsymbol *Gentry;
 "class" { return CLASS; }
 "endclass" { return ENDCLASS; }
 "self"	{ return SELF; }
+"delete" { return DELETE; }
 "extends" { return EXTENDS; }
 [a-zA-Z]+[a-zA-Z0-9_]* { var = strdup(yytext); yylval.no = createTree(NULL, NULL, var, 4, NULL, NULL, NULL, NULL);   return ID; }
 [\"][^"]*[\"] { var = strdup(yytext); yylval.no = createTree(NULL, TLookup("STR"), var, 0, NULL, NULL, NULL, NULL); return LIT; }

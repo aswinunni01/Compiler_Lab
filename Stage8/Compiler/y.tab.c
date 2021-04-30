@@ -98,7 +98,7 @@
 #define MethodBlock 59
 #define ClassEQNode 60
 #define SelfMethodCall 61
-
+#define DelNode 62
 
 int yylex(void);
 FILE *input_file;
@@ -700,16 +700,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  28
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   501
+#define YYLAST   499
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  60
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  44
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  122
+#define YYNRULES  123
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  280
+#define YYNSTATES  273
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   305
@@ -773,9 +773,9 @@ static const yytype_int16 yyrline[] =
      413,   423,   436,   437,   440,   443,   444,   447,   448,   449,
      450,   451,   452,   453,   454,   455,   456,   457,   458,   461,
      464,   468,   471,   472,   473,   474,   475,   476,   477,   478,
-     479,   480,   481,   482,   503,   512,   525,   526,   527,   528,
-     541,   553,   554,   557,   558,   562,   581,   601,   643,   670,
-     699,   711,   743
+     479,   480,   481,   482,   503,   513,   526,   527,   528,   529,
+     543,   556,   557,   560,   561,   565,   585,   606,   648,   700,
+     728,   758,   773,   807
 };
 #endif
 
@@ -829,7 +829,7 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-229)
+#define YYPACT_NINF (-188)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -843,34 +843,34 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-     132,   -26,   262,    -3,    -6,    66,    35,   -25,   105,  -229,
-      21,  -229,  -229,  -229,  -229,  -229,   324,  -229,    70,    34,
-    -229,    52,  -229,    37,  -229,    57,  -229,    51,  -229,    83,
-      35,   191,  -229,  -229,  -229,  -229,   108,   191,  -229,    72,
-    -229,  -229,    22,    33,   105,  -229,  -229,   128,  -229,  -229,
-     117,  -229,   191,   -26,   191,  -229,   101,  -229,  -229,   111,
-     105,   153,  -229,   158,     8,  -229,   164,  -229,  -229,   191,
-    -229,  -229,   105,   145,   167,    53,  -229,   124,    39,  -229,
-    -229,   133,   105,  -229,   136,   408,   176,  -229,  -229,   105,
-     160,   105,   225,  -229,  -229,   415,  -229,   192,   173,  -229,
-     232,   424,  -229,   155,   195,  -229,   233,   142,   201,   105,
-    -229,   250,   157,   145,  -229,    69,  -229,  -229,   209,   224,
-      67,  -229,   228,   229,  -229,  -229,  -229,    58,  -229,   237,
-     220,   243,    58,   300,  -229,  -229,   155,  -229,   266,   268,
-     274,   456,  -229,   261,  -229,   270,  -229,   276,    13,  -229,
-     293,  -229,   105,   176,  -229,   338,    58,    58,    62,    58,
-     339,    58,    58,   373,    58,   347,    -2,   267,  -229,   349,
-    -229,  -229,  -229,  -229,   387,    58,    58,    58,    58,    58,
-      58,    58,    58,    58,    58,   352,  -229,   348,  -229,  -229,
-     165,   318,  -229,   295,   317,  -229,   462,   183,     6,   315,
-     323,   345,  -229,   367,   329,   312,   325,   -39,  -229,  -229,
-     346,   350,   351,   462,   478,   478,   288,   288,   462,   462,
-     462,   462,   462,   462,   353,   319,   356,  -229,  -229,  -229,
-    -229,    58,   344,    87,   377,   376,   358,   216,   396,   402,
-     360,   404,  -229,  -229,   405,    58,  -229,  -229,   462,    58,
-    -229,   185,   251,   251,  -229,  -229,   211,  -229,  -229,  -229,
-    -229,   362,   213,   125,  -229,   146,   202,  -229,   366,  -229,
-    -229,   368,   251,   370,  -229,  -229,   204,  -229,   371,  -229
+     181,   -33,    85,    -3,    -2,     9,   -24,   -30,   228,  -188,
+     -37,  -188,  -188,  -188,  -188,  -188,    98,  -188,    11,   -28,
+    -188,    36,  -188,    15,  -188,     0,  -188,    19,  -188,    44,
+     -24,   387,  -188,  -188,  -188,  -188,    69,   387,  -188,    32,
+    -188,  -188,    74,    91,   228,  -188,  -188,   105,  -188,  -188,
+     100,  -188,   387,   -33,   387,  -188,    47,  -188,  -188,    95,
+     228,   109,  -188,   142,    10,  -188,   145,  -188,  -188,   387,
+    -188,  -188,   228,   122,   163,    30,  -188,   126,   117,  -188,
+    -188,   137,   228,  -188,    37,   248,   162,  -188,  -188,   228,
+     138,   228,   190,  -188,  -188,   312,  -188,   193,   160,  -188,
+     203,   377,  -188,   156,   167,  -188,   211,   106,   185,   228,
+    -188,   218,   124,   122,  -188,    92,  -188,  -188,   198,   202,
+      23,  -188,   219,   222,  -188,  -188,  -188,    58,  -188,   229,
+     180,   238,    58,   253,  -188,  -188,   156,  -188,   224,   244,
+     245,   450,  -188,   256,  -188,   258,  -188,   264,   223,  -188,
+     291,  -188,   228,   162,  -188,   325,    58,    58,    56,    58,
+     337,    58,    58,   373,    58,   378,    58,   281,  -188,   329,
+    -188,  -188,  -188,  -188,   406,    58,    58,    58,    58,    58,
+      58,    58,    58,    58,    58,   388,  -188,   348,  -188,  -188,
+     151,   313,  -188,   287,   305,  -188,   456,   153,     6,   345,
+     311,   331,  -188,   349,   351,   355,  -188,  -188,   330,   350,
+     352,   456,   472,   472,   464,   464,   456,   456,   456,   456,
+     456,   456,   360,   344,   371,  -188,  -188,  -188,  -188,    58,
+     368,   374,   405,   404,   382,   379,   383,  -188,  -188,   427,
+     390,  -188,  -188,   456,    58,  -188,   170,   237,   237,  -188,
+    -188,   189,  -188,   385,  -188,   216,   118,  -188,   139,   188,
+    -188,   389,  -188,  -188,   393,   237,   397,  -188,  -188,   220,
+    -188,   399,  -188
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -897,25 +897,25 @@ static const yytype_int8 yydefact[] =
        0,     0,     0,     0,     0,     0,     0,     0,    61,     0,
       75,    77,    78,    79,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,    50,     0,    13,    22,
-       0,     0,    70,     0,     0,   109,   114,     0,     0,   121,
-       0,     0,    62,     0,   122,     0,     0,     0,   102,    60,
-       0,     0,     0,    91,    92,    94,    93,    95,   101,    96,
-      97,    99,    98,   100,   120,     0,     0,    55,    90,    89,
-     110,     0,   104,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,    85,    84,     0,     0,    47,    21,   113,     0,
-     119,     0,     0,     0,    86,   116,     0,   121,   122,    88,
-     120,     0,     0,     0,   118,     0,     0,   115,     0,   117,
-     105,     0,     0,     0,    87,    73,     0,    74,     0,    72
+       0,     0,    70,     0,     0,   109,   114,     0,     0,   122,
+       0,     0,    62,     0,   123,     0,   102,    60,     0,     0,
+       0,    91,    92,    94,    93,    95,   101,    96,    97,    99,
+      98,   100,   121,     0,     0,    55,    90,    89,   110,     0,
+     104,     0,     0,     0,     0,     0,     0,    85,    84,     0,
+       0,    47,    21,   113,     0,   120,     0,     0,     0,    86,
+     116,     0,    88,     0,   118,     0,     0,   119,     0,     0,
+     115,     0,   117,   105,     0,     0,     0,    87,    73,     0,
+      74,     0,    72
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -229,  -229,   420,  -229,   411,  -229,  -229,  -229,  -229,   342,
-    -229,  -229,  -229,   417,  -229,   381,    -1,    71,  -229,   427,
-    -229,  -229,    30,   -35,   -69,   361,   299,   321,   379,   340,
-    -229,   365,  -229,  -229,  -229,   -99,  -136,  -229,  -229,  -229,
-    -126,  -228,  -229,   301
+    -188,  -188,   434,  -188,   418,  -188,  -188,  -188,  -188,   358,
+    -188,  -188,  -188,   440,  -188,   402,    -1,    66,  -188,   451,
+    -188,  -188,   -13,   -35,   -69,   400,   335,   361,   127,   386,
+    -188,   395,  -188,  -188,  -188,  -187,  -136,  -188,  -188,  -188,
+    -126,  -133,  -188,  -188
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -933,112 +933,110 @@ static const yytype_int16 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int16 yytable[] =
 {
-     170,   163,    57,    84,    23,   251,   167,    19,   205,   256,
-       2,    10,   175,   176,   177,   178,   240,   262,    32,    57,
-     241,     4,   107,    32,   179,   180,   181,   182,   183,   184,
-     193,   194,   196,   198,    57,   200,   201,    20,   203,    33,
-      34,    24,    35,    66,    33,    34,   206,    35,   213,   214,
-     215,   216,   217,   218,   219,   220,   221,   222,   223,    74,
-      79,    54,    19,    66,   232,   188,    28,    23,   120,   121,
-       2,    74,   120,   121,   149,    39,    60,    29,    31,    61,
-      42,    97,    69,   190,   100,    44,    62,    47,    74,    63,
-      74,   126,    45,    91,   111,   126,    92,   120,   121,   128,
-     100,    52,    50,   128,    48,   248,   130,   196,    88,    89,
-     130,   196,   132,   189,     1,    32,   132,   195,    56,   196,
-     126,   158,   154,   263,   159,   155,   160,    59,   128,   170,
-     170,   175,   176,   177,   178,   130,    33,    34,    67,    35,
-     170,   132,   250,   179,   180,   181,   182,   183,   184,   118,
-     119,    74,    68,   265,   266,    72,   120,   121,   118,   119,
-     122,   271,    73,     1,    77,   120,   121,     2,    78,   122,
-     272,     3,   123,   276,    81,   124,   125,    87,     4,   126,
-      85,   123,    90,   270,   124,   125,    93,   128,   126,   103,
-     129,    98,    89,   127,   130,   131,   128,   146,    89,   129,
-     132,    32,   112,   130,   131,   118,   119,   118,   119,   132,
-     151,   152,   120,   121,   120,   121,   122,   106,   122,   278,
-     226,    89,    53,    34,   113,    35,   120,   121,   123,   273,
-     123,   124,   125,   124,   125,   126,   108,   126,   230,   231,
-     264,   231,   114,   128,   145,   128,   129,   144,   129,   126,
-     130,   131,   130,   131,   118,   119,   132,   128,   132,   147,
-     150,   120,   121,   156,   130,   122,   267,   231,   269,   231,
-     132,   255,    11,   175,   176,   177,   178,   123,   157,   165,
-     124,   125,   161,   162,   126,   179,   180,   181,   182,   183,
-     184,   164,   128,    12,    13,   129,    14,   166,    15,   130,
-     131,   175,   176,   177,   178,   132,   179,   180,   181,   182,
-     183,   184,   168,   179,   180,   181,   182,   183,   184,   171,
-     185,   172,   208,   175,   176,   177,   178,   173,   186,   175,
-     176,   177,   178,   187,    11,   179,   180,   181,   182,   183,
-     184,   179,   180,   181,   182,   183,   184,   152,   192,   199,
-     228,   175,   176,   177,   178,    12,    13,   204,    14,   225,
-      40,   209,   224,   179,   180,   181,   182,   183,   184,   233,
-     227,   238,   229,   175,   176,   177,   178,   246,   234,   175,
-     176,   177,   178,   237,   239,   179,   180,   181,   182,   183,
-     184,   179,   180,   181,   182,   183,   184,   120,   121,   242,
-     235,   249,   252,   243,   253,   244,   257,   245,    51,   247,
-      55,   254,   258,   259,   260,   261,    58,   268,    32,   274,
-     126,   275,   236,   277,   279,    32,   202,    30,   128,   210,
-     211,    70,   212,    71,    32,   130,    49,   110,    46,    33,
-      34,   132,    35,    41,    99,    80,    33,    34,    83,    35,
-     105,   109,   191,   153,     0,    33,    34,   169,    35,     0,
-     116,   174,   175,   176,   177,   178,   117,   207,   175,   176,
-     177,   178,     0,     0,   179,   180,   181,   182,   183,   184,
-     179,   180,   181,   182,   183,   184,   177,   178,     0,     0,
-       0,     0,     0,     0,     0,     0,   179,   180,   181,   182,
-     183,   184
+     170,   163,    57,    84,    10,     2,   167,    19,    23,    28,
+      23,     2,   175,   176,   177,   178,     4,    39,    54,    57,
+      32,    42,   107,    44,   179,   180,   181,   182,   183,   184,
+     193,   194,   196,   198,    57,   200,   201,    20,   203,    69,
+     205,    33,    34,    66,    35,    24,    19,    48,   211,   212,
+     213,   214,   215,   216,   217,   218,   219,   220,   221,    74,
+     258,   259,    79,    66,   230,    47,   120,   121,   120,   121,
+      50,    74,    29,    31,   149,     1,    45,   158,   269,    56,
+     159,    97,   160,   190,   100,    88,    89,    59,    74,   126,
+      74,   126,    98,    89,   111,    11,    52,   128,   246,   128,
+     100,    72,   251,   243,   130,   196,   130,   255,    11,   196,
+     132,   195,   132,   189,   196,    67,    12,    13,   256,    14,
+      77,    15,   170,   170,   175,   176,   177,   178,    60,    12,
+      13,    61,    14,   170,    40,    68,   179,   180,   181,   182,
+     183,   184,   118,   119,    62,   154,    73,    63,   155,   120,
+     121,    74,    78,   122,   264,    81,    51,    85,    55,   118,
+     119,   146,    89,   265,    58,   123,   120,   121,   124,   125,
+     122,    91,   126,    87,    92,   103,   263,   151,   152,    70,
+     128,    71,   123,   129,    90,   124,   125,   130,   131,   126,
+      93,   118,   119,   132,   127,   106,    83,   128,   120,   121,
+     129,   108,   122,   112,   130,   131,   224,    89,   228,   229,
+     132,   113,     1,   114,   123,   266,     2,   124,   125,   144,
+       3,   126,   145,   118,   119,   257,   229,     4,   150,   128,
+     120,   121,   129,    32,   122,   271,   130,   131,    32,   165,
+     118,   119,   132,   147,   260,   229,   123,   120,   121,   124,
+     125,   122,   156,   126,    33,    34,   157,    35,    32,    33,
+      34,   128,    35,   123,   129,   168,   124,   125,   130,   131,
+     126,   262,   229,   161,   132,   188,   162,   171,   128,    33,
+      34,   129,    35,   164,    99,   130,   131,   175,   176,   177,
+     178,   132,   166,   175,   176,   177,   178,   172,   173,   179,
+     180,   181,   182,   183,   184,   179,   180,   181,   182,   183,
+     184,   175,   176,   177,   178,   185,   186,   175,   176,   177,
+     178,   187,    32,   179,   180,   181,   182,   183,   184,   179,
+     180,   181,   182,   183,   184,   192,   206,   175,   176,   177,
+     178,   207,   226,    33,    34,   152,    35,   199,   109,   179,
+     180,   181,   182,   183,   184,   175,   176,   177,   178,   223,
+     227,   175,   176,   177,   178,   225,   232,   179,   180,   181,
+     182,   183,   184,   179,   180,   181,   182,   183,   184,   175,
+     176,   177,   178,   237,   120,   121,   233,    32,   204,   120,
+     121,   179,   180,   181,   182,   183,   184,    32,   222,   231,
+     120,   121,   241,   238,   234,   235,   239,   126,    33,    34,
+     236,    35,   126,   116,   240,   128,   120,   121,    53,    34,
+     128,    35,   130,   126,   242,   244,   202,   130,   132,   245,
+     247,   128,   248,   132,   250,   249,   252,   253,   130,   126,
+     261,    30,   267,    49,   132,   254,   268,   128,   208,   209,
+     270,   210,   272,   110,   130,   174,   175,   176,   177,   178,
+     132,    46,   175,   176,   177,   178,    80,    41,   179,   180,
+     181,   182,   183,   184,   179,   180,   181,   182,   183,   184,
+     177,   178,   179,   180,   181,   182,   183,   184,   191,   105,
+     179,   180,   181,   182,   183,   184,   117,   169,     0,   153
 };
 
 static const yytype_int16 yycheck[] =
 {
-     136,   127,    37,    72,    10,   233,   132,    10,    10,   237,
-      35,    37,     6,     7,     8,     9,    55,   245,    10,    54,
-      59,    46,    91,    10,    18,    19,    20,    21,    22,    23,
-     156,   157,   158,   159,    69,   161,   162,    40,   164,    31,
-      32,    47,    34,    44,    31,    32,    48,    34,   174,   175,
+     136,   127,    37,    72,    37,    35,   132,    10,    10,     0,
+      10,    35,     6,     7,     8,     9,    46,    54,    31,    54,
+      10,    10,    91,    51,    18,    19,    20,    21,    22,    23,
+     156,   157,   158,   159,    69,   161,   162,    40,   164,    52,
+     166,    31,    32,    44,    34,    47,    10,    47,   174,   175,
      176,   177,   178,   179,   180,   181,   182,   183,   184,    60,
-      52,    31,    10,    64,    58,    52,     0,    10,    10,    11,
-      35,    72,    10,    11,   109,    54,    54,     6,     7,    57,
-      10,    82,    52,   152,    85,    51,    53,    50,    89,    56,
-      91,    33,    40,    54,    95,    33,    57,    10,    11,    41,
-     101,    30,    51,    41,    47,   231,    48,   233,    55,    56,
-      48,   237,    54,   148,    31,    10,    54,    55,    10,   245,
-      33,    54,    53,   249,    57,    56,    59,    55,    41,   265,
-     266,     6,     7,     8,     9,    48,    31,    32,    10,    34,
-     276,    54,    55,    18,    19,    20,    21,    22,    23,     3,
-       4,   152,    35,   252,   253,    54,    10,    11,     3,     4,
-      14,    15,    51,    31,    11,    10,    11,    35,    10,    14,
-      24,    39,    26,   272,    10,    29,    30,    10,    46,    33,
-      35,    26,    58,    58,    29,    30,    53,    41,    33,    13,
-      44,    55,    56,    38,    48,    49,    41,    55,    56,    44,
-      54,    10,    10,    48,    49,     3,     4,     3,     4,    54,
-      53,    54,    10,    11,    10,    11,    14,    57,    14,    15,
-      55,    56,    31,    32,    51,    34,    10,    11,    26,    27,
-      26,    29,    30,    29,    30,    33,    11,    33,    55,    56,
-      55,    56,    10,    41,    11,    41,    44,    52,    44,    33,
-      48,    49,    48,    49,     3,     4,    54,    41,    54,    58,
-      10,    10,    11,    54,    48,    14,    55,    56,    55,    56,
-      54,    55,    10,     6,     7,     8,     9,    26,    54,    59,
-      29,    30,    54,    54,    33,    18,    19,    20,    21,    22,
-      23,    54,    41,    31,    32,    44,    34,    54,    36,    48,
-      49,     6,     7,     8,     9,    54,    18,    19,    20,    21,
-      22,    23,    12,    18,    19,    20,    21,    22,    23,    53,
-      59,    53,    55,     6,     7,     8,     9,    53,    58,     6,
-       7,     8,     9,    57,    10,    18,    19,    20,    21,    22,
-      23,    18,    19,    20,    21,    22,    23,    54,    10,    10,
-      55,     6,     7,     8,     9,    31,    32,    10,    34,    11,
-      36,    12,    10,    18,    19,    20,    21,    22,    23,    54,
-      52,    59,    55,     6,     7,     8,     9,    58,    55,     6,
-       7,     8,     9,    54,    59,    18,    19,    20,    21,    22,
-      23,    18,    19,    20,    21,    22,    23,    10,    11,    53,
-      55,    57,    25,    53,    28,    54,    10,    54,    29,    53,
-      31,    53,    10,    53,    10,    10,    37,    55,    10,    53,
-      33,    53,    55,    53,    53,    10,    53,     7,    41,    42,
-      43,    52,    45,    54,    10,    48,    25,    95,    21,    31,
-      32,    54,    34,    16,    36,    64,    31,    32,    69,    34,
-      89,    36,   153,   113,    -1,    31,    32,   136,    34,    -1,
-      36,     5,     6,     7,     8,     9,   101,   166,     6,     7,
-       8,     9,    -1,    -1,    18,    19,    20,    21,    22,    23,
-      18,    19,    20,    21,    22,    23,     8,     9,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    18,    19,    20,    21,
-      22,    23
+     247,   248,    52,    64,    58,    50,    10,    11,    10,    11,
+      51,    72,     6,     7,   109,    31,    40,    54,   265,    10,
+      57,    82,    59,   152,    85,    55,    56,    55,    89,    33,
+      91,    33,    55,    56,    95,    10,    30,    41,   231,    41,
+     101,    54,   235,   229,    48,   231,    48,   240,    10,   235,
+      54,    55,    54,   148,   240,    10,    31,    32,   244,    34,
+      11,    36,   258,   259,     6,     7,     8,     9,    54,    31,
+      32,    57,    34,   269,    36,    35,    18,    19,    20,    21,
+      22,    23,     3,     4,    53,    53,    51,    56,    56,    10,
+      11,   152,    10,    14,    15,    10,    29,    35,    31,     3,
+       4,    55,    56,    24,    37,    26,    10,    11,    29,    30,
+      14,    54,    33,    10,    57,    13,    58,    53,    54,    52,
+      41,    54,    26,    44,    58,    29,    30,    48,    49,    33,
+      53,     3,     4,    54,    38,    57,    69,    41,    10,    11,
+      44,    11,    14,    10,    48,    49,    55,    56,    55,    56,
+      54,    51,    31,    10,    26,    27,    35,    29,    30,    52,
+      39,    33,    11,     3,     4,    55,    56,    46,    10,    41,
+      10,    11,    44,    10,    14,    15,    48,    49,    10,    59,
+       3,     4,    54,    58,    55,    56,    26,    10,    11,    29,
+      30,    14,    54,    33,    31,    32,    54,    34,    10,    31,
+      32,    41,    34,    26,    44,    12,    29,    30,    48,    49,
+      33,    55,    56,    54,    54,    52,    54,    53,    41,    31,
+      32,    44,    34,    54,    36,    48,    49,     6,     7,     8,
+       9,    54,    54,     6,     7,     8,     9,    53,    53,    18,
+      19,    20,    21,    22,    23,    18,    19,    20,    21,    22,
+      23,     6,     7,     8,     9,    59,    58,     6,     7,     8,
+       9,    57,    10,    18,    19,    20,    21,    22,    23,    18,
+      19,    20,    21,    22,    23,    10,    55,     6,     7,     8,
+       9,    12,    55,    31,    32,    54,    34,    10,    36,    18,
+      19,    20,    21,    22,    23,     6,     7,     8,     9,    11,
+      55,     6,     7,     8,     9,    52,    55,    18,    19,    20,
+      21,    22,    23,    18,    19,    20,    21,    22,    23,     6,
+       7,     8,     9,    53,    10,    11,    55,    10,    10,    10,
+      11,    18,    19,    20,    21,    22,    23,    10,    10,    54,
+      10,    11,    58,    53,    55,    54,    54,    33,    31,    32,
+      55,    34,    33,    36,    54,    41,    10,    11,    31,    32,
+      41,    34,    48,    33,    53,    57,    53,    48,    54,    55,
+      25,    41,    28,    54,    55,    53,    53,    10,    48,    33,
+      55,     7,    53,    25,    54,    55,    53,    41,    42,    43,
+      53,    45,    53,    95,    48,     5,     6,     7,     8,     9,
+      54,    21,     6,     7,     8,     9,    64,    16,    18,    19,
+      20,    21,    22,    23,    18,    19,    20,    21,    22,    23,
+       8,     9,    18,    19,    20,    21,    22,    23,   153,    89,
+      18,    19,    20,    21,    22,    23,   101,   136,    -1,   113
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -1065,14 +1063,14 @@ static const yytype_int8 yystos[] =
       96,    53,    53,    53,     5,     6,     7,     8,     9,    18,
       19,    20,    21,    22,    23,    59,    58,    57,    52,    83,
       84,    86,    10,   100,   100,    55,   100,   101,   100,    10,
-     100,   100,    53,   100,    10,    10,    48,   103,    55,    12,
-      42,    43,    45,   100,   100,   100,   100,   100,   100,   100,
-     100,   100,   100,   100,    10,    11,    55,    52,    55,    55,
-      55,    56,    58,    54,    55,    55,    55,    54,    59,    59,
-      55,    59,    53,    53,    54,    54,    58,    53,   100,    57,
-      55,   101,    25,    28,    53,    55,   101,    10,    10,    53,
-      10,    10,   101,   100,    55,    95,    95,    55,    55,    55,
-      58,    15,    24,    27,    53,    53,    95,    53,    15,    53
+     100,   100,    53,   100,    10,   100,    55,    12,    42,    43,
+      45,   100,   100,   100,   100,   100,   100,   100,   100,   100,
+     100,   100,    10,    11,    55,    52,    55,    55,    55,    56,
+      58,    54,    55,    55,    55,    54,    55,    53,    53,    54,
+      54,    58,    53,   100,    57,    55,   101,    25,    28,    53,
+      55,   101,    53,    10,    55,   101,   100,    55,    95,    95,
+      55,    55,    55,    58,    15,    24,    27,    53,    53,    95,
+      53,    15,    53
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -1090,7 +1088,7 @@ static const yytype_int8 yyr1[] =
       98,    99,   100,   100,   100,   100,   100,   100,   100,   100,
      100,   100,   100,   100,   100,   100,   100,   100,   100,   100,
      100,   100,   100,   101,   101,   102,   102,   102,   102,   102,
-     103,   103,   103
+     102,   103,   103,   103
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -1107,8 +1105,8 @@ static const yytype_int8 yyr2[] =
        1,     1,     1,     1,     4,     4,     5,     7,     5,     4,
        4,     3,     3,     3,     3,     3,     3,     3,     3,     3,
        3,     3,     3,     1,     4,     7,     1,     1,     1,     3,
-       4,     1,     1,     3,     1,     6,     5,     6,     6,     5,
-       3,     3,     3
+       4,     1,     1,     3,     1,     6,     5,     6,     5,     6,
+       5,     3,     3,     3
 };
 
 
@@ -1587,7 +1585,7 @@ yyreduce:
                                         	codeGen((yyvsp[0].no),fptr);
                                                 exit(1);
                                         }
-#line 1591 "y.tab.c"
+#line 1589 "y.tab.c"
     break;
 
   case 3: /* start: TypeDefBlock ClassDefBlock GdeclBlock MainBlock  */
@@ -1602,7 +1600,7 @@ yyreduce:
 						fclose(fptr);
                                                 exit(1);
 						}
-#line 1606 "y.tab.c"
+#line 1604 "y.tab.c"
     break;
 
   case 4: /* start: TypeDefBlock GdeclBlock MainBlock  */
@@ -1618,7 +1616,7 @@ yyreduce:
                                                 exit(1);
 
 						}
-#line 1622 "y.tab.c"
+#line 1620 "y.tab.c"
     break;
 
   case 5: /* start: TypeDefBlock GdeclBlock FdefBlock MainBlock  */
@@ -1635,7 +1633,7 @@ yyreduce:
 
 
 						}
-#line 1639 "y.tab.c"
+#line 1637 "y.tab.c"
     break;
 
   case 6: /* start: ClassDefBlock GdeclBlock MainBlock  */
@@ -1652,7 +1650,7 @@ yyreduce:
 
 
 						}
-#line 1656 "y.tab.c"
+#line 1654 "y.tab.c"
     break;
 
   case 7: /* start: GdeclBlock FdefBlock MainBlock  */
@@ -1667,7 +1665,7 @@ yyreduce:
 						fclose(fptr);
       						exit(1); 
 					}
-#line 1671 "y.tab.c"
+#line 1669 "y.tab.c"
     break;
 
   case 8: /* start: MainBlock  */
@@ -1680,31 +1678,31 @@ yyreduce:
 						fclose(fptr);
                                                 exit(1);
  }
-#line 1684 "y.tab.c"
+#line 1682 "y.tab.c"
     break;
 
   case 9: /* ClassDefBlock: CLASS ClassDefList ENDCLASS  */
 #line 142 "staticalloc.y"
                                                 {  (yyval.no) = (yyvsp[-1].no);    }
-#line 1690 "y.tab.c"
+#line 1688 "y.tab.c"
     break;
 
   case 10: /* ClassDefBlock: CLASS ENDCLASS  */
 #line 143 "staticalloc.y"
                                                 {  (yyval.no) = NULL;  }
-#line 1696 "y.tab.c"
+#line 1694 "y.tab.c"
     break;
 
   case 11: /* ClassDefList: ClassDefList ClassDef  */
 #line 146 "staticalloc.y"
                                                 { (yyval.no) = createTree(NULL, NULL, NULL, ClBlock,NULL, (yyvsp[-1].no), NULL, (yyvsp[0].no)); }
-#line 1702 "y.tab.c"
+#line 1700 "y.tab.c"
     break;
 
   case 12: /* ClassDefList: ClassDef  */
 #line 147 "staticalloc.y"
                                                 { (yyval.no) = (yyvsp[0].no); }
-#line 1708 "y.tab.c"
+#line 1706 "y.tab.c"
     break;
 
   case 13: /* ClassDef: Cname '{' DECL Fieldlists MethodDecl ENDDECL MethodDefns '}'  */
@@ -1714,43 +1712,43 @@ yyreduce:
 										printVirtualTable(Cptr);
 										Cptr = NULL;				/* Clear class pointer after a class is parsed */
 										}
-#line 1718 "y.tab.c"
+#line 1716 "y.tab.c"
     break;
 
   case 14: /* Cname: ID  */
 #line 157 "staticalloc.y"
                         { Cptr = CInstall((yyvsp[0].no)->varname, NULL); (yyval.no)=(yyvsp[0].no); }
-#line 1724 "y.tab.c"
+#line 1722 "y.tab.c"
     break;
 
   case 15: /* Cname: ID EXTENDS ID  */
 #line 158 "staticalloc.y"
                                 { Cptr = CInstall((yyvsp[-2].no)->varname, (yyvsp[0].no)->varname); (yyval.no)=(yyvsp[-2].no);}
-#line 1730 "y.tab.c"
+#line 1728 "y.tab.c"
     break;
 
   case 16: /* Fieldlists: Fieldlists FId  */
 #line 161 "staticalloc.y"
                                  {}
-#line 1736 "y.tab.c"
+#line 1734 "y.tab.c"
     break;
 
   case 18: /* FId: TypeName ID ';'  */
 #line 165 "staticalloc.y"
                                         { Class_Finstall(Cptr, (yyvsp[-2].Tentry), (yyvsp[-1].no)->varname); }
-#line 1742 "y.tab.c"
+#line 1740 "y.tab.c"
     break;
 
   case 19: /* MethodDecl: MethodDecl MDecl  */
 #line 168 "staticalloc.y"
                                         {}
-#line 1748 "y.tab.c"
+#line 1746 "y.tab.c"
     break;
 
   case 20: /* MethodDecl: MDecl  */
 #line 169 "staticalloc.y"
                                         {}
-#line 1754 "y.tab.c"
+#line 1752 "y.tab.c"
     break;
 
   case 21: /* MDecl: TypeName ID '(' ParamList ')' ';'  */
@@ -1760,7 +1758,7 @@ yyreduce:
 						//		exit(1);}
 							ploc = -3; lloc = 0; Lhead=NULL;
 							Class_Minstall(Cptr, (yyvsp[-4].no)->varname, TLookup((yyvsp[-5].Tentry)), (yyvsp[-2].np));}
-#line 1764 "y.tab.c"
+#line 1762 "y.tab.c"
     break;
 
   case 22: /* MethodDefns: MethodDefns Fdef  */
@@ -1770,7 +1768,7 @@ yyreduce:
  						  (yyvsp[0].no)->val = Mtemp->Flabel; 
 						  (yyval.no) = createTree(NULL,FnBlock, NULL,MethodBlock, NULL, (yyvsp[-1].no),NULL, (yyvsp[0].no)); 
 						}
-#line 1774 "y.tab.c"
+#line 1772 "y.tab.c"
     break;
 
   case 23: /* MethodDefns: Fdef  */
@@ -1780,7 +1778,7 @@ yyreduce:
 						  (yyvsp[0].no)->val = Mtemp->Flabel; 
 						  (yyval.no) = (yyvsp[0].no); 
 						}
-#line 1784 "y.tab.c"
+#line 1782 "y.tab.c"
     break;
 
   case 24: /* TypeDefBlock: TYPES TypeDefList ENDTYPE  */
@@ -1798,19 +1796,19 @@ yyreduce:
 							
 							temp = temp->next;}
 						}
-#line 1802 "y.tab.c"
+#line 1800 "y.tab.c"
     break;
 
   case 25: /* TypeDefBlock: TYPES ENDTYPE  */
 #line 207 "staticalloc.y"
                                                 {}
-#line 1808 "y.tab.c"
+#line 1806 "y.tab.c"
     break;
 
   case 27: /* TypeDefList: TypeDef  */
 #line 210 "staticalloc.y"
                                                 {}
-#line 1814 "y.tab.c"
+#line 1812 "y.tab.c"
     break;
 
   case 28: /* TypeDef: ID '{' FieldDeclList '}'  */
@@ -1820,7 +1818,7 @@ yyreduce:
 	 					 size = 0;
   					   	 Findex=0;
 						}
-#line 1824 "y.tab.c"
+#line 1822 "y.tab.c"
     break;
 
   case 29: /* FieldDeclList: FieldDeclList FieldDecl  */
@@ -1831,13 +1829,13 @@ yyreduce:
 						  if(FieldNo>=8){
 							yyerror("Number of fields cannot exceed 8\n");	/* Checking max number of fields = 8 */
 							exit(1);}}
-#line 1835 "y.tab.c"
+#line 1833 "y.tab.c"
     break;
 
   case 30: /* FieldDeclList: FieldDecl  */
 #line 227 "staticalloc.y"
                                                 {  FieldNo = 0; (yyval.fl)=(yyvsp[0].fl); }
-#line 1841 "y.tab.c"
+#line 1839 "y.tab.c"
     break;
 
   case 31: /* FieldDecl: TypeName ID ';'  */
@@ -1846,43 +1844,43 @@ yyreduce:
 
 				size=size+1;
 				(yyval.fl) = Finstall((yyvsp[-1].no)->varname, (yyvsp[-2].Tentry)); }
-#line 1850 "y.tab.c"
+#line 1848 "y.tab.c"
     break;
 
   case 32: /* TypeName: INT  */
 #line 236 "staticalloc.y"
                     { (yyval.Tentry) = "INT"; }
-#line 1856 "y.tab.c"
+#line 1854 "y.tab.c"
     break;
 
   case 33: /* TypeName: STR  */
 #line 237 "staticalloc.y"
                     { (yyval.Tentry) = "STR"; }
-#line 1862 "y.tab.c"
+#line 1860 "y.tab.c"
     break;
 
   case 34: /* TypeName: VOID  */
 #line 238 "staticalloc.y"
                      { (yyval.Tentry) = "VOID"; }
-#line 1868 "y.tab.c"
+#line 1866 "y.tab.c"
     break;
 
   case 35: /* TypeName: ID  */
 #line 239 "staticalloc.y"
                     {  (yyval.Tentry) = (yyvsp[0].no)->varname; }
-#line 1874 "y.tab.c"
+#line 1872 "y.tab.c"
     break;
 
   case 37: /* GdeclBlock: DECL ENDDECL  */
 #line 247 "staticalloc.y"
                                                    {}
-#line 1880 "y.tab.c"
+#line 1878 "y.tab.c"
     break;
 
   case 39: /* GdeclList: Gdecl  */
 #line 250 "staticalloc.y"
                                     {}
-#line 1886 "y.tab.c"
+#line 1884 "y.tab.c"
     break;
 
   case 40: /* Gdecl: Type GidList ';'  */
@@ -1897,25 +1895,25 @@ yyreduce:
 							}
 							(yyvsp[-1].no) = (yyvsp[-1].no)->left;}
 					}
-#line 1901 "y.tab.c"
+#line 1899 "y.tab.c"
     break;
 
   case 41: /* Type: INT  */
 #line 267 "staticalloc.y"
                                         { (yyval.th) = createTypeholder(TLookup("INT"), NULL); }
-#line 1907 "y.tab.c"
+#line 1905 "y.tab.c"
     break;
 
   case 42: /* Type: STR  */
 #line 268 "staticalloc.y"
                                         { (yyval.th)= createTypeholder(TLookup("STR"), NULL) ; }
-#line 1913 "y.tab.c"
+#line 1911 "y.tab.c"
     break;
 
   case 43: /* Type: VOID  */
 #line 269 "staticalloc.y"
                                         { (yyval.th)=createTypeholder(TLookup("VOID"),NULL); }
-#line 1919 "y.tab.c"
+#line 1917 "y.tab.c"
     break;
 
   case 44: /* Type: ID  */
@@ -1931,7 +1929,7 @@ yyreduce:
 						
 						}
 						}
-#line 1935 "y.tab.c"
+#line 1933 "y.tab.c"
     break;
 
   case 45: /* GidList: GidList ',' ID  */
@@ -1941,7 +1939,7 @@ yyreduce:
 			                                yyerror("Variable already declared");   
 			                                exit(1);}     
 					  	Install((yyvsp[0].no)->varname, NULL, 1,1, NULL, NULL); (yyvsp[0].no)->left = (yyvsp[-2].no); (yyval.no)=(yyvsp[0].no); }
-#line 1945 "y.tab.c"
+#line 1943 "y.tab.c"
     break;
 
   case 46: /* GidList: GidList ',' ID '[' NUM ']'  */
@@ -1952,7 +1950,7 @@ yyreduce:
 			                                exit(1);}
 			                         Install((yyvsp[-3].no)->varname, NULL,(yyvsp[-1].no)->val, 1, NULL, NULL); (yyvsp[-3].no)->left = (yyvsp[-5].no); (yyval.no)=(yyvsp[-3].no);
 						 address= address + ((yyvsp[-1].no)->val-1);}
-#line 1956 "y.tab.c"
+#line 1954 "y.tab.c"
     break;
 
   case 47: /* GidList: GidList ',' ID '[' NUM ']' '[' NUM ']'  */
@@ -1963,7 +1961,7 @@ yyreduce:
 			                                exit(1);}
 			                        Install((yyvsp[-6].no)->varname, NULL, (yyvsp[-4].no)->val, (yyvsp[-1].no)->val, NULL, NULL); (yyvsp[-6].no)->left = (yyvsp[-8].no); (yyval.no)=(yyvsp[-6].no);
                         			address= address + (((yyvsp[-4].no)->val*(yyvsp[-1].no)->val)-1);}
-#line 1967 "y.tab.c"
+#line 1965 "y.tab.c"
     break;
 
   case 48: /* GidList: GidList ',' ID '(' ParamList ')'  */
@@ -1975,7 +1973,7 @@ yyreduce:
                                                 Install((yyvsp[-3].no)->varname, NULL, 1, 1,(yyvsp[-1].np), getFlabel()); (yyvsp[-3].no)->left = (yyvsp[-5].no);  (yyval.no) = (yyvsp[-3].no);
 						ploc=-3; lloc=0; Lhead=NULL;
 						 }
-#line 1979 "y.tab.c"
+#line 1977 "y.tab.c"
     break;
 
   case 49: /* GidList: ID '[' NUM ']'  */
@@ -1986,7 +1984,7 @@ yyreduce:
 			                                exit(1);}
 			                        Install((yyvsp[-3].no)->varname, NULL,(yyvsp[-1].no)->val, 1, NULL, NULL); (yyval.no) = (yyvsp[-3].no);
 						address = address + ((yyvsp[-1].no)->val-1); }
-#line 1990 "y.tab.c"
+#line 1988 "y.tab.c"
     break;
 
   case 50: /* GidList: ID '[' NUM ']' '[' NUM ']'  */
@@ -1997,7 +1995,7 @@ yyreduce:
 			                                exit(1);}
 			                        Install((yyvsp[-6].no)->varname, NULL,(yyvsp[-4].no)->val,(yyvsp[-1].no)->val, NULL, NULL); (yyval.no) = (yyvsp[-6].no);
 			                        address = address + (((yyvsp[-4].no)->val*(yyvsp[-1].no)->val)-1); }
-#line 2001 "y.tab.c"
+#line 1999 "y.tab.c"
     break;
 
   case 51: /* GidList: ID  */
@@ -2007,7 +2005,7 @@ yyreduce:
 							yyerror("Variable name already declared");
 							exit(1);}	
 						Install((yyvsp[0].no)->varname, NULL,1, 1, NULL, NULL); (yyval.no) = (yyvsp[0].no); }
-#line 2011 "y.tab.c"
+#line 2009 "y.tab.c"
     break;
 
   case 52: /* GidList: ID '(' ParamList ')'  */
@@ -2019,19 +2017,19 @@ yyreduce:
 						Install((yyvsp[-3].no)->varname, NULL, 1, 1,(yyvsp[-1].np), getFlabel()); (yyval.no) = (yyvsp[-3].no);
 						ploc=-3; lloc=0; Lhead=NULL;
 					}
-#line 2023 "y.tab.c"
+#line 2021 "y.tab.c"
     break;
 
   case 53: /* FdefBlock: FdefBlock Fdef  */
 #line 342 "staticalloc.y"
                                                                 { (yyval.no) = createTree(NULL,FnBlock, NULL,FnBlock, NULL, (yyvsp[-1].no),NULL, (yyvsp[0].no));}
-#line 2029 "y.tab.c"
+#line 2027 "y.tab.c"
     break;
 
   case 54: /* FdefBlock: Fdef  */
 #line 343 "staticalloc.y"
                                                                 { (yyval.no) = (yyvsp[0].no); }
-#line 2035 "y.tab.c"
+#line 2033 "y.tab.c"
     break;
 
   case 55: /* Fdef: TypeName ID '(' ParamList ')' '{' LdeclBlock Body '}'  */
@@ -2044,7 +2042,7 @@ yyreduce:
 								  (yyval.no)->Lentry = Lhead;
 								  Lhead = NULL;
 								}
-#line 2048 "y.tab.c"
+#line 2046 "y.tab.c"
     break;
 
   case 56: /* ParamList: ParamList ',' Param  */
@@ -2052,7 +2050,7 @@ yyreduce:
                                         { 	Pcheck((yyvsp[-2].np), (yyvsp[0].np));
 						(yyvsp[0].np)->next = (yyvsp[-2].np); (yyval.np) = (yyvsp[0].np); Linstall((yyvsp[0].np)->name, (yyvsp[0].np)->type, ploc--); 
 					}
-#line 2056 "y.tab.c"
+#line 2054 "y.tab.c"
     break;
 
   case 57: /* ParamList: Param  */
@@ -2060,37 +2058,37 @@ yyreduce:
                                         { 
 					  (yyval.np) = (yyvsp[0].np); Linstall((yyvsp[0].np)->name, (yyvsp[0].np)->type, ploc--); 
 					}
-#line 2064 "y.tab.c"
+#line 2062 "y.tab.c"
     break;
 
   case 58: /* ParamList: %empty  */
 #line 362 "staticalloc.y"
                                         { (yyval.np) = NULL; }
-#line 2070 "y.tab.c"
+#line 2068 "y.tab.c"
     break;
 
   case 59: /* Param: TypeName ID  */
 #line 365 "staticalloc.y"
                                                 { (yyval.np) = Pinstall((yyvsp[0].no)->varname, TLookup((yyvsp[-1].Tentry)), NULL); }
-#line 2076 "y.tab.c"
+#line 2074 "y.tab.c"
     break;
 
   case 60: /* Body: BEG Stlist Retstmt END  */
 #line 368 "staticalloc.y"
                                         { (yyvsp[-1].no)->left=(yyvsp[-2].no); (yyval.no) = (yyvsp[-1].no); }
-#line 2082 "y.tab.c"
+#line 2080 "y.tab.c"
     break;
 
   case 61: /* Body: BEG Retstmt END  */
 #line 369 "staticalloc.y"
                                         { (yyvsp[-1].no)->left = NULL; (yyval.no) = (yyvsp[-1].no); }
-#line 2088 "y.tab.c"
+#line 2086 "y.tab.c"
     break;
 
   case 62: /* Retstmt: RET E ';'  */
 #line 372 "staticalloc.y"
                                         { (yyval.no) = createTree(NULL, RetNode, NULL, RetNode, NULL, NULL, NULL, (yyvsp[-1].no)); }
-#line 2094 "y.tab.c"
+#line 2092 "y.tab.c"
     break;
 
   case 63: /* MainBlock: INT MAIN '(' ')' '{' LdeclBlock Body '}'  */
@@ -2101,7 +2099,7 @@ yyreduce:
 	  								(yyval.no) = createTree(NULL, NULL, "main", MnNode, NULL, temp, NULL,(yyvsp[-1].no));
 									(yyval.no)->Lentry = Lhead;
 									Lhead = NULL; }
-#line 2105 "y.tab.c"
+#line 2103 "y.tab.c"
     break;
 
   case 64: /* LdeclBlock: DECL LDecList ENDDECL  */
@@ -2111,7 +2109,7 @@ yyreduce:
 	   						Linstall("self", TLookup("VOID"), ploc--);
 						}
 					}
-#line 2115 "y.tab.c"
+#line 2113 "y.tab.c"
     break;
 
   case 65: /* LdeclBlock: DECL ENDDECL  */
@@ -2123,7 +2121,7 @@ yyreduce:
                                                 }
 
 						}
-#line 2127 "y.tab.c"
+#line 2125 "y.tab.c"
     break;
 
   case 66: /* LdeclBlock: %empty  */
@@ -2133,19 +2131,19 @@ yyreduce:
                                                         Linstall("self", TLookup("VOID"), ploc--);
                                                 }
 					}
-#line 2137 "y.tab.c"
+#line 2135 "y.tab.c"
     break;
 
   case 67: /* LDecList: LDecList LDecl  */
 #line 400 "staticalloc.y"
                                         {}
-#line 2143 "y.tab.c"
+#line 2141 "y.tab.c"
     break;
 
   case 68: /* LDecList: LDecl  */
 #line 401 "staticalloc.y"
                                         {}
-#line 2149 "y.tab.c"
+#line 2147 "y.tab.c"
     break;
 
   case 69: /* LDecl: TypeName IdList ';'  */
@@ -2157,7 +2155,7 @@ yyreduce:
                                                         Ltemp->type = TLookup((yyvsp[-2].Tentry));}
                                                         ttemp=ttemp->left;}
                                         }
-#line 2161 "y.tab.c"
+#line 2159 "y.tab.c"
     break;
 
   case 70: /* IdList: IdList ',' ID  */
@@ -2172,7 +2170,7 @@ yyreduce:
 						}	
 					  }
 					  Linstall((yyvsp[0].no)->varname, NULL, ++lloc); (yyvsp[0].no)->left = (yyvsp[-2].no); (yyval.no)=(yyvsp[0].no); }
-#line 2176 "y.tab.c"
+#line 2174 "y.tab.c"
     break;
 
   case 71: /* IdList: ID  */
@@ -2187,193 +2185,193 @@ yyreduce:
 		
 					 }
 					  Linstall((yyvsp[0].no)->varname, NULL, ++lloc); (yyval.no)=(yyvsp[0].no); }
-#line 2191 "y.tab.c"
+#line 2189 "y.tab.c"
     break;
 
   case 72: /* Ifstmt: IF '(' E ')' THEN Stlist ELSE Stlist ENDIF ';'  */
 #line 436 "staticalloc.y"
                                                               {  (yyval.no) = createIfNode((yyvsp[-7].no),(yyvsp[-4].no),(yyvsp[-2].no)); }
-#line 2197 "y.tab.c"
+#line 2195 "y.tab.c"
     break;
 
   case 73: /* Ifstmt: IF '(' E ')' THEN Stlist ENDIF ';'  */
 #line 437 "staticalloc.y"
                                                               { (yyval.no) = createIfNode((yyvsp[-5].no), (yyvsp[-2].no), NULL); }
-#line 2203 "y.tab.c"
+#line 2201 "y.tab.c"
     break;
 
   case 74: /* Whilestmt: WHILE '(' E ')' DO Stlist ENDWHILE ';'  */
 #line 440 "staticalloc.y"
                                                           { (yyval.no) = createWhileNode((yyvsp[-5].no), (yyvsp[-2].no)); }
-#line 2209 "y.tab.c"
+#line 2207 "y.tab.c"
     break;
 
   case 75: /* Stlist: Stlist Stmt  */
 #line 443 "staticalloc.y"
                         { (yyval.no) = createTree(NULL,3, NULL,3, NULL, (yyvsp[-1].no),NULL, (yyvsp[0].no)); }
-#line 2215 "y.tab.c"
+#line 2213 "y.tab.c"
     break;
 
   case 76: /* Stlist: Stmt  */
 #line 444 "staticalloc.y"
                         { (yyval.no) = (yyvsp[0].no); }
-#line 2221 "y.tab.c"
+#line 2219 "y.tab.c"
     break;
 
   case 77: /* Stmt: InputStmt ';'  */
 #line 447 "staticalloc.y"
                         { (yyval.no) = (yyvsp[-1].no); }
-#line 2227 "y.tab.c"
+#line 2225 "y.tab.c"
     break;
 
   case 78: /* Stmt: OutputStmt ';'  */
 #line 448 "staticalloc.y"
                            {(yyval.no) = (yyvsp[-1].no); }
-#line 2233 "y.tab.c"
+#line 2231 "y.tab.c"
     break;
 
   case 79: /* Stmt: AsgStmt ';'  */
 #line 449 "staticalloc.y"
                         { (yyval.no) = (yyvsp[-1].no); }
-#line 2239 "y.tab.c"
+#line 2237 "y.tab.c"
     break;
 
   case 80: /* Stmt: Ifstmt  */
 #line 450 "staticalloc.y"
                         { (yyval.no) = (yyvsp[0].no); }
-#line 2245 "y.tab.c"
+#line 2243 "y.tab.c"
     break;
 
   case 81: /* Stmt: Whilestmt  */
 #line 451 "staticalloc.y"
                         { (yyval.no) = (yyvsp[0].no); }
-#line 2251 "y.tab.c"
+#line 2249 "y.tab.c"
     break;
 
   case 82: /* Stmt: BREAK  */
 #line 452 "staticalloc.y"
                        { (yyval.no) = createTree(NULL, NULL, NULL, 10,NULL, NULL, NULL, NULL); }
-#line 2257 "y.tab.c"
+#line 2255 "y.tab.c"
     break;
 
   case 83: /* Stmt: CONTINUE  */
 #line 453 "staticalloc.y"
                        { (yyval.no) = createTree(NULL, NULL, NULL, 11,NULL, NULL, NULL, NULL); }
-#line 2263 "y.tab.c"
+#line 2261 "y.tab.c"
     break;
 
   case 84: /* Stmt: E EQ ALLOC ';'  */
 #line 454 "staticalloc.y"
                                 { (yyval.no) = createAllocNode((yyvsp[-3].no)); }
-#line 2269 "y.tab.c"
+#line 2267 "y.tab.c"
     break;
 
   case 85: /* Stmt: E EQ INIT ';'  */
 #line 455 "staticalloc.y"
                         { (yyval.no) = createInitNode((yyvsp[-3].no)); }
-#line 2275 "y.tab.c"
+#line 2273 "y.tab.c"
     break;
 
   case 86: /* Stmt: FREE '(' E ')' ';'  */
 #line 456 "staticalloc.y"
                              { (yyval.no) = createFreeNode((yyvsp[-4].no)); }
-#line 2281 "y.tab.c"
+#line 2279 "y.tab.c"
     break;
 
   case 87: /* Stmt: E EQ NEW '(' ID ')' ';'  */
 #line 457 "staticalloc.y"
                                   { (yyvsp[-6].no)->nodetype = Cobj; (yyval.no) = createNewNode((yyvsp[-6].no), (yyvsp[-2].no)->varname);	}
-#line 2287 "y.tab.c"
+#line 2285 "y.tab.c"
     break;
 
-  case 88: /* Stmt: DELETE '(' Field ')' ';'  */
+  case 88: /* Stmt: DELETE '(' E ')' ';'  */
 #line 458 "staticalloc.y"
-                                   { (yyval.no) = createDelNode((yyvsp[-2].no)); }
-#line 2293 "y.tab.c"
+                               {  (yyvsp[-2].no)->nodetype = Cobj; (yyval.no) = createDelNode((yyvsp[-2].no)); }
+#line 2291 "y.tab.c"
     break;
 
   case 89: /* InputStmt: READ '(' E ')'  */
 #line 461 "staticalloc.y"
                            { (yyval.no) =createIONode(-1,"Read",(yyvsp[-1].no));}
-#line 2299 "y.tab.c"
+#line 2297 "y.tab.c"
     break;
 
   case 90: /* OutputStmt: WRITE '(' E ')'  */
 #line 464 "staticalloc.y"
                              { (yyval.no) = createIONode(-2,"Write",(yyvsp[-1].no)); }
-#line 2305 "y.tab.c"
+#line 2303 "y.tab.c"
     break;
 
   case 91: /* AsgStmt: E EQ E  */
 #line 468 "staticalloc.y"
                   { (yyval.no) = createEQNode((yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2311 "y.tab.c"
+#line 2309 "y.tab.c"
     break;
 
   case 92: /* E: E PLUS E  */
 #line 471 "staticalloc.y"
                 { (yyval.no) = createOpNode("ADD",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2317 "y.tab.c"
+#line 2315 "y.tab.c"
     break;
 
   case 93: /* E: E MUL E  */
 #line 472 "staticalloc.y"
                 { (yyval.no) = createOpNode("MUL",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2323 "y.tab.c"
+#line 2321 "y.tab.c"
     break;
 
   case 94: /* E: E MINUS E  */
 #line 473 "staticalloc.y"
                 { (yyval.no) = createOpNode("SUB",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2329 "y.tab.c"
+#line 2327 "y.tab.c"
     break;
 
   case 95: /* E: E DIV E  */
 #line 474 "staticalloc.y"
                 { (yyval.no) = createOpNode("DIV",intType,(yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2335 "y.tab.c"
+#line 2333 "y.tab.c"
     break;
 
   case 96: /* E: E EQU E  */
 #line 475 "staticalloc.y"
                 { (yyval.no) = createOpNode("EQ",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2341 "y.tab.c"
+#line 2339 "y.tab.c"
     break;
 
   case 97: /* E: E LT E  */
 #line 476 "staticalloc.y"
                 { (yyval.no) = createOpNode("LT",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2347 "y.tab.c"
+#line 2345 "y.tab.c"
     break;
 
   case 98: /* E: E GT E  */
 #line 477 "staticalloc.y"
                 { (yyval.no) = createOpNode("GT",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2353 "y.tab.c"
+#line 2351 "y.tab.c"
     break;
 
   case 99: /* E: E LTE E  */
 #line 478 "staticalloc.y"
                 { (yyval.no) = createOpNode("LE",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2359 "y.tab.c"
+#line 2357 "y.tab.c"
     break;
 
   case 100: /* E: E GTE E  */
 #line 479 "staticalloc.y"
                 { (yyval.no) = createOpNode("GE",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2365 "y.tab.c"
+#line 2363 "y.tab.c"
     break;
 
   case 101: /* E: E NE E  */
 #line 480 "staticalloc.y"
                 { (yyval.no) = createOpNode("NE",boolType, (yyvsp[-2].no), (yyvsp[0].no)); }
-#line 2371 "y.tab.c"
+#line 2369 "y.tab.c"
     break;
 
   case 102: /* E: '(' E ')'  */
 #line 481 "staticalloc.y"
                 { (yyval.no) = (yyvsp[-1].no); }
-#line 2377 "y.tab.c"
+#line 2375 "y.tab.c"
     break;
 
   case 103: /* E: ID  */
@@ -2381,7 +2379,7 @@ yyreduce:
                 { 
 		  if(Llookup((yyvsp[0].no)->varname)==NULL){
 			if(Lookup((yyvsp[0].no)->varname) == NULL){
-				printf((yyvsp[0].no)->varname);
+				printf("%s - ",(yyvsp[0].no)->varname);
 	                        yyerror("Variable not declared\n");
         	                exit(1); }
 			(yyvsp[0].no)->type = Lookup((yyvsp[0].no)->varname)->type;
@@ -2399,12 +2397,13 @@ yyreduce:
 			(yyval.no) = (yyvsp[0].no);
 		   }
 		}
-#line 2403 "y.tab.c"
+#line 2401 "y.tab.c"
     break;
 
   case 104: /* E: ID '[' E ']'  */
 #line 503 "staticalloc.y"
                  { if(Lookup((yyvsp[-3].no)->varname) == NULL){
+				   printf("%s - ", (yyvsp[-3].no)->varname);
                         yyerror("Variable not declared\n");
                         exit(1); }
                         (yyvsp[-3].no)->nodetype = arType;
@@ -2412,13 +2411,13 @@ yyreduce:
                         (yyvsp[-3].no)->Gentry = Lookup((yyvsp[-3].no)->varname);
 			(yyvsp[-3].no)->left = (yyvsp[-1].no);
                         (yyval.no) = (yyvsp[-3].no); }
-#line 2416 "y.tab.c"
+#line 2415 "y.tab.c"
     break;
 
   case 105: /* E: ID '[' E ']' '[' E ']'  */
-#line 512 "staticalloc.y"
+#line 513 "staticalloc.y"
                            { if(Lookup((yyvsp[-6].no)->varname)==NULL){
-
+				   printf("%s - ", (yyvsp[-6].no)->varname);
 				   yyerror("Variable not declared\n");
 				   exit(1);
 				}
@@ -2429,31 +2428,32 @@ yyreduce:
 				(yyvsp[-6].no)->left = (yyvsp[-4].no);
 				(yyvsp[-6].no)->right = (yyvsp[-1].no);
 				(yyval.no) = (yyvsp[-6].no); }
-#line 2433 "y.tab.c"
+#line 2432 "y.tab.c"
     break;
 
   case 106: /* E: NUM  */
-#line 525 "staticalloc.y"
+#line 526 "staticalloc.y"
                 { (yyval.no) = (yyvsp[0].no); }
-#line 2439 "y.tab.c"
+#line 2438 "y.tab.c"
     break;
 
   case 107: /* E: LIT  */
-#line 526 "staticalloc.y"
+#line 527 "staticalloc.y"
                 { (yyval.no) = (yyvsp[0].no); }
-#line 2445 "y.tab.c"
+#line 2444 "y.tab.c"
     break;
 
   case 108: /* E: NUL  */
-#line 527 "staticalloc.y"
+#line 528 "staticalloc.y"
                 { (yyval.no) = createTree(0, TLookup("VOID"), NULL, 0, NULL, NULL, NULL, NULL); }
-#line 2451 "y.tab.c"
+#line 2450 "y.tab.c"
     break;
 
   case 109: /* E: ID '(' ')'  */
-#line 528 "staticalloc.y"
+#line 529 "staticalloc.y"
                         {
 				if(Lookup((yyvsp[-2].no)->varname) == NULL){
+					printf("%s - ",(yyvsp[-2].no)->varname);
                                         yyerror("Function not declared before calling \n");
                                         exit(1);
                                 }
@@ -2468,9 +2468,10 @@ yyreduce:
     break;
 
   case 110: /* E: ID '(' ArgList ')'  */
-#line 541 "staticalloc.y"
+#line 543 "staticalloc.y"
                                 { 
 				if(Lookup((yyvsp[-3].no)->varname) == NULL){
+					printf("%s - ",(yyvsp[-3].no)->varname);
 					yyerror("Function not declared before calling \n");
 					exit(1);
 				}	
@@ -2481,35 +2482,35 @@ yyreduce:
 				(yyvsp[-3].no)->middle = (yyvsp[-1].no);
 				(yyval.no) = (yyvsp[-3].no);
 				}
-#line 2485 "y.tab.c"
+#line 2486 "y.tab.c"
     break;
 
   case 111: /* E: Field  */
-#line 553 "staticalloc.y"
+#line 556 "staticalloc.y"
                                 { checkifFieldisClass((yyvsp[0].no)); (yyval.no) = (yyvsp[0].no); }
-#line 2491 "y.tab.c"
+#line 2492 "y.tab.c"
     break;
 
   case 112: /* E: Method  */
-#line 554 "staticalloc.y"
+#line 557 "staticalloc.y"
                                 { (yyval.no) = (yyvsp[0].no); }
-#line 2497 "y.tab.c"
+#line 2498 "y.tab.c"
     break;
 
   case 113: /* ArgList: ArgList ',' E  */
-#line 557 "staticalloc.y"
+#line 560 "staticalloc.y"
                                 { (yyvsp[0].no)->middle = (yyvsp[-2].no); (yyval.no)=(yyvsp[0].no);}
-#line 2503 "y.tab.c"
+#line 2504 "y.tab.c"
     break;
 
   case 114: /* ArgList: E  */
-#line 558 "staticalloc.y"
+#line 561 "staticalloc.y"
                                 { (yyval.no)=(yyvsp[0].no); }
-#line 2509 "y.tab.c"
+#line 2510 "y.tab.c"
     break;
 
   case 115: /* Method: SELF '.' ID '(' ArgList ')'  */
-#line 562 "staticalloc.y"
+#line 565 "staticalloc.y"
                                      {
        					if(Cptr == NULL){
                                         yyerror("Self cannot be used outside a class");
@@ -2517,7 +2518,8 @@ yyreduce:
 					
 	                                struct Memberfunclist * Mtemp = CMLookup(Cptr, (yyvsp[-3].no)->varname);
 	                                if(Mtemp == NULL){
-                	                                yyerror("Function not a member function of the class \n");
+							printf("%s - ",(yyvsp[-3].no)->varname);
+                	                                yyerror("Method not a member function of the class \n");
                         	                        exit(1);
                                 	        }
 					(yyvsp[-3].no)->middle = (yyvsp[-1].no);
@@ -2529,18 +2531,19 @@ yyreduce:
                                         	(yyval.no)->type = Mtemp->type;
 					
 	                                }
-#line 2533 "y.tab.c"
+#line 2535 "y.tab.c"
     break;
 
   case 116: /* Method: SELF '.' ID '(' ')'  */
-#line 581 "staticalloc.y"
+#line 585 "staticalloc.y"
                               {
 					if(Cptr == NULL){
                                         yyerror("Self cannot be used outside a class");
                                         exit(1);}
 					struct Memberfunclist * Mtemp = CMLookup(Cptr, (yyvsp[-2].no)->varname);
                                         if(Mtemp == NULL){
-                                                        yyerror("Function not a member function of the class \n");
+							printf("%s - ", (yyvsp[-2].no)->varname);
+                                                        yyerror("Method not a member function of the class \n");
                                                         exit(1);
                                                 }
 					(yyvsp[-2].no)->middle = NULL;
@@ -2554,11 +2557,11 @@ yyreduce:
 
 
 				}
-#line 2558 "y.tab.c"
+#line 2561 "y.tab.c"
     break;
 
   case 117: /* Method: Field '.' ID '(' ArgList ')'  */
-#line 601 "staticalloc.y"
+#line 606 "staticalloc.y"
                                        {	if((yyvsp[-5].no)->nodetype = FieldNode){
 							if(Cptr == NULL){
 								if((yyvsp[-5].no)->varname == "self"){
@@ -2574,7 +2577,7 @@ yyreduce:
                                                                 temp = temp->right;}
 						temp->right = (yyvsp[-3].no);
 					if(temp->Ctype == NULL){
-						printf(temp->varname);
+						printf("%s - ",temp->varname);
 						yyerror("Variable not a class object\n");
 						exit(1);
 					}
@@ -2585,6 +2588,7 @@ yyreduce:
 					}
 					struct Memberfunclist *Mtemp = CMLookup(temp->Ctype, (yyvsp[-3].no)->varname);
 					if(Mtemp == NULL){
+						printf("%s - ", (yyvsp[-3].no)->varname);
 						yyerror("Method not a member of class\n");
 						exit(1);
 					}
@@ -2600,16 +2604,73 @@ yyreduce:
 					checkvalidmethodcall((yyvsp[-3].no)->varname, (yyvsp[-1].no), Mtemp);
 					(yyval.no) = (yyvsp[-5].no);
 					}
-#line 2604 "y.tab.c"
+#line 2608 "y.tab.c"
     break;
 
-  case 118: /* Method: ID '.' ID '(' ArgList ')'  */
-#line 643 "staticalloc.y"
+  case 118: /* Method: Field '.' ID '(' ')'  */
+#line 648 "staticalloc.y"
+                                        {
+					if((yyvsp[-4].no)->nodetype = FieldNode){
+                                                        if(Cptr == NULL){
+                                                                if((yyvsp[-4].no)->varname == "self"){
+                                                                        yyerror("Self cannot be used outside a class\n");
+                                                                        exit(1);}
+                                                        (yyvsp[-4].no)->nodetype = MethodCall;}
+                                                        else{
+                                                        (yyvsp[-4].no)->nodetype = SelfFnNode;
+                                                        }
+                                                }
+                                                struct tnode* temp = (yyvsp[-4].no);
+							int tempi = 0;
+                                                        while(temp->right!=NULL){
+								if(tempi>=1){
+									printf("%s - ",temp->varname);
+									yyerror("Class variables cannot access memberfields of member class variables");
+									exit(1);
+								}
+								tempi ++;
+                                                                temp = temp->right;}
+                                                temp->right = (yyvsp[-2].no);
+	                                        if(temp->Ctype == NULL){
+        	                                        printf("%s - ",temp->varname);
+                	                                yyerror("Variable not a class object\n");
+                        	                        exit(1);
+                                	        }
+                                        	struct Gsymbol *Gtemp = NULL;
+	                                        if((yyvsp[-4].no)->nodetype  == MethodCall){
+        	                                        Gtemp = Lookup(temp->varname);
+	
+        	                                }
+                	                        struct Memberfunclist *Mtemp = CMLookup(temp->Ctype, (yyvsp[-2].no)->varname);
+                        	                if(Mtemp == NULL){
+                                	                printf("%s - ", (yyvsp[-2].no)->varname);
+                                        	        yyerror("Method not a member of class\n");
+                                                	exit(1);
+	                                        }
+	                                        (yyvsp[-4].no)->type = Mtemp->type;
+	                                        (yyvsp[-2].no)->middle = NULL;
+	                                        if((yyvsp[-4].no)->nodetype == SelfFnNode){
+	                                        (yyvsp[-2].no)->val = Mtemp->Funcposition;
+	                                        (yyvsp[-2].no)->nodetype = SelfMethodCall;}
+	                                        else{
+	                                        (yyvsp[-2].no)->val = Mtemp->Funcposition;
+	                                        (yyvsp[-2].no)->nodetype = MethodCall;
+	                                        }
+	                                        checkvalidmethodcall((yyvsp[-2].no)->varname, NULL, Mtemp);
+	                                        (yyval.no) = (yyvsp[-4].no);
+
+
+					}
+#line 2665 "y.tab.c"
+    break;
+
+  case 119: /* Method: ID '.' ID '(' ArgList ')'  */
+#line 700 "staticalloc.y"
                                     { 
 					(yyvsp[-5].no)->right = (yyvsp[-3].no); 
 					struct Gsymbol *Gtemp = Lookup((yyvsp[-5].no)->varname);
 					if(Gtemp == NULL){
-						printf((yyvsp[-5].no)->varname);
+						printf("%s - ",(yyvsp[-5].no)->varname);
 						yyerror("Variable not declared \n");
 						exit(1);
 					}
@@ -2620,6 +2681,7 @@ yyreduce:
 	
 					struct Memberfunclist *Mtemp = CMLookup((yyvsp[-5].no)->Ctype, (yyvsp[-3].no)->varname);
 					if(Mtemp == NULL){
+						printf("%s - ", (yyvsp[-3].no)->varname);
 						yyerror("Method not a member of class\n");
 						exit(1);
 					}
@@ -2632,16 +2694,16 @@ yyreduce:
 					(yyvsp[-3].no)->nodetype = MethodCall;
 					(yyval.no) = (yyvsp[-5].no);
 					}
-#line 2636 "y.tab.c"
+#line 2698 "y.tab.c"
     break;
 
-  case 119: /* Method: ID '.' ID '(' ')'  */
-#line 670 "staticalloc.y"
+  case 120: /* Method: ID '.' ID '(' ')'  */
+#line 728 "staticalloc.y"
                             {
 					(yyvsp[-4].no)->right = (yyvsp[-2].no);
                                         struct Gsymbol *Gtemp = Lookup((yyvsp[-4].no)->varname);
                                         if(Gtemp == NULL){
-						printf((yyvsp[-4].no)->varname);
+						printf("%s - ",(yyvsp[-4].no)->varname);
                                                 yyerror("Variable not declared \n");
                                                 exit(1);
                                         }
@@ -2652,6 +2714,7 @@ yyreduce:
 
                                         struct Memberfunclist *Mtemp = CMLookup((yyvsp[-4].no)->Ctype, (yyvsp[-2].no)->varname);
                                         if(Mtemp == NULL){
+						printf("%s - ", (yyvsp[-2].no)->varname);
                                                 yyerror("Method not a member of class\n");
                                                 exit(1);
                                         }
@@ -2665,28 +2728,31 @@ yyreduce:
                                         (yyval.no) = (yyvsp[-4].no);
 
 				}
-#line 2669 "y.tab.c"
+#line 2732 "y.tab.c"
     break;
 
-  case 120: /* Field: Field '.' ID  */
-#line 699 "staticalloc.y"
+  case 121: /* Field: Field '.' ID  */
+#line 758 "staticalloc.y"
                         { 				struct tnode* temp = (yyvsp[-2].no); 
 							while(temp->right!=NULL){
  								temp = temp->right;}
 							struct Fieldlist *Ftemp = FLookup(temp->type, temp->Ctype, (yyvsp[0].no)->varname);
 							if(Ftemp == NULL){
+								printf("%s - ", (yyvsp[0].no)->varname);
 								yyerror("Field is not a member of the datatype");
 								exit(1);}
 							(yyvsp[0].no)->type = Ftemp->type;
+							(yyvsp[0].no)->Ctype = Ftemp->Ctype;
+							(yyvsp[-2].no)->Ctype = Ftemp->Ctype;
 							(yyvsp[0].no)->val = Ftemp->fieldIndex;
 							(yyvsp[-2].no)->type = Ftemp->type;
 							temp->right = (yyvsp[0].no);
 							 (yyval.no) =  (yyvsp[-2].no);}
-#line 2686 "y.tab.c"
+#line 2752 "y.tab.c"
     break;
 
-  case 121: /* Field: ID '.' ID  */
-#line 711 "staticalloc.y"
+  case 122: /* Field: ID '.' ID  */
+#line 773 "staticalloc.y"
                         { (yyvsp[-2].no)->right = (yyvsp[0].no); 
 					
 				struct Gsymbol *Gtemp = Lookup((yyvsp[-2].no)->varname);
@@ -2711,19 +2777,21 @@ yyreduce:
 
 				struct Fieldlist *Ftemp = FLookup((yyvsp[-2].no)->type,(yyvsp[-2].no)->Ctype, (yyvsp[0].no)->varname);
 				if(Ftemp==NULL){
+					printf("%s - ", (yyvsp[0].no)->varname);
 					yyerror("Field is not a member of the datatype\n");
 					exit(1);}
 				(yyvsp[-2].no)->type = Ftemp->type;
 				(yyvsp[0].no)->type = Ftemp->type;
 				(yyvsp[0].no)->Ctype = Ftemp->Ctype;
+			
 				(yyvsp[0].no)->val = Ftemp->fieldIndex;
 				(yyvsp[-2].no)->nodetype = FieldNode;
 				(yyval.no) = (yyvsp[-2].no); }
-#line 2723 "y.tab.c"
+#line 2791 "y.tab.c"
     break;
 
-  case 122: /* Field: SELF '.' ID  */
-#line 743 "staticalloc.y"
+  case 123: /* Field: SELF '.' ID  */
+#line 807 "staticalloc.y"
                         {
 				if(Cptr == NULL){
 					yyerror("Self cannot be used outside a class");
@@ -2732,22 +2800,23 @@ yyreduce:
 				(yyval.no)->Lentry = Llookup("self");
 				struct Fieldlist * Ftemp = CFLookup(Cptr, (yyvsp[0].no)->varname);
 				if(Ftemp == NULL){
-						
+						printf("%s - ", (yyvsp[0].no)->varname);	
 						yyerror("Variable not a memberfield\n");
 						exit(1);
 					}
 					(yyval.no)->type = Ftemp->type;
 					(yyvsp[0].no)->type = Ftemp->type;
 					(yyvsp[0].no)->Ctype = Ftemp->Ctype;
+					(yyval.no)->Ctype = Ftemp->Ctype;
 					(yyvsp[0].no)->val = Ftemp->fieldIndex;
 				(yyval.no)->val = Ftemp->fieldIndex;
 						
 			}
-#line 2747 "y.tab.c"
+#line 2816 "y.tab.c"
     break;
 
 
-#line 2751 "y.tab.c"
+#line 2820 "y.tab.c"
 
       default: break;
     }
@@ -2941,7 +3010,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 764 "staticalloc.y"
+#line 829 "staticalloc.y"
 
 
 yyerror(char const* s){

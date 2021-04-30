@@ -28,7 +28,7 @@
 #define MethodBlock 59
 #define ClassEQNode 60
 #define SelfMethodCall 61
-
+#define DelNode 62
 
 int yylex(void);
 FILE *input_file;
@@ -455,7 +455,7 @@ Stmt	: InputStmt ';'	{ $$ = $1; }
 	| E EQ INIT ';'	{ $$ = createInitNode($1); }
 	| FREE '(' E ')' ';' { $$ = createFreeNode($1); }
 	| E EQ NEW '(' ID ')' ';' { $1->nodetype = Cobj; $$ = createNewNode($1, $5->varname);	}
-	| DELETE '(' Field ')' ';' { $$ = createDelNode($3); } 
+	| DELETE '(' E ')' ';' {  $3->nodetype = Cobj; $$ = createDelNode($3); } 
 ;
 
 InputStmt : READ '(' E ')' { $$ =createIONode(-1,"Read",$3);}
@@ -482,7 +482,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
   | ID		{ 
 		  if(Llookup($1->varname)==NULL){
 			if(Lookup($1->varname) == NULL){
-				printf($1->varname);
+				printf("%s - ",$1->varname);
 	                        yyerror("Variable not declared\n");
         	                exit(1); }
 			$1->type = Lookup($1->varname)->type;
@@ -501,6 +501,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 		   }
 		}
   | ID '[' E ']' { if(Lookup($1->varname) == NULL){
+				   printf("%s - ", $1->varname);
                         yyerror("Variable not declared\n");
                         exit(1); }
                         $1->nodetype = arType;
@@ -510,7 +511,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
                         $$ = $1; }
 
   | ID '[' E ']' '[' E ']' { if(Lookup($1->varname)==NULL){
-
+				   printf("%s - ", $1->varname);
 				   yyerror("Variable not declared\n");
 				   exit(1);
 				}
@@ -527,6 +528,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
   | NUL		{ $$ = createTree(0, TLookup("VOID"), NULL, 0, NULL, NULL, NULL, NULL); }
   | ID '(' ')' 		{
 				if(Lookup($1->varname) == NULL){
+					printf("%s - ",$1->varname);
                                         yyerror("Function not declared before calling \n");
                                         exit(1);
                                 }
@@ -540,6 +542,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 
   | ID '(' ArgList ')' 		{ 
 				if(Lookup($1->varname) == NULL){
+					printf("%s - ",$1->varname);
 					yyerror("Function not declared before calling \n");
 					exit(1);
 				}	
@@ -566,7 +569,8 @@ Method : SELF '.' ID '(' ArgList ')' {
 					
 	                                struct Memberfunclist * Mtemp = CMLookup(Cptr, $3->varname);
 	                                if(Mtemp == NULL){
-                	                                yyerror("Function not a member function of the class \n");
+							printf("%s - ",$3->varname);
+                	                                yyerror("Method not a member function of the class \n");
                         	                        exit(1);
                                 	        }
 					$3->middle = $5;
@@ -584,7 +588,8 @@ Method : SELF '.' ID '(' ArgList ')' {
                                         exit(1);}
 					struct Memberfunclist * Mtemp = CMLookup(Cptr, $3->varname);
                                         if(Mtemp == NULL){
-                                                        yyerror("Function not a member function of the class \n");
+							printf("%s - ", $3->varname);
+                                                        yyerror("Method not a member function of the class \n");
                                                         exit(1);
                                                 }
 					$3->middle = NULL;
@@ -613,7 +618,7 @@ Method : SELF '.' ID '(' ArgList ')' {
                                                                 temp = temp->right;}
 						temp->right = $3;
 					if(temp->Ctype == NULL){
-						printf(temp->varname);
+						printf("%s - ",temp->varname);
 						yyerror("Variable not a class object\n");
 						exit(1);
 					}
@@ -624,6 +629,7 @@ Method : SELF '.' ID '(' ArgList ')' {
 					}
 					struct Memberfunclist *Mtemp = CMLookup(temp->Ctype, $3->varname);
 					if(Mtemp == NULL){
+						printf("%s - ", $3->varname);
 						yyerror("Method not a member of class\n");
 						exit(1);
 					}
@@ -639,12 +645,63 @@ Method : SELF '.' ID '(' ArgList ')' {
 					checkvalidmethodcall($3->varname, $5, Mtemp);
 					$$ = $1;
 					}
+	| Field '.' ID '(' ')'		{
+					if($1->nodetype = FieldNode){
+                                                        if(Cptr == NULL){
+                                                                if($1->varname == "self"){
+                                                                        yyerror("Self cannot be used outside a class\n");
+                                                                        exit(1);}
+                                                        $1->nodetype = MethodCall;}
+                                                        else{
+                                                        $1->nodetype = SelfFnNode;
+                                                        }
+                                                }
+                                                struct tnode* temp = $1;
+							int tempi = 0;
+                                                        while(temp->right!=NULL){
+								if(tempi>=1){
+									printf("%s - ",temp->varname);
+									yyerror("Class variables cannot access memberfields of member class variables");
+									exit(1);
+								}
+								tempi ++;
+                                                                temp = temp->right;}
+                                                temp->right = $3;
+	                                        if(temp->Ctype == NULL){
+        	                                        printf("%s - ",temp->varname);
+                	                                yyerror("Variable not a class object\n");
+                        	                        exit(1);
+                                	        }
+                                        	struct Gsymbol *Gtemp = NULL;
+	                                        if($1->nodetype  == MethodCall){
+        	                                        Gtemp = Lookup(temp->varname);
 	
+        	                                }
+                	                        struct Memberfunclist *Mtemp = CMLookup(temp->Ctype, $3->varname);
+                        	                if(Mtemp == NULL){
+                                	                printf("%s - ", $3->varname);
+                                        	        yyerror("Method not a member of class\n");
+                                                	exit(1);
+	                                        }
+	                                        $1->type = Mtemp->type;
+	                                        $3->middle = NULL;
+	                                        if($1->nodetype == SelfFnNode){
+	                                        $3->val = Mtemp->Funcposition;
+	                                        $3->nodetype = SelfMethodCall;}
+	                                        else{
+	                                        $3->val = Mtemp->Funcposition;
+	                                        $3->nodetype = MethodCall;
+	                                        }
+	                                        checkvalidmethodcall($3->varname, NULL, Mtemp);
+	                                        $$ = $1;
+
+
+					}
 	| ID '.' ID '(' ArgList ')' { 
 					$1->right = $3; 
 					struct Gsymbol *Gtemp = Lookup($1->varname);
 					if(Gtemp == NULL){
-						printf($1->varname);
+						printf("%s - ",$1->varname);
 						yyerror("Variable not declared \n");
 						exit(1);
 					}
@@ -655,6 +712,7 @@ Method : SELF '.' ID '(' ArgList ')' {
 	
 					struct Memberfunclist *Mtemp = CMLookup($1->Ctype, $3->varname);
 					if(Mtemp == NULL){
+						printf("%s - ", $3->varname);
 						yyerror("Method not a member of class\n");
 						exit(1);
 					}
@@ -671,7 +729,7 @@ Method : SELF '.' ID '(' ArgList ')' {
 					$1->right = $3;
                                         struct Gsymbol *Gtemp = Lookup($1->varname);
                                         if(Gtemp == NULL){
-						printf($1->varname);
+						printf("%s - ",$1->varname);
                                                 yyerror("Variable not declared \n");
                                                 exit(1);
                                         }
@@ -682,6 +740,7 @@ Method : SELF '.' ID '(' ArgList ')' {
 
                                         struct Memberfunclist *Mtemp = CMLookup($1->Ctype, $3->varname);
                                         if(Mtemp == NULL){
+						printf("%s - ", $3->varname);
                                                 yyerror("Method not a member of class\n");
                                                 exit(1);
                                         }
@@ -701,9 +760,12 @@ Field 	: Field '.' ID	{ 				struct tnode* temp = $1;
  								temp = temp->right;}
 							struct Fieldlist *Ftemp = FLookup(temp->type, temp->Ctype, $3->varname);
 							if(Ftemp == NULL){
+								printf("%s - ", $3->varname);
 								yyerror("Field is not a member of the datatype");
 								exit(1);}
 							$3->type = Ftemp->type;
+							$3->Ctype = Ftemp->Ctype;
+							$1->Ctype = Ftemp->Ctype;
 							$3->val = Ftemp->fieldIndex;
 							$1->type = Ftemp->type;
 							temp->right = $3;
@@ -732,11 +794,13 @@ Field 	: Field '.' ID	{ 				struct tnode* temp = $1;
 
 				struct Fieldlist *Ftemp = FLookup($1->type,$1->Ctype, $3->varname);
 				if(Ftemp==NULL){
+					printf("%s - ", $3->varname);
 					yyerror("Field is not a member of the datatype\n");
 					exit(1);}
 				$1->type = Ftemp->type;
 				$3->type = Ftemp->type;
 				$3->Ctype = Ftemp->Ctype;
+			
 				$3->val = Ftemp->fieldIndex;
 				$1->nodetype = FieldNode;
 				$$ = $1; }
@@ -748,13 +812,14 @@ Field 	: Field '.' ID	{ 				struct tnode* temp = $1;
 				$$->Lentry = Llookup("self");
 				struct Fieldlist * Ftemp = CFLookup(Cptr, $3->varname);
 				if(Ftemp == NULL){
-						
+						printf("%s - ", $3->varname);	
 						yyerror("Variable not a memberfield\n");
 						exit(1);
 					}
 					$$->type = Ftemp->type;
 					$3->type = Ftemp->type;
 					$3->Ctype = Ftemp->Ctype;
+					$$->Ctype = Ftemp->Ctype;
 					$3->val = Ftemp->fieldIndex;
 				$$->val = Ftemp->fieldIndex;
 						

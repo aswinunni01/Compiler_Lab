@@ -26,7 +26,7 @@
 #define MethodBlock 59
 #define ClassEQNode 60
 #define SelfMethodCall 61
-
+#define DelNode 62
 
 
 int ifcount=0;
@@ -93,7 +93,12 @@ struct tnode* createAllocNode(struct tnode* t){
 }
 
 struct tnode* createDelNode(struct tnode* t){
-	
+	if(t->nodetype != Cobj){
+		yyerror("Only Class variables can be deleted\n");
+		exit(1);
+	}
+	struct tnode* temp = createTree(NULL, TLookup("INT"), "Delete", DelNode, NULL, NULL, t, NULL);
+	return temp;
 
 }
 
@@ -118,7 +123,7 @@ int validClassEQ(struct tnode*l, struct tnode*r){
 	return 0;
 }
 struct tnode* createEQNode(struct tnode* l, struct tnode*r){
-	if(l->Ctype!=NULL && r->Ctype!=NULL){
+	if(l->Ctype!=NULL || r->Ctype!=NULL && (r->nodetype != MethodCall && r->nodetype != SelfFnNode )){	/* Class assign if a=b.not if a=ID.b() / a = ID.b.b() / a = self.b() / a = self.b.b()*/
 		if(validClassEQ(l,r) == 1)
 			return createTree(NULL, 1, "EQU", ClassEQNode, NULL, l, NULL, r);
 		else{
@@ -554,8 +559,6 @@ int  codeGen(struct tnode *t, FILE *fptr){
 					fprintf(fptr, "POP R%d\n",reg_1);
 					fprintf(fptr, "POP R%d\n",reg_1);
 					fprintf(fptr, "POP R%d\n",reg_1);
-					fprintf(fptr, "POP R%d\n",reg_1);
-					fprintf(fptr, "POP R%d\n",reg_1);
 					for(int j=n_reg; j>=0; j--){
                                                 fprintf(fptr, "POP R%d\n",j);
                                         }
@@ -564,6 +567,34 @@ int  codeGen(struct tnode *t, FILE *fptr){
 					return -1;
 
 			       }
+		case DelNode: {
+				      int n_reg = -1;
+                                      for(int i=0; i<count; i++){
+                                                fprintf(fptr, "PUSH R%d\n",i);
+                                                n_reg++;
+                                        }
+
+                                        reg_1 = getReg();
+                                        fprintf(fptr, "MOV R%d, \"Free\"\n", reg_1);
+                                        reg_2 = getLoc(t->middle, fptr);
+                                        fprintf(fptr, "MOV R%d, [R%d]\n",reg_1, reg_2);
+                                        fprintf(fptr, "PUSH R%d\n", reg_1);
+                                        fprintf(fptr, "PUSH R%d\n", reg_1);
+                                        fprintf(fptr, "PUSH R%d\n", reg_1);
+                                        fprintf(fptr, "CALL 0\n");
+                                        fprintf(fptr, "POP R%d\n",reg_1);
+                                        fprintf(fptr, "POP R%d\n",reg_1);
+                                        fprintf(fptr, "POP R%d\n",reg_1);
+                                        for(int j=n_reg; j>=0; j--){
+                                                fprintf(fptr, "POP R%d\n",j);
+                                        }
+
+                                        freeReg();
+                                        return -1;
+
+
+
+			      }
 		case 2:
 			if(strcmp(t->varname,"Read")==0){
                                 reg_2 = getLoc(t->right, fptr);
@@ -1430,6 +1461,7 @@ void Class_Finstall(struct Classtable *cptr, char *typename, char *name){
 		temp->type = TLookup(typename);
 		temp->Ctype = CLookup(typename);
 		if(temp->Ctype != NULL){
+			CFindex++ ;
 			cptr->Fieldcount++;
 		}
 	        temp->next = Fhead;
@@ -1607,15 +1639,18 @@ void printVirtualTable( struct Classtable *Cptr){
 
 void checkifFieldisClass(struct tnode* t){
 	struct tnode* temp = t;
+	int i=0;
 	while(temp->right != NULL){
 		if(temp->right->right == NULL)
 			break;
-		temp = temp->right;
-	}
-	if(temp->Ctype != NULL){
+		if(i>=1){
+			if(temp->Ctype != NULL){
+		printf("%s - ",temp->varname);
 		yyerror("Cannot access member fields of class variables defined inside a class");
-		exit(1);
-
+		exit(1);}
+		}
+		i++;
+		temp = temp->right;
 	}
 
 
