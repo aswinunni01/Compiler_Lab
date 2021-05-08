@@ -66,6 +66,7 @@
 	obj = new(Square);
 	endif;
 	x = obj.set_dimensions();
+	write("AREA:");
 	write(obj.area());
 	return 0;
 	end

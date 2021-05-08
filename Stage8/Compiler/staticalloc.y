@@ -49,12 +49,12 @@ struct Classtable *Cptr = NULL;
 }
 
 
-%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt GidList FdefBlock Fdef Body MainBlock ArgList Retstmt IdList LDecl Field LIT INIT ALLOC FREE MethodDefns Cname ClassDef ClassDefList Method ClassDefBlock
+%type <no> E PLUS MINUS MUL DIV Stmt Stlist InputStmt OutputStmt AsgStmt ID NUM Ifstmt NE EQU LT LTE GT GTE Whilestmt GidList FdefBlock Fdef Body MainBlock ArgList Retstmt IdList LDecl Field STRING INIT ALLOC FREE MethodDefns Cname ClassDef ClassDefList Method ClassDefBlock
 %type <np> ParamList Param
 %type <Tentry> TypeName
 %type <th> Type
 %type <fl> FieldDecl FieldDeclList
-%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE INT STR NUL VOID DECL ENDDECL MAIN RET TYPES ENDTYPE LIT INIT ALLOC FREE NEW CLASS ENDCLASS SELF DELETE EXTENDS
+%token WRITE READ EQ PLUS MINUS MUL DIV ID NUM END BEG IF ENDIF Else then NE EQU LT LTE GT GTE ELSE THEN WHILE ENDWHILE DO BREAK CONTINUE INT STR NUL VOID DECL ENDDECL MAIN RET TYPES ENDTYPE STRING INIT ALLOC FREE NEW CLASS ENDCLASS SELF DELETE EXTENDS
 %left PLUS MINUS
 %left MUL DIV
 
@@ -524,7 +524,7 @@ E : E PLUS E	{ $$ = createOpNode("ADD",intType,$1, $3); }
 				$$ = $1; }
 
   | NUM		{ $$ = $1; }
-  | LIT 	{ $$ = $1; }
+  | STRING 	{ $$ = $1; }
   | NUL		{ $$ = createTree(0, TLookup("VOID"), NULL, 0, NULL, NULL, NULL, NULL); }
   | ID '(' ')' 		{
 				if(Lookup($1->varname) == NULL){

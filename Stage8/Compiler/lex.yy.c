@@ -1073,7 +1073,7 @@ case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
 #line 52 "staticalloc.l"
-{ var = strdup(yytext); yylval.no = createTree(NULL, TLookup("STR"), var, 0, NULL, NULL, NULL, NULL); return LIT; }
+{ var = strdup(yytext); yylval.no = createTree(NULL, TLookup("STR"), var, 0, NULL, NULL, NULL, NULL); return STRING; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP

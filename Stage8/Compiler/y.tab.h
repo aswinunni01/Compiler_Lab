@@ -92,7 +92,7 @@ extern int yydebug;
     RET = 293,                     /* RET  */
     TYPES = 294,                   /* TYPES  */
     ENDTYPE = 295,                 /* ENDTYPE  */
-    LIT = 296,                     /* LIT  */
+    STRING = 296,                  /* STRING  */
     INIT = 297,                    /* INIT  */
     ALLOC = 298,                   /* ALLOC  */
     FREE = 299,                    /* FREE  */
@@ -147,7 +147,7 @@ extern int yydebug;
 #define RET 293
 #define TYPES 294
 #define ENDTYPE 295
-#define LIT 296
+#define STRING 296
 #define INIT 297
 #define ALLOC 298
 #define FREE 299

@@ -191,7 +191,7 @@ extern int yydebug;
     RET = 293,                     /* RET  */
     TYPES = 294,                   /* TYPES  */
     ENDTYPE = 295,                 /* ENDTYPE  */
-    LIT = 296,                     /* LIT  */
+    STRING = 296,                  /* STRING  */
     INIT = 297,                    /* INIT  */
     ALLOC = 298,                   /* ALLOC  */
     FREE = 299,                    /* FREE  */
@@ -246,7 +246,7 @@ extern int yydebug;
 #define RET 293
 #define TYPES 294
 #define ENDTYPE 295
-#define LIT 296
+#define STRING 296
 #define INIT 297
 #define ALLOC 298
 #define FREE 299
@@ -328,7 +328,7 @@ enum yysymbol_kind_t
   YYSYMBOL_RET = 38,                       /* RET  */
   YYSYMBOL_TYPES = 39,                     /* TYPES  */
   YYSYMBOL_ENDTYPE = 40,                   /* ENDTYPE  */
-  YYSYMBOL_LIT = 41,                       /* LIT  */
+  YYSYMBOL_STRING = 41,                    /* STRING  */
   YYSYMBOL_INIT = 42,                      /* INIT  */
   YYSYMBOL_ALLOC = 43,                     /* ALLOC  */
   YYSYMBOL_FREE = 44,                      /* FREE  */
@@ -795,7 +795,7 @@ static const char *const yytname[] =
   "PLUS", "MINUS", "MUL", "DIV", "ID", "NUM", "END", "BEG", "IF", "ENDIF",
   "Else", "then", "NE", "EQU", "LT", "LTE", "GT", "GTE", "ELSE", "THEN",
   "WHILE", "ENDWHILE", "DO", "BREAK", "CONTINUE", "INT", "STR", "NUL",
-  "VOID", "DECL", "ENDDECL", "MAIN", "RET", "TYPES", "ENDTYPE", "LIT",
+  "VOID", "DECL", "ENDDECL", "MAIN", "RET", "TYPES", "ENDTYPE", "STRING",
   "INIT", "ALLOC", "FREE", "NEW", "CLASS", "ENDCLASS", "SELF", "DELETE",
   "EXTENDS", "'{'", "'}'", "';'", "'('", "')'", "','", "'['", "']'", "'.'",
   "$accept", "start", "ClassDefBlock", "ClassDefList", "ClassDef", "Cname",
@@ -2437,7 +2437,7 @@ yyreduce:
 #line 2438 "y.tab.c"
     break;
 
-  case 107: /* E: LIT  */
+  case 107: /* E: STRING  */
 #line 527 "staticalloc.y"
                 { (yyval.no) = (yyvsp[0].no); }
 #line 2444 "y.tab.c"

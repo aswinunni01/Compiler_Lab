@@ -81,7 +81,11 @@ class
 	int temp,n;
 	enddecl
 	begin
+	write("A if n<0");
+	write("B if n==0");
+	write("C if n>0");
 	temp= initialize();
+	write("Input n");
 	read(n);
 	if(n < 0)then
 	obj = new(A);

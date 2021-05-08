@@ -39,8 +39,8 @@ int main(){
 	x = f1(a, num);
 	write(a.data);
 	write(num);
-	d = a;
-	write(d.data);
+	a = d;
+	write(a.data);
 	return 0;
 	end
 
